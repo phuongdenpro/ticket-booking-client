@@ -36,7 +36,7 @@ const Login = () => {
                   <Input
                     size="large"
                     prefix={<UserOutlined className="site-form-item-icon" />}
-                    placeholder="Nhập email hoặc số điện thoại"
+                    placeholder="Nhập email hoặc số điện thoại!"
                     autoFocus
                     style={{height:50}}
                   />
