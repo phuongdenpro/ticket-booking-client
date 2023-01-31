@@ -8,11 +8,12 @@ import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
 } from "@ant-design/icons";
-import { Button, Menu } from "antd";
+import { Avatar, Button, Menu } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import store from "../../redux/store";
+import logo from "../../assets/logo.png";
 const { Title } = Typography;
 
 const rootSubmenuKeys = [
@@ -43,7 +44,7 @@ const Sidebar = (props) => {
     };
   };
   const items = [
-    getItem("Dashboard", "/dashboard", <DashboardOutlined />),
+    getItem("Dashboard", "", <DashboardOutlined />),
     getItem("Quản Lý Người Dùng", "sub1", <TagsOutlined />, [
       getChildItem("Nhóm sản phẩm", "2"),
       getChildItem("Sản phẩm", "3"),
@@ -68,7 +69,7 @@ const Sidebar = (props) => {
     ]),
     getItem("Quản lý bến xe", "12", <BarChartOutlined />),
     getItem("Quản lý vé", "13", <BarChartOutlined />),
-    getItem("Thống kê", "13", <BarChartOutlined />),
+    getItem("Thống kê", "dashboard/default", <BarChartOutlined />),
   ];
 
   const onOpenChange = (keys) => {
@@ -91,6 +92,7 @@ const Sidebar = (props) => {
 
   return (
     <div>
+    <Title style={{marginLeft:50, height:50}}>Manager</Title>
       <Menu
         mode="inline"
         theme="light"

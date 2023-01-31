@@ -13,13 +13,13 @@ const Topbar = (props) => {
         ml: sizeConfigs.sidebar.width,
         boxShadow: "unset",
         backgroundColor: colorConfigs.topbar.bg,
-        color: colorConfigs.topbar.color
+        color: colorConfigs.topbar.color,
+        marginLeft: 0,
       }}
     >
-    <Toolbar>
-      <Typography>
-      Xin chào</Typography>
-    </Toolbar>
+      <Toolbar>
+        <Typography>Xin chào</Typography>
+      </Toolbar>
     </AppBar>
   );
 };
