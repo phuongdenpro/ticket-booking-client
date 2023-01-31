@@ -1,8 +1,9 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { createBrowserHistory } from "history";
-
 import Login from "./pages/Admin/AdminLogin";
-import './App.css';
+import AdminLayout from "./components/layout/AdminLayout";
+import AdminTicket from "./pages/Admin/AdminTicket";
+import { routes } from "./routers";
 
 export const history = createBrowserHistory();
 
@@ -10,6 +11,9 @@ function App() {
   return (
     <BrowserRouter history={history}>
       <Routes>
+        <Route path="admin" element={<AdminLayout />}>
+          {routes}
+        </Route>
         <Route path="/admin/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
