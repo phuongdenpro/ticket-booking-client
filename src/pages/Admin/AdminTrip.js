@@ -2,7 +2,7 @@ import React from 'react'
 
 const AdminTrip = (props)=>{
     return (
-        <div>AdminTrip</div>
+        <div>Quản lý chuyến xe</div>
       )
 }
 

@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Route } from "react-router-dom";
-import appRoutes from "./appRoutes";
+import adminRoutes from "./adminRoutes";
 
 const generateRoute = (routes) => {
   return routes.map((route, index) =>
@@ -14,4 +14,4 @@ const generateRoute = (routes) => {
   );
 };
 
-export const routes = generateRoute(appRoutes);
+export const routes = generateRoute(adminRoutes);

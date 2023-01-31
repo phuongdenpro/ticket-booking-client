@@ -2,7 +2,7 @@ import React from 'react'
 
 const AdminDashboard = (props)=>{
     return (
-        <div>AdminDashboard</div>
+        <div>Admin Dashboard</div>
       )
 }
 

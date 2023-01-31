@@ -7,6 +7,9 @@ import {
   DashboardOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
+  CarOutlined,
+  IdcardOutlined,
+  DollarCircleOutlined,
 } from "@ant-design/icons";
 import { Avatar, Button, Menu } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +17,9 @@ import { Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import store from "../../redux/store";
 import logo from "../../assets/logo.png";
+import CarRentalIcon from "@mui/icons-material/CarRental";
+import DepartureBoardIcon from "@mui/icons-material/DepartureBoard";
+import DirectionsTransitIcon from "@mui/icons-material/DirectionsTransit";
 const { Title } = Typography;
 
 const rootSubmenuKeys = [
@@ -45,31 +51,25 @@ const Sidebar = (props) => {
   };
   const items = [
     getItem("Dashboard", "", <DashboardOutlined />),
-    getItem("Quản Lý Người Dùng", "sub1", <TagsOutlined />, [
-      getChildItem("Nhóm sản phẩm", "2"),
-      getChildItem("Sản phẩm", "3"),
-      getChildItem("Ngành hàng", "4"),
-    ]),
     getItem(
-      "Quản lý chuyến xe",
-      "sub2",
-      <InboxOutlined />,
-      [
-        getChildItem("Phiếu nhập hàng", "5"),
-        getChildItem("Phiếu kiểm kê", "6"),
-        getChildItem("Lịch sử biến động kho", "7"),
-      ],
+      "Quản Lý Người Dùng",
+      "user",
+      <UserOutlined />,
+      [getChildItem("Người dùng", "user/user"), getChildItem("Nhóm người dùng", "user/group-user")],
       true
     ),
-    getItem("Quản lý nhà xe", "sub3", <UserOutlined />, [
-      getChildItem("Nhà cung cấp", "1", true),
-      getChildItem("Quản lý xe", "9"),
-      getChildItem("Khách hàng", "10"),
-      getChildItem("Nhân viên", "11", true),
+    getItem("Quản lý Chuyến Xe", "trip", <DepartureBoardIcon />),
+    getItem("Quản Lý Nhà Xe", "passenger", <DirectionsTransitIcon />),
+    getItem("Quản Lý Xe", "vehicle", <CarOutlined />),
+    getItem("Quản Lý Vé", "ticket", <IdcardOutlined />),
+    getItem("Quản Lý Bến Xe", "station", <CarRentalIcon />),
+    getItem("Chương Trình Khuyến Mãi", "promotion", <DollarCircleOutlined />),
+    getItem("Thống kê", "dashboard", <BarChartOutlined />, [
+      getChildItem("Thống kê doanh thu", "dashboard/cost"),
+      getChildItem("Thống kê người dùng", "dashboard/user"),
+      getChildItem("Thống kê vé", "dashboard/ticket"),
+      getChildItem("Thống kê tổng hợp ", "dashboard/default"),
     ]),
-    getItem("Quản lý bến xe", "12", <BarChartOutlined />),
-    getItem("Quản lý vé", "13", <BarChartOutlined />),
-    getItem("Thống kê", "dashboard/default", <BarChartOutlined />),
   ];
 
   const onOpenChange = (keys) => {
@@ -83,16 +83,16 @@ const Sidebar = (props) => {
   };
 
   const onSelect = (selected) => {
-    navigate(`/admin/${selected.key}`)
-  }
+    navigate(`/admin/${selected.key}`);
+  };
 
   const onClick = (selected) => {
-    navigate(`/admin/${selected.key}`)
-  }
+    navigate(`/admin/${selected.key}`);
+  };
 
   return (
     <div>
-    <Title style={{marginLeft:50, height:50}}>Manager</Title>
+      <Title style={{ marginLeft: 50, height: 50 }}>Manager</Title>
       <Menu
         mode="inline"
         theme="light"
