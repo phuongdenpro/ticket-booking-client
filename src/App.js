@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { createBrowserHistory } from "history";
-import Login from "./pages/Admin/AdminLogin";
+import Login from "./pages/Admin/AdminLogin/AdminLogin";
 import AdminLayout from "./components/layout/AdminLayout";
 import AdminTicket from "./pages/Admin/AdminTicket";
 import { routes } from "./routers";

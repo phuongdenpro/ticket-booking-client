@@ -1,15 +1,37 @@
 import { SettingOutlined } from "@ant-design/icons";
 import { AppBar, Menu, Toolbar } from "@mui/material";
-import { Avatar, Dropdown, message, Typography } from "antd";
+import { Avatar, Dropdown, message, Typography, notification } from "antd";
 import { Header } from "antd/es/layout/layout";
 import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import colorConfigs from "../../config/colorConfigs";
 import sizeConfigs from "../../config/sizeConfigs";
+import { AdminApi } from "../../utils/apis";
 
 const Topbar = (props) => {
-  const onClick = ({ key }) => {
-    message.info(`Click on item ${key}`);
+  const navigate = useNavigate();
+
+  const onClickLogout = async () => {
+    const adminApi = new AdminApi();
+    try {
+      // const response = await adminApi.logout();
+      // console.log(response);
+
+      navigate("/admin/login");
+
+      notification.config({ top: 10 });
+      setTimeout(() => {
+        notification.open({
+          type: "success",
+          duration: 2,
+          description: `Tạm biệt quý khách`,
+          message: "Logout success !",
+        });
+      }, 1000);
+    } catch (error) {
+      message.error("Có lỗi sảy ra");
+    }
   };
   const items = [
     {
@@ -25,7 +47,11 @@ const Topbar = (props) => {
       key: "2",
     },
     {
-      label: "Đăng xuất",
+      label: (
+        <a rel="noopener noreferrer" onClick={onClickLogout}>
+          Đăng xuất
+        </a>
+      ),
       key: "3",
     },
   ];
@@ -50,12 +76,10 @@ const Topbar = (props) => {
         }}
       >
         <Typography>Xin chào,</Typography>
-        <Typography
-          style={{ fontWeight: "500", color: "#333", marginLeft: 7 }}
-        >
+        <Typography style={{ fontWeight: "500", color: "#333", marginLeft: 7 }}>
           Phương
         </Typography>
-        <Dropdown menu={{ items, onClick }}>
+        <Dropdown menu={{ items }}>
           <Avatar
             style={{
               color: "#f56a00",

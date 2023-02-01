@@ -1,21 +1,74 @@
-import { useState } from "react";
+import { React, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Grid, IconButton, InputAdornment } from "@mui/material";
-import { Button, Col, Row, Checkbox, Form, Input, message } from "antd";
-import {UserOutlined, LockOutlined } from "@ant-design/icons";
-import logo from "../../assets/logo.png";
-import imgLogin from "../../assets/imgLogin.png";
-
-import "../../sass/AdminLogin.scss";
+import {
+  Button,
+  Col,
+  Row,
+  Checkbox,
+  Form,
+  Input,
+  message,
+  notification,
+} from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import logo from "../../../assets/logo.png";
+import imgLogin from "../../../assets/imgLogin.png";
+import { AdminApi } from "../../../utils/apis";
+import "./AdminLogin.scss";
 
 const Login = () => {
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const navigate = useNavigate();
+  const [loadings, setLoadings] = useState([]);
+
+  const enterLoading = (index) => {
+    setLoadings((prevLoadings) => {
+      const newLoadings = [...prevLoadings];
+      newLoadings[index] = true;
+      return newLoadings;
+    });
+  };
+
+  const stopLoading = (index) => {
+    setLoadings((prevLoadings) => {
+      const newLoadings = [...prevLoadings];
+      newLoadings[index] = false;
+      return newLoadings;
+    });
+  };
+
+  const onFinish = async (values) => {
+    enterLoading(0);
+    const adminApi = new AdminApi();
+    try {
+      const response = await adminApi.login(values);
+      navigate("/admin");
+
+      notification.config({ top: 70 });
+      setTimeout(() => {
+        notification.open({
+          type: "success",
+          duration: 2,
+          description: `Xin chào Admin `,
+          message: "Login success !",
+        });
+      }, 1000);
+      
+    } catch (error) {
+      message.error("Sai số điện thoại hoặc mật khẩu");
+    } finally {
+      stopLoading(0);
+    }
+  };
   return (
     <div>
       <Grid container>
         <Grid className="item-login" md={5.5} xs={24}>
           <div className="container">
-          <img src={logo} alt="Logo" style={{height:100}} />
+            <div className="text-login">Đăng nhập</div>
             <div className="form-field">
               <Form
                 name="normal_login"
@@ -23,9 +76,10 @@ const Login = () => {
                 initialValues={{
                   remember: true,
                 }}
+                onFinish={onFinish}
               >
                 <Form.Item
-                  name="phone"
+                  name="email"
                   rules={[
                     {
                       required: true,
@@ -35,10 +89,11 @@ const Login = () => {
                 >
                   <Input
                     size="large"
+                    ref={emailRef}
                     prefix={<UserOutlined className="site-form-item-icon" />}
                     placeholder="Nhập email hoặc số điện thoại!"
                     autoFocus
-                    style={{height:50}}
+                    style={{ height: 50 }}
                   />
                 </Form.Item>
                 <Form.Item
@@ -52,22 +107,29 @@ const Login = () => {
                 >
                   <Input.Password
                     size="large"
+                    ref={passwordRef}
                     prefix={<LockOutlined className="site-form-item-icon" />}
                     type="password"
                     placeholder="Nhập mật khẩu"
-                    style={{height:50}}
+                    style={{ height: 50 }}
                   />
                 </Form.Item>
 
                 <Form.Item>
                   <div className="view-link">
-                    <Link to="/quen-mat-khau" style={{color:'white'}}>Quên mật khẩu ?</Link>{" "}
+                    <Link
+                      to="/quen-mat-khau"
+                      style={{ color: "#00354e", fontSize: 16 }}
+                    >
+                      Quên mật khẩu ?
+                    </Link>{" "}
                   </div>
                   <Button
                     type="primary"
                     htmlType="submit"
                     className="btn-primary-hover btn-login"
                     size="large"
+                    loading={loadings[0]}
                   >
                     Đăng nhập
                   </Button>
@@ -79,7 +141,7 @@ const Login = () => {
         <Grid md={6.5} className="item-content-right">
           <div className="container-right">
             <div className="text-welcome">Chào mừng bạn quay lại</div>
-            <h5 className="text">Vui lòng đăng nhập để sử dụng hệ thống</h5>
+            <h5 className="text">Vui lòng đăng nhập để sử dụng dịch vụ</h5>
             <div>
               <img src={imgLogin} alt="Image" className="image-right" />
             </div>
