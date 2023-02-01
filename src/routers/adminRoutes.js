@@ -3,14 +3,14 @@ import AppsOutlinedIcon from "@mui/icons-material/AppsOutlined";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import FormatListBulletedOutlinedIcon from "@mui/icons-material/FormatListBulletedOutlined";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
-import AdminPassenger from "../pages/Admin/AdminPassenger";
-import AdminTicket from "../pages/Admin/AdminTicket";
-import AdminDashboard from "../pages/Admin/AdminDashboard";
-import AdminStation from "../pages/Admin/AdminStation";
-import AdminTrip from "../pages/Admin/AdminTrip";
-import AdminTripPassenger from "../pages/Admin/AdminTripPassenger";
-import AdminUser from "../pages/Admin/AdminUser";
-import AdminVehicle from "../pages/Admin/AdminVehicle";
+import AdminPassenger from "../pages/Admin/AdminPassenger/AdminPassenger";
+import AdminTicket from "../pages/Admin/AdminTicket/AdminTicket";
+import AdminDashboard from "../pages/Admin/AdminDashboard/AdminDashboard";
+import AdminStation from "../pages/Admin/AdminStation/AdminStation";
+import AdminTrip from "../pages/Admin/AdminTrip/AdminTrip";
+import AdminTripPassenger from "../pages/Admin/AdminTripPassenger/AdminTripPassenger";
+import AdminUser from "../pages/Admin/AdminUser/AdminUser";
+import AdminVehicle from "../pages/Admin/AdminVehicle/AdminVehicle";
 
 const adminRoutes = [
   {
