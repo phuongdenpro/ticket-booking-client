@@ -23,11 +23,8 @@ import DirectionsTransitIcon from "@mui/icons-material/DirectionsTransit";
 const { Title } = Typography;
 
 const rootSubmenuKeys = [
-  "quan-ly-ban-hang",
-  "quan-ly-san-pham",
-  "quan-ly-kho",
-  "quan-ly-doi-tac",
-  "quan-ly-bao-cao",
+  "user",
+  "dashboard",
 ];
 
 const Sidebar = (props) => {
