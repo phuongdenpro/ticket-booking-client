@@ -1,14 +1,14 @@
 import Cookies from "js-cookie";
-import axiosApi from "./axios";
+import axiosClient from "./axios";
 
 class AdminApi {
   login(params) {
     const url = "auth/admin/login/";
-    return axiosApi.post(url, params);
+    return axiosClient.post(url, params);
   }
   logout() {
     const url = "auth/admin/logout";
-    return axiosApi.post(url);
+    return axiosClient.post(url);
   }
   save_token(data) {
     Cookies.set("access_token", data.data.access_token);

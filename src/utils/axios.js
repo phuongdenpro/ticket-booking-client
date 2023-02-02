@@ -2,14 +2,14 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const base_url = process.env.REACT_APP_BASE_URL;
-const axiosApi = axios.create({
+const axiosClient = axios.create({
   baseURL: base_url,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-axiosApi.interceptors.request.use(
+axiosClient.interceptors.request.use(
   async (config) => {
     let token = Cookies.get("access_token");
     if (token) {
@@ -23,4 +23,4 @@ axiosApi.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-export default axiosApi;
+export default axiosClient;
