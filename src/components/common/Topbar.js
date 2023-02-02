@@ -2,6 +2,7 @@ import { SettingOutlined } from "@ant-design/icons";
 import { AppBar, Menu, Toolbar } from "@mui/material";
 import { Avatar, Dropdown, message, Typography, notification } from "antd";
 import { Header } from "antd/es/layout/layout";
+import Cookies from "js-cookie";
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -15,9 +16,8 @@ const Topbar = (props) => {
   const onClickLogout = async () => {
     const adminApi = new AdminApi();
     try {
-      // const response = await adminApi.logout();
-      // console.log(response);
-
+      const response = await adminApi.logout();
+      Cookies.remove("access_token");
       navigate("/admin/login");
 
       notification.config({ top: 10 });

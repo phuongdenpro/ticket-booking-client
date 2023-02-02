@@ -17,6 +17,7 @@ import logo from "../../../assets/logo.png";
 import imgLogin from "../../../assets/imgLogin.png";
 import { AdminApi } from "../../../utils/apis";
 import "./AdminLogin.scss";
+import Cookies from "js-cookie";
 
 const Login = () => {
   const emailRef = useRef();
@@ -45,6 +46,9 @@ const Login = () => {
     const adminApi = new AdminApi();
     try {
       const response = await adminApi.login(values);
+      if(response.status == 200){
+        adminApi.save_token(response.data);
+      }
       navigate("/admin");
 
       notification.config({ top: 70 });
