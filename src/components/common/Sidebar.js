@@ -89,15 +89,15 @@ const Sidebar = (props) => {
 
   return (
     <div>
-      <Title style={{ marginLeft: 50, height: 50 }}>Manager</Title>
       <Menu
         mode="inline"
-        theme="light"
+        theme="dark"
         openKeys={openKeys}
         onOpenChange={onOpenChange}
         items={items}
         onSelect={onSelect}
         onClick={onClick}
+        style={{minHeight:'100vh'}}
       />
     </div>
   );
