@@ -1,4 +1,4 @@
-import { Box, Button, Drawer, Grid, TextField } from "@mui/material";
+import { Box, Button, Drawer, Grid, Icon, TextField } from "@mui/material";
 import React, { useState } from "react";
 import {
   DataGrid,
@@ -8,6 +8,7 @@ import {
   GridValueGetterParams,
 } from "@mui/x-data-grid";
 import { Breadcrumb, Col, Row, Space } from "antd";
+import AddIcon from '@mui/icons-material/Add';
 
 const AdminStation = (props) => {
   const [pageSize, setPageSize] = useState(5);
@@ -118,6 +119,8 @@ const AdminStation = (props) => {
         color="primary"
         style={{ marginBottom: 14 }}
         onClick={showDrawer}
+        startIcon={<AddIcon  />}
+
       >
         Thêm mới
       </Button>
@@ -150,7 +153,7 @@ const AdminStation = (props) => {
         bodyStyle={{ paddingBottom: 80 }}
         sx={{
           "& .MuiPaper-root": {
-            width: 600,
+            width: 700,
           },
         }}
       >
