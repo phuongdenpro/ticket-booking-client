@@ -1,0 +1,22 @@
+.table-custom {
+    .MuiTableHead-root {
+      border: 1px solid #e4e4e4;
+      background-color: rgba(245, 245, 245, 0.5);
+  
+      .MuiTableCell-root {
+        padding: 5px 0 5px 0;
+        color: #00202f;
+        font-family: 'SourceSansPro';
+      }
+    }
+  
+    .MuiTableCell-root {
+      border: 1px solid #e4e4e4;
+      color: #666666;
+      img {
+        vertical-align: middle;
+        margin: 5px 0 5px 0;
+      }
+    }
+  }
+  

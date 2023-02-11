@@ -15,75 +15,138 @@ import {
   TextField,
   Divider,
 } from "@mui/material";
-import React, { useState } from "react";
-import {
-  DataGrid,
-  GridColDef,
-  GridToolbar,
-  GridToolbarFilterButton,
-  GridValueGetterParams,
-} from "@mui/x-data-grid";
+import React, { useEffect, useState } from "react";
 import { Breadcrumb, Col, message, Row, Space } from "antd";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { isEmpty } from "lodash";
 import AddIcon from "@mui/icons-material/Add";
 import PrintIcon from "@mui/icons-material/Print";
 import SearchInput from "../../../components/InputSearch";
 import CreateStation from "./Components/CreateStation";
+import { StationApi } from "../../../utils/apis";
+import TableCustom from "../../../components/TableCustom";
+import StationList from "./Components/StationList";
 
 const AdminStation = (props) => {
   const [loadings, setLoadings] = useState([]);
   const [showDrawer, setShowDrawer] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [idStation, setIdStation] = useState(null);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
+  const [selectedStation, setSelectedStation] = useState([]);
   const [selected, setSelected] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [filterParams, setFilterParams] = useState(null);
   const [formType, setFormType] = useState(null);
-  const columns = [
-    { field: "id", headerName: "ID", width: 50 },
-    {
-      field: "name",
-      headerName: "Tên bến xe",
-      width: 150,
-      editable: true,
-    },
-    {
-      field: "address",
-      headerName: "Địa chỉ",
-      width: 200,
-      editable: true,
-    },
-    {
-      field: "createAt",
-      headerName: "Ngày tạo",
-      type: "date",
-      width: 180,
-      editable: true,
-    },
-    {
-      field: "addressFull",
-      headerName: "Địa chỉ cụ thể",
-      description: "This column has a value getter and is not sortable.",
-      sortable: false,
-      width: 200,
-    },
-    {
-      field: "images",
-      headerName: "Hình ảnh",
-      description: "This column has a value getter and is not sortable.",
-      sortable: false,
-      width: 200,
-    },
+  const [data, setData] = useState([]);
 
-    {
-      field: "action",
-      headerName: "Thao tác",
-      description: "This column has a value getter and is not sortable.",
-      sortable: false,
-      width: 200,
-    },
-  ];
+  const handleGetData = async () => {
+    enterLoading(0);
+    const stationApi = new StationApi();
+    const response = await stationApi.getAllStations({
+      page: page + 1,
+      pageSize: pageSize,
+      ...filterParams,
+    });
+    console.log(response);
+    setData(response);
+  };
+  useEffect(() => {
+    const tmpSelected = [];
+    if (!isEmpty(selected)) {
+      selected.map((item) =>
+        data?.data?.data.map((elm) => {
+          if (item === elm?.id) {
+            tmpSelected.push(elm);
+            setSelectedStation(tmpSelected);
+          }
+        })
+      );
+    } else {
+      setSelectedStation([]);
+    }
+  }, [selected]);
+
+  console.log(selected);
+
+  useEffect(() => {
+    setFilterParams({ ...filterParams, key: searchValue });
+  }, [searchValue]);
+
+  useEffect(() => {
+    if (!showDrawer) {
+      setIdStation("");
+    }
+  }, [showDrawer]);
+
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelected = data.map((n) => n.id);
+      setSelected(newSelected);
+      return;
+    }
+    setSelected([]);
+  };
+
+  const handleClick = (event, name) => {
+    const selectedIndex = selected.indexOf(name);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, name);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+    }
+
+    setSelected(newSelected);
+  };
+
+  const handelShowDetail = (id) => {
+    setShowDrawer(true);
+    setIdStation(id);
+    setFormType("update");
+  };
+
+  const handleSearch = (e) => {
+    setFilterParams({ key: searchValue || undefined });
+  };
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setPageSize(+event.target.value);
+    setPage(0);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+  const handleOpenModal = () => {
+    if (!isEmpty(selected)) {
+      setOpenModal(true);
+    } else {
+      message.error("warning", "Vui lòng chọn mã");
+    }
+  };
+
+  const handleConfirm = () => {
+    const params = {
+      ids: selected,
+    };
+  };
+  useEffect(() => {
+    handleGetData();
+  }, [page, pageSize, filterParams]);
+
   const rows = [
     { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
     { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
@@ -105,26 +168,6 @@ const AdminStation = (props) => {
     { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
     { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
   ];
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setPageSize(+event.target.value);
-    setPage(0);
-  };
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
-  const handleOpenModal = () => {
-    if (!isEmpty(selected)) {
-      setOpenModal(true);
-    } else {
-      message.error("warning", "Vui lòng chọn mã");
-    }
-  };
 
   const enterLoading = (index) => {
     setLoadings((prevLoadings) => {
@@ -231,41 +274,25 @@ const AdminStation = (props) => {
 
       <div style={{ display: "flex", height: "100%" }}>
         <div style={{ flexGrow: 1 }}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
+          <StationList
+            data={data?.data?.data || []}
+            handleShowDetail={handelShowDetail}
+            selectionModel={selected}
+            handleSelectionModeChange={handleSelectAllClick}
+            handleClick={handleClick}
+            handleChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+            total={data?.data?.pagination?.total}
+            page={page}
             pageSize={pageSize}
-            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-            rowsPerPageOptions={[5, 10, 15, 20]}
-            checkboxSelection
-            disableSelectionOnClick
-            experimentalFeatures={{ newEditingApi: true }}
-            sx={{
-              borderColor: "light",
-              "& .MuiDataGrid-cell:hover": {
-                color: "primary.main",
-              },
-              position: "unset",
-              "& .MuiDataGrid-columnHeader": {
-                backgroundColor: "#FAFAFA",
-                color: "black",
-                fontWeight: "bold",
-                fontSize: 16,
-                padding: "10px 10px 10px 10px",
-              },
-
-              backgroundColor: "#FAFAFA",
-            }}
-            componentsProps={{
-              pagination: {
-                labelRowsPerPage: "Số hàng hiển thị: ",
-              },
-            }}
-          />
+          ></StationList>
         </div>
       </div>
-      <CreateStation setShowDrawer={setShowDrawer}
-      showDrawer={showDrawer} type={formType}></CreateStation>
+      <CreateStation
+        setShowDrawer={setShowDrawer}
+        showDrawer={showDrawer}
+        type={formType}
+      ></CreateStation>
     </Box>
   );
 };
