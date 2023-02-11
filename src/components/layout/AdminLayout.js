@@ -3,8 +3,8 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import colorConfigs from "../../config/colorConfigs";
 import sizeConfigs from "../../config/sizeConfigs";
-import Sidebar from "../common/Sidebar";
-import Topbar from "../common/Topbar";
+import Sidebar from "../Common/Sidebar";
+import Topbar from "../Common/Topbar";
 
 const AdminLayout = () => {
   return (
@@ -15,11 +15,12 @@ const AdminLayout = () => {
         sx={{
           width: sizeConfigs.sidebar.width,
           flexShrink: 0,
-          minHeight:'100vh'
+          minHeight: "100vh",
         }}
       >
         <Sidebar />
       </Box>
+
       <Box
         component="main"
         sx={{
