@@ -9,6 +9,7 @@ import colorConfigs from "../../config/colorConfigs";
 import sizeConfigs from "../../config/sizeConfigs";
 import { AdminApi } from "../../utils/apis";
 import Cookies from "js-cookie";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 const Topbar = (props) => {
   const navigate = useNavigate();
@@ -80,7 +81,6 @@ const Topbar = (props) => {
       sx={{
         width: `calc(100% - ${sizeConfigs.sidebar.width})`,
         ml: sizeConfigs.sidebar.width,
-        boxShadow: "unset",
         backgroundColor: colorConfigs.topbar.bg,
         color: colorConfigs.topbar.color,
         marginLeft: 0,
@@ -90,11 +90,22 @@ const Topbar = (props) => {
       <Toolbar
         style={{
           top: 3,
-          right: 40,
+          right: 20,
           padding: 15,
           justifyContent: "flex-end",
         }}
       >
+        <a
+          href="/admin"
+          className="home-title"
+          style={{ textDecoration: "none", color: "#000" }}
+        >
+          Admin
+        </a>
+        <ChevronRightIcon
+          className="icon-right-header"
+          style={{ marginRight: 870 }}
+        />
         <ClockCircleOutlined style={{ marginRight: 7 }} />
         <Typography style={{ fontWeight: "600", marginRight: 30, width: 200 }}>
           {" "}
@@ -112,7 +123,6 @@ const Topbar = (props) => {
               backgroundColor: "#fde3cf",
               width: "35px",
               height: "35px",
-              marginRight: "10px",
               marginLeft: "10px",
             }}
             onClick={(e) => e.preventDefault()}

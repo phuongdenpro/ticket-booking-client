@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import Login from "./pages/Admin/AdminLogin/AdminLogin";
-import AdminLayout from "./components/layout/AdminLayout";
+import AdminLayout from "./components/Layout/AdminLayout";
 import { routes } from "./routers";
 
 export const history = createBrowserHistory();

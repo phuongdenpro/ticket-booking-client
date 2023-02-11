@@ -1,4 +1,20 @@
-import { Box, Button, Drawer, Grid, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Drawer,
+  FormControl,
+  Select,
+  MenuItem,
+  FormControlLabel,
+  Grid,
+  Icon,
+  Input,
+  InputLabel,
+  Radio,
+  TextField,
+  Divider,
+} from "@mui/material";
 import React, { useState } from "react";
 import {
   DataGrid,
@@ -7,12 +23,23 @@ import {
   GridToolbarFilterButton,
   GridValueGetterParams,
 } from "@mui/x-data-grid";
-import { Breadcrumb, Col, Row, Space } from "antd";
+import { Breadcrumb, Col, message, Row, Space } from "antd";
+import { isEmpty } from "lodash";
+import AddIcon from "@mui/icons-material/Add";
+import PrintIcon from "@mui/icons-material/Print";
+import SearchInput from "../../../components/InputSearch";
+import CreateStation from "./Components/CreateStation";
 
 const AdminStation = (props) => {
-  const [pageSize, setPageSize] = useState(5);
   const [loadings, setLoadings] = useState([]);
-  const [open, setOpen] = useState(false);
+  const [showDrawer, setShowDrawer] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [selected, setSelected] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [filterParams, setFilterParams] = useState(null);
+  const [formType, setFormType] = useState(null);
   const columns = [
     { field: "id", headerName: "ID", width: 50 },
     {
@@ -24,14 +51,14 @@ const AdminStation = (props) => {
     {
       field: "address",
       headerName: "Địa chỉ",
-      width: 150,
+      width: 200,
       editable: true,
     },
     {
       field: "createAt",
       headerName: "Ngày tạo",
       type: "date",
-      width: 150,
+      width: 180,
       editable: true,
     },
     {
@@ -39,28 +66,22 @@ const AdminStation = (props) => {
       headerName: "Địa chỉ cụ thể",
       description: "This column has a value getter and is not sortable.",
       sortable: false,
-      width: 150,
-    },
-    {
-      field: "fromTrips",
-      headerName: "Các điểm đi",
-      description: "This column has a value getter and is not sortable.",
-      sortable: false,
-      width: 150,
-    },
-    {
-      field: "toTrips",
-      headerName: "Các điểm đến",
-      description: "This column has a value getter and is not sortable.",
-      sortable: false,
-      width: 150,
+      width: 200,
     },
     {
       field: "images",
       headerName: "Hình ảnh",
       description: "This column has a value getter and is not sortable.",
       sortable: false,
-      width: 150,
+      width: 200,
+    },
+
+    {
+      field: "action",
+      headerName: "Thao tác",
+      description: "This column has a value getter and is not sortable.",
+      sortable: false,
+      width: 200,
     },
   ];
   const rows = [
@@ -84,12 +105,25 @@ const AdminStation = (props) => {
     { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
     { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
   ];
-  const showDrawer = () => {
-    setOpen(true);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
   };
 
-  const onClose = () => {
-    setOpen(false);
+  const handleChangeRowsPerPage = (event) => {
+    setPageSize(+event.target.value);
+    setPage(0);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+  const handleOpenModal = () => {
+    if (!isEmpty(selected)) {
+      setOpenModal(true);
+    } else {
+      message.error("warning", "Vui lòng chọn mã");
+    }
   };
 
   const enterLoading = (index) => {
@@ -107,20 +141,94 @@ const AdminStation = (props) => {
       return newLoadings;
     });
   };
+
+  const [value, setValue] = useState({
+    textfield: "",
+    select: "",
+    radio: "",
+    checkbox: false,
+  });
+
+  const handleChange = (event) => {
+    setValue({
+      ...value,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log(value);
+  };
   return (
-    <Box sx={{ height: 500, width: "100%" }}>
-      <Breadcrumb style={{ margin: "16px 0" }}>
-        <Breadcrumb.Item>Admin</Breadcrumb.Item>
-        <Breadcrumb.Item>Station</Breadcrumb.Item>
-      </Breadcrumb>
-      <Button
-        variant="contained"
-        color="primary"
-        style={{ marginBottom: 14 }}
-        onClick={showDrawer}
+    <Box sx={{ height: 520, width: "100%" }}>
+      <Grid container className={"align-items-center header_title"}>
+        <Grid item md={7}>
+          <h2 className={"txt-title"}>QUẢN LÝ BẾN XE</h2>
+        </Grid>
+        <Grid item md={5}>
+          <Box
+            style={{ display: "flex", justifyContent: "flex-end" }}
+            flexDirection={{ xs: "column", md: "row" }}
+          >
+            <Button
+              className={"btn-create"}
+              style={{ marginTop: 20, marginRight: 20 }}
+              variant="contained"
+              color="success"
+              startIcon={<PrintIcon />}
+            >
+              <span className={"txt"}>In danh sách</span>
+            </Button>
+            <Button
+              variant="contained"
+              color="warning"
+              className={"btn-create"}
+              onClick={() => setShowDrawer(true)}
+              startIcon={<AddIcon />}
+              style={{ marginTop: 20 }}
+            >
+              <span className={"txt"}>Thêm mới</span>
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
+      <Divider />
+
+      <Grid
+        container
+        className="search"
+        style={{ marginTop: 15, marginBottom: 18 }}
       >
-        Thêm mới
-      </Button>
+        <Grid item md={4}>
+          <div style={{ marginBottom: 5 }}>
+            <span className="txt-find" style={{ marginBottom: 20 }}>
+              Tìm kiếm
+            </span>
+          </div>
+
+          <SearchInput
+            className="txt-search"
+            placeholder={"Tìm kiếm theo tên, địa chỉ bến xe"}
+          />
+        </Grid>
+        <Grid item md={4}></Grid>
+        <Grid item md={4}>
+          <div
+            style={{
+              marginBottom: 5,
+              float: "right",
+              marginTop: 30,
+              marginRight: 10,
+            }}
+          >
+            <span style={{ fontSize: 20, fontWeight: "bolder" }}>
+              Tổng số: 10000
+            </span>
+          </div>
+        </Grid>
+      </Grid>
+
       <div style={{ display: "flex", height: "100%" }}>
         <div style={{ flexGrow: 1 }}>
           <DataGrid
@@ -137,38 +245,27 @@ const AdminStation = (props) => {
               "& .MuiDataGrid-cell:hover": {
                 color: "primary.main",
               },
+              position: "unset",
+              "& .MuiDataGrid-columnHeader": {
+                backgroundColor: "#FAFAFA",
+                color: "black",
+                fontWeight: "bold",
+                fontSize: 16,
+                padding: "10px 10px 10px 10px",
+              },
+
+              backgroundColor: "#FAFAFA",
+            }}
+            componentsProps={{
+              pagination: {
+                labelRowsPerPage: "Số hàng hiển thị: ",
+              },
             }}
           />
         </div>
       </div>
-
-      <Drawer
-        title="Thêm bến xe"
-        onClose={onClose}
-        anchor="right"
-        open={open}
-        bodyStyle={{ paddingBottom: 80 }}
-        sx={{
-          "& .MuiPaper-root": {
-            width: 600,
-          },
-        }}
-      >
-        <Grid container spacing={2}>
-          <Grid item xs={8}>
-            <TextField></TextField>
-          </Grid>
-          <Grid item xs={4}>
-            <TextField></TextField>
-          </Grid>
-          <Grid item xs={4}>
-            <TextField></TextField>
-          </Grid>
-          <Grid item xs={8}>
-            <TextField></TextField>
-          </Grid>
-        </Grid>
-      </Drawer>
+      <CreateStation setShowDrawer={setShowDrawer}
+      showDrawer={showDrawer} type={formType}></CreateStation>
     </Box>
   );
 };
