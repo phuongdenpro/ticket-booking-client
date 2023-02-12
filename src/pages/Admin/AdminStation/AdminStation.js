@@ -28,8 +28,7 @@ import { StationApi } from "../../../utils/apis";
 import TableCustom from "../../../components/TableCustom";
 import StationList from "./Components/StationList";
 import ModalAlert from "../../../components/Modal";
-import { messToast } from "../../../components/Toast";
-
+notification.config({ top: 150 });
 const AdminStation = (props) => {
   const [loadings, setLoadings] = useState([]);
   const [showDrawer, setShowDrawer] = useState(false);
@@ -44,7 +43,6 @@ const AdminStation = (props) => {
   const [formType, setFormType] = useState(null);
   const [data, setData] = useState([]);
 
-
   const handleGetData = async () => {
     enterLoading(0);
     const stationApi = new StationApi();
@@ -53,7 +51,6 @@ const AdminStation = (props) => {
       pageSize: pageSize,
       ...filterParams,
     });
-    console.log(response);
     setData(response);
   };
   useEffect(() => {
@@ -117,8 +114,6 @@ const AdminStation = (props) => {
     setFormType("update");
   };
 
-  console.log(searchValue);
-
   const handleSearch = (e) => {
     setFilterParams({ keywords: searchValue || undefined });
   };
@@ -138,7 +133,14 @@ const AdminStation = (props) => {
     if (!isEmpty(selected)) {
       setOpenModal(true);
     } else {
-      message.warning("Vui lòng chọn mã");
+      setTimeout(() => {
+        notification.open({
+          type: "warning",
+          duration: 2,
+          description: `Vui lòng chọn mã `,
+          message: "Error !",
+        });
+      }, 1000);
     }
   };
 
@@ -147,16 +149,11 @@ const AdminStation = (props) => {
       ids: selected,
     };
 
-    console.log(Array.isArray(selected));
-    
     try {
       const stationApi = new StationApi();
-      const response = await stationApi.deleteMultiple({ids: selected});
+      const response = await stationApi.deleteMultiple({ ids: selected });
 
-
-      console.log(response);
       if (response.status == 200) {
-        notification.config({ top: 70 });
         setTimeout(() => {
           notification.open({
             type: "success",
@@ -166,8 +163,9 @@ const AdminStation = (props) => {
           });
         }, 1000);
       }
-      handleGetData()
+      handleGetData();
       setOpenModal(false);
+      setSelected([]);
     } catch (error) {
       setTimeout(() => {
         notification.open({
@@ -215,7 +213,6 @@ const AdminStation = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(value);
   };
   return (
     <Box sx={{ height: 520, width: "100%" }}>
