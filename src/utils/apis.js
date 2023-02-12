@@ -28,10 +28,20 @@ class StationApi {
     });
     return res;
   }
-  deleteStation(params) {
-    const url = "station/id";
+  deleteStation(id,params) {
+    const url = `station/id/${id}`;
     const res = axiosClient.get(url,{
       params: {
+        ...params,
+      },
+    });
+    return res;
+  }
+
+  deleteMultiple(params){
+    const url = "station/multiple";
+    const res = axiosClient.delete(url,{
+      data: {
         ...params,
       },
     });

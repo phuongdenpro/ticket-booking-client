@@ -1,6 +1,6 @@
 import { ClockCircleOutlined, SettingOutlined } from "@ant-design/icons";
 import { AppBar, Menu, Toolbar } from "@mui/material";
-import { Avatar, Dropdown, message, Typography, notification } from "antd";
+import { Avatar, Dropdown, Typography, notification } from "antd";
 import { Header } from "antd/es/layout/layout";
 import React, { useEffect } from "react";
 import { useState } from "react";
@@ -39,6 +39,7 @@ const Topbar = (props) => {
     try {
       const response = adminApi.logout();
       navigate("/admin/login");
+      Cookies.remove("access_token");
 
       notification.config({ top: 10 });
       setTimeout(() => {
@@ -50,7 +51,14 @@ const Topbar = (props) => {
         });
       }, 1000);
     } catch (error) {
-      message.error("Có lỗi sảy ra");
+      setTimeout(() => {
+        notification.open({
+          type: "error",
+          duration: 2,
+          description: `Có lỗi xảy ra! `,
+          message: "Error !",
+        });
+      }, 1000);
     }
   };
   const items = [

@@ -9,7 +9,6 @@ import {
   Checkbox,
   Form,
   Input,
-  message,
   notification,
 } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
@@ -62,7 +61,14 @@ const Login = () => {
       }, 1000);
       
     } catch (error) {
-      message.error("Sai số điện thoại hoặc mật khẩu");
+      setTimeout(() => {
+        notification.open({
+          type: "error",
+          duration: 2,
+          description: `Đăng nhập thất bại! `,
+          message: "Error !",
+        });
+      }, 1000);
     } finally {
       stopLoading(0);
     }

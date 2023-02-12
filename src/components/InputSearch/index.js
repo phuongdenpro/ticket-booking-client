@@ -1,10 +1,10 @@
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import { InputAdornment, OutlinedInput, SxProps, Theme } from '@mui/material';
-import './index.scss'
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import { InputAdornment, OutlinedInput, SxProps, Theme } from "@mui/material";
+import "./index.scss";
 const SearchInput = (props) => {
   const {
     placeholder,
-    value ,
+    value,
     className,
     sx,
     // onChange = undefined,
@@ -20,10 +20,10 @@ const SearchInput = (props) => {
         // variant="outlined"
         placeholder={placeholder}
         value={value}
-        onChange={ev => {
+        onChange={(ev) => {
           setSearchValue(ev.target.value);
         }}
-        onKeyDown={e => {
+        onKeyDown={(e) => {
           if (e.keyCode === 13) {
             handleSearch();
             e.preventDefault();
@@ -33,7 +33,7 @@ const SearchInput = (props) => {
         endAdornment={
           <InputAdornment
             sx={{
-              cursor: 'pointer',
+              cursor: "pointer",
             }}
             position="start"
             onClick={() => {
@@ -46,7 +46,7 @@ const SearchInput = (props) => {
           </InputAdornment>
         }
         inputProps={{
-          'aria-label': 'Search',
+          "aria-label": "Search",
         }}
         size="small"
       />
