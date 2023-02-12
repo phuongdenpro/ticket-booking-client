@@ -6,8 +6,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Checkbox, TableFooter, TablePagination } from "@mui/material";
+import { Checkbox, Stack, TableFooter, TablePagination } from "@mui/material";
 import "./index.scss";
+import { GridOverlay } from "@mui/x-data-grid";
 
 const TableCustom = (props) => {
   const {
@@ -28,8 +29,6 @@ const TableCustom = (props) => {
     pageSize,
     total,
   } = props;
-
-  console.log(rows);
 
   const renderRow = (row, column, rowsIndex) => {
     let params = {
@@ -53,6 +52,16 @@ const TableCustom = (props) => {
   };
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * pageSize - rows.length) : 0;
+
+    const renderNoRowsOverlay = () => {
+      return (
+        <GridOverlay className="gird-overlay">
+          <Stack alignItems="center" justifyContent="center" spacing={2}>
+            <p>Không có dữ liệu</p>
+          </Stack>
+        </GridOverlay>
+      );
+    };
 
   return (
     <Paper sx={{ width: "100%" }}>

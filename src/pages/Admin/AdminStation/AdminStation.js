@@ -16,7 +16,7 @@ import {
   Divider,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { Breadcrumb, Col, message, Row, Space } from "antd";
+import { Breadcrumb, Col, message, notification, Row, Space } from "antd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { isEmpty } from "lodash";
 import AddIcon from "@mui/icons-material/Add";
@@ -27,6 +27,8 @@ import CreateStation from "./Components/CreateStation";
 import { StationApi } from "../../../utils/apis";
 import TableCustom from "../../../components/TableCustom";
 import StationList from "./Components/StationList";
+import ModalAlert from "../../../components/Modal";
+import { messToast } from "../../../components/Toast";
 
 const AdminStation = (props) => {
   const [loadings, setLoadings] = useState([]);
@@ -41,6 +43,7 @@ const AdminStation = (props) => {
   const [filterParams, setFilterParams] = useState(null);
   const [formType, setFormType] = useState(null);
   const [data, setData] = useState([]);
+
 
   const handleGetData = async () => {
     enterLoading(0);
@@ -69,10 +72,8 @@ const AdminStation = (props) => {
     }
   }, [selected]);
 
-  console.log(selected);
-
   useEffect(() => {
-    setFilterParams({ ...filterParams, key: searchValue });
+    setFilterParams({ ...filterParams, keywords: searchValue });
   }, [searchValue]);
 
   useEffect(() => {
@@ -116,8 +117,10 @@ const AdminStation = (props) => {
     setFormType("update");
   };
 
+  console.log(searchValue);
+
   const handleSearch = (e) => {
-    setFilterParams({ key: searchValue || undefined });
+    setFilterParams({ keywords: searchValue || undefined });
   };
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -135,40 +138,50 @@ const AdminStation = (props) => {
     if (!isEmpty(selected)) {
       setOpenModal(true);
     } else {
-      message.error("warning", "Vui lòng chọn mã");
+      message.warning("Vui lòng chọn mã");
     }
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     const params = {
       ids: selected,
     };
+
+    console.log(Array.isArray(selected));
+    
+    try {
+      const stationApi = new StationApi();
+      const response = await stationApi.deleteMultiple({ids: selected});
+
+
+      console.log(response);
+      if (response.status == 200) {
+        notification.config({ top: 70 });
+        setTimeout(() => {
+          notification.open({
+            type: "success",
+            duration: 2,
+            description: `Xóa thành công `,
+            message: "Success !",
+          });
+        }, 1000);
+      }
+      handleGetData()
+      setOpenModal(false);
+    } catch (error) {
+      setTimeout(() => {
+        notification.open({
+          type: "error",
+          duration: 2,
+          description: `Có lỗi xảy ra `,
+          message: "Error !",
+        });
+      }, 1000);
+    }
   };
   useEffect(() => {
     handleGetData();
   }, [page, pageSize, filterParams]);
-
-  const rows = [
-    { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-    { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-    { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-    { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-    { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-    { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-    { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-    { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-    { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-    { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-  ];
 
   const enterLoading = (index) => {
     setLoadings((prevLoadings) => {
@@ -230,7 +243,7 @@ const AdminStation = (props) => {
               className={"btn-create"}
               onClick={() => setShowDrawer(true)}
               startIcon={<AddIcon />}
-              style={{ marginTop: 20,marginRight: 20 }}
+              style={{ marginTop: 20, marginRight: 20 }}
             >
               <span className={"txt"}>Thêm mới</span>
             </Button>
@@ -241,6 +254,7 @@ const AdminStation = (props) => {
               className={"btn-create"}
               startIcon={<DeleteIcon />}
               style={{ marginTop: 20 }}
+              onClick={() => handleOpenModal()}
             >
               <span className={"txt"}>Xóa</span>
             </Button>
@@ -264,6 +278,9 @@ const AdminStation = (props) => {
           <SearchInput
             className="txt-search"
             placeholder={"Tìm kiếm theo tên, địa chỉ bến xe"}
+            value={searchValue}
+            setSearchValue={setSearchValue}
+            handleSearch={handleSearch}
           />
         </Grid>
         <Grid item md={4}></Grid>
@@ -277,7 +294,7 @@ const AdminStation = (props) => {
             }}
           >
             <span style={{ fontSize: 20, fontWeight: "bolder" }}>
-              Tổng số bến xe: {data?.data?.pagination?.total}
+              Tổng số bến xe: {data?.data?.pagination?.total || 0}
             </span>
           </div>
         </Grid>
@@ -304,6 +321,39 @@ const AdminStation = (props) => {
         showDrawer={showDrawer}
         type={formType}
       ></CreateStation>
+      <ModalAlert
+        open={openModal}
+        handleClose={() => handleCloseModal()}
+        handleCancel={() => handleCloseModal()}
+        handleConfirm={() => handleConfirm()}
+        title={"Xác nhận xóa"}
+        description={
+          "Thao tác sẽ không thể hoàn tác, bạn có chắc chắn muốn tiếp tục không?"
+        }
+        type={"error"}
+        icon={true}
+        renderContentModal={
+          <div className="view-input-discount">
+            <span>Mã station: </span>
+            {selectedStation?.map((sku) => {
+              return (
+                <div>
+                  <span
+                    style={{
+                      fontSize: "17px",
+                      fontWeight: "500",
+                      marginLeft: "2px",
+                    }}
+                  >
+                    {sku?.id}
+                    {","}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        }
+      />
     </Box>
   );
 };

@@ -39,6 +39,7 @@ const Topbar = (props) => {
     try {
       const response = adminApi.logout();
       navigate("/admin/login");
+Cookies.remove("access_token");
 
       notification.config({ top: 10 });
       setTimeout(() => {

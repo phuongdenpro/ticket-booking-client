@@ -1,5 +1,7 @@
-import { Button } from '@mui/material';
-import TableCustom from '../../../../components/TableCustom';
+import { Button } from "@mui/material";
+import TableCustom from "../../../../components/TableCustom";
+import moment from "moment";
+moment.locale("vi");
 
 const StationList = (props) => {
   const {
@@ -21,14 +23,14 @@ const StationList = (props) => {
       headerName: "STT",
       headerAlign: "center",
       headerClassName: "theme",
-      width: 50,
+      flex: 50,
     },
     {
       field: "name",
       headerName: "Tên bến xe",
       headerAlign: "center",
       headerClassName: "theme",
-      width: 150,
+      flex: 250,
       editable: true,
     },
     {
@@ -36,17 +38,22 @@ const StationList = (props) => {
       headerName: "Địa chỉ",
       headerAlign: "center",
       headerClassName: "theme",
-      width: 200,
+      flex: 410,
       editable: true,
     },
     {
-      field: "createAt",
+      field: "createdAt",
       headerName: "Ngày tạo",
       headerAlign: "center",
       headerClassName: "theme",
       type: "date",
-      width: 180,
+      flex: 110,
       editable: true,
+      renderCell: (params) => {
+        return (
+          <span>{moment(params.row?.createdAt).format("DD-MM-YYYY")}</span>
+        );
+      },
     },
     {
       field: "addressFull",
@@ -55,7 +62,7 @@ const StationList = (props) => {
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
-      width: 200,
+      flex: 300,
     },
     {
       field: "images",
@@ -64,7 +71,7 @@ const StationList = (props) => {
       headerClassName: "theme",
       description: "This column has a value getter and is not sortable.",
       sortable: false,
-      width: 200,
+      flex: 80,
       renderCell: (params) => {
         return (
           <img
@@ -87,7 +94,7 @@ const StationList = (props) => {
     {
       field: "action",
       headerName: "Thao tác",
-      flex: 70,
+      flex: 85,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
