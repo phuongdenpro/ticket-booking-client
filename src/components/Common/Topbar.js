@@ -56,7 +56,7 @@ const Topbar = (props) => {
           type: "error",
           duration: 2,
           description: `Có lỗi xảy ra! `,
-          message: "Login fail !",
+          message: "Error !",
         });
       }, 1000);
     }

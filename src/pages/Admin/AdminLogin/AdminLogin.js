@@ -65,8 +65,8 @@ const Login = () => {
         notification.open({
           type: "error",
           duration: 2,
-          description: `Có lỗi xảy ra! `,
-          message: "Login fail !",
+          description: `Đăng nhập thất bại! `,
+          message: "Error !",
         });
       }, 1000);
     } finally {
