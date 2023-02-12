@@ -21,6 +21,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { isEmpty } from "lodash";
 import AddIcon from "@mui/icons-material/Add";
 import PrintIcon from "@mui/icons-material/Print";
+import DeleteIcon from "@mui/icons-material/Delete";
 import SearchInput from "../../../components/InputSearch";
 import CreateStation from "./Components/CreateStation";
 import { StationApi } from "../../../utils/apis";
@@ -82,7 +83,7 @@ const AdminStation = (props) => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = data.map((n) => n.id);
+      const newSelected = data?.data?.data?.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -229,9 +230,19 @@ const AdminStation = (props) => {
               className={"btn-create"}
               onClick={() => setShowDrawer(true)}
               startIcon={<AddIcon />}
-              style={{ marginTop: 20 }}
+              style={{ marginTop: 20,marginRight: 20 }}
             >
               <span className={"txt"}>Thêm mới</span>
+            </Button>
+
+            <Button
+              variant="contained"
+              color="error"
+              className={"btn-create"}
+              startIcon={<DeleteIcon />}
+              style={{ marginTop: 20 }}
+            >
+              <span className={"txt"}>Xóa</span>
             </Button>
           </Box>
         </Grid>
@@ -266,7 +277,7 @@ const AdminStation = (props) => {
             }}
           >
             <span style={{ fontSize: 20, fontWeight: "bolder" }}>
-              Tổng số: 10000
+              Tổng số bến xe: {data?.data?.pagination?.total}
             </span>
           </div>
         </Grid>

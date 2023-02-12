@@ -15,12 +15,10 @@ const StationList = (props) => {
     pageSize,
   } = props;
 
-  console.log(data);
-
   const columns = [
     {
-      field: "id",
-      headerName: "ID",
+      field: "stt",
+      headerName: "STT",
       headerAlign: "center",
       headerClassName: "theme",
       width: 50,
