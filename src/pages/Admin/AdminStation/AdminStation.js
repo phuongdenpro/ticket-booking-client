@@ -24,13 +24,14 @@ import PrintIcon from "@mui/icons-material/Print";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchInput from "../../../components/InputSearch";
 import CreateStation from "./Components/CreateStation";
-import { StationApi } from "../../../utils/apis";
+import { StationApi } from "../../../utils/stationApi";
 import TableCustom from "../../../components/TableCustom";
 import StationList from "./Components/StationList";
 import ModalAlert from "../../../components/Modal";
+import { messageToast } from "../../../components/Toast";
 
-notification.config({ top: 150 });
 const AdminStation = (props) => {
+  const toast = messageToast();
   const [loadings, setLoadings] = useState([]);
   const [showDrawer, setShowDrawer] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -134,14 +135,7 @@ const AdminStation = (props) => {
     if (!isEmpty(selected)) {
       setOpenModal(true);
     } else {
-      setTimeout(() => {
-        notification.open({
-          type: "warning",
-          duration: 2,
-          description: `Vui lòng chọn mã `,
-          message: "Error !",
-        });
-      }, 1000);
+      toast('warning', 'Vui lòng chọn mã');
     }
   };
 
@@ -155,27 +149,14 @@ const AdminStation = (props) => {
       const response = await stationApi.deleteMultiple({ ids: selected });
 
       if (response.status == 200) {
-        setTimeout(() => {
-          notification.open({
-            type: "success",
-            duration: 2,
-            description: `Xóa thành công `,
-            message: "Success !",
-          });
-        }, 1000);
+        toast('success', 'Xóa thành công');
       }
       handleGetData();
       setOpenModal(false);
       setSelected([]);
     } catch (error) {
-      setTimeout(() => {
-        notification.open({
-          type: "error",
-          duration: 2,
-          description: `Có lỗi xảy ra `,
-          message: "Error !",
-        });
-      }, 1000);
+      toast('error', 'Có lỗi xảy ra');
+      
     }
   };
   useEffect(() => {

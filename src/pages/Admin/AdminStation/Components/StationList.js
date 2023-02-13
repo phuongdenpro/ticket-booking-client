@@ -56,15 +56,6 @@ const StationList = (props) => {
       },
     },
     {
-      field: "addressFull",
-      headerName: "Địa chỉ cụ thể",
-      description: "This column has a value getter and is not sortable.",
-      headerAlign: "center",
-      headerClassName: "theme",
-      sortable: false,
-      flex: 300,
-    },
-    {
       field: "images",
       headerName: "Hình ảnh",
       headerAlign: "center",
@@ -100,7 +91,7 @@ const StationList = (props) => {
       sortable: false,
       renderCell: (params) => {
         return (
-          <Button style={{ backgroundColor: "transparent" }}>
+          <Button onClick={() => handleShowDetail(params.id)} style={{ backgroundColor: "transparent" }}>
             <span
               style={{
                 textDecorationLine: "underline",
