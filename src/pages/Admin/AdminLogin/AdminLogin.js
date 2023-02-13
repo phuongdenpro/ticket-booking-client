@@ -14,11 +14,13 @@ import {
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import logo from "../../../assets/logo.png";
 import imgLogin from "../../../assets/imgLogin.png";
-import { AdminApi } from "../../../utils/apis";
+import { AdminApi } from "../../../utils/adminApi";
 import "./AdminLogin.scss";
 import Cookies from "js-cookie";
+import { messageToast } from "../../../components/Toast";
 
 const Login = () => {
+  const toast = messageToast();
   const emailRef = useRef();
   const passwordRef = useRef();
   const navigate = useNavigate();
@@ -51,24 +53,11 @@ const Login = () => {
       navigate("/admin");
 
       notification.config({ top: 70 });
-      setTimeout(() => {
-        notification.open({
-          type: "success",
-          duration: 2,
-          description: `Xin chào Admin `,
-          message: "Login success !",
-        });
-      }, 1000);
+      toast("success","Đăng nhập thành công");
+
       
     } catch (error) {
-      setTimeout(() => {
-        notification.open({
-          type: "error",
-          duration: 2,
-          description: `Đăng nhập thất bại! `,
-          message: "Error !",
-        });
-      }, 1000);
+      toast("error","Đăng nhập thất bại");
     } finally {
       stopLoading(0);
     }

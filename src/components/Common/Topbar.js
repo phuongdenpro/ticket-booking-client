@@ -7,11 +7,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import colorConfigs from "../../config/colorConfigs";
 import sizeConfigs from "../../config/sizeConfigs";
-import { AdminApi } from "../../utils/apis";
+import { AdminApi } from "../../utils/adminApi";
 import Cookies from "js-cookie";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { messageToast } from "../Toast";
 
 const Topbar = (props) => {
+  const toast = messageToast();
   const navigate = useNavigate();
   const [time, setTime] = useState();
   useEffect(() => {
@@ -40,25 +42,10 @@ const Topbar = (props) => {
       const response = adminApi.logout();
       navigate("/admin/login");
       Cookies.remove("access_token");
+      toast("success", "Đăng xuất thành công");
 
-      notification.config({ top: 10 });
-      setTimeout(() => {
-        notification.open({
-          type: "success",
-          duration: 2,
-          description: `Tạm biệt quý khách`,
-          message: "Logout success !",
-        });
-      }, 1000);
     } catch (error) {
-      setTimeout(() => {
-        notification.open({
-          type: "error",
-          duration: 2,
-          description: `Có lỗi xảy ra! `,
-          message: "Error !",
-        });
-      }, 1000);
+      toast("error", "Có lỗi xảy ra");
     }
   };
   const items = [
