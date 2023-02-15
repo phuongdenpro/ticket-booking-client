@@ -97,7 +97,8 @@ const Sidebar = (props) => {
         items={items}
         onSelect={onSelect}
         onClick={onClick}
-        style={{minHeight:'100vh'}}
+        style={{minHeight:'100vh', width:'100%'}}
+        
       />
     </div>
   );

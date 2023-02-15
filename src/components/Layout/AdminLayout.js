@@ -1,5 +1,8 @@
 import { Box, Toolbar } from "@mui/material";
-import React from "react";
+import { Layout } from "antd";
+import Sider from "antd/es/layout/Sider";
+import { right } from "glamor";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import { Outlet } from "react-router-dom";
 import colorConfigs from "../../config/colorConfigs";
 import sizeConfigs from "../../config/sizeConfigs";
@@ -7,29 +10,39 @@ import Sidebar from "../Common/Sidebar";
 import Topbar from "../Common/Topbar";
 
 const AdminLayout = () => {
+  const ref = useRef(null);
+  const [collapsed, setCollapsed] = useState(false);
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);
   return (
     <Box sx={{ display: "flex" }}>
-      <Topbar />
-      <Box
-        component="nav"
-        sx={{
-          width: sizeConfigs.sidebar.width,
-          flexShrink: 0,
-          minHeight: "100vh",
+      <Topbar collapsed={collapsed} setCollapsed={setCollapsed} width={width} height={height}/>
+      <Sider
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+        width={250}
+        style={{
+          height: "100vh",
+          overflow: "auto",
+          position:"fixed",
+          top: 0,
+          bottom:0,
         }}
       >
-        <Sidebar />
-      </Box>
+        <Sidebar collapsed={collapsed} />
+      </Sider>
 
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
-          width: `calc(100% - ${sizeConfigs.sidebar.width})`,
+          p: 2,
+          width: collapsed ? `calc(100% - 80px)` : `calc(100% - 250px)`,
           minHeight: "100vh",
-          backgroundColor: colorConfigs.mainBg,
         }}
+        style={{marginLeft: collapsed? 80 : 250}}
+
       >
         <Toolbar></Toolbar>
         <Outlet></Outlet>

@@ -1,5 +1,10 @@
-import { ClockCircleOutlined, SettingOutlined } from "@ant-design/icons";
-import { AppBar, Menu, Toolbar } from "@mui/material";
+import {
+  ClockCircleOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
+import { AppBar, Button, Menu, Toolbar } from "@mui/material";
 import { Avatar, Dropdown, Typography, notification } from "antd";
 import { Header } from "antd/es/layout/layout";
 import React, { useEffect } from "react";
@@ -10,7 +15,8 @@ import sizeConfigs from "../../config/sizeConfigs";
 import { AdminApi } from "../../utils/adminApi";
 import Cookies from "js-cookie";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import customToast from "../CustomToast";
+import customToast from "../ToastCustom";
+import ArticleIcon from "@mui/icons-material/Article";
 
 const Topbar = (props) => {
   const navigate = useNavigate();
@@ -42,7 +48,6 @@ const Topbar = (props) => {
       navigate("/admin/login");
       Cookies.remove("access_token");
       customToast.success("Đăng xuất thành công");
-
     } catch (error) {
       customToast.error("Có lỗi xảy ra");
     }
@@ -73,12 +78,12 @@ const Topbar = (props) => {
     <AppBar
       position="fixed"
       sx={{
-        width: `calc(100% - ${sizeConfigs.sidebar.width})`,
+        width: props.collapsed ? `calc(100% - 80px)` : `calc(100% - 250px)`,
         ml: sizeConfigs.sidebar.width,
         backgroundColor: colorConfigs.topbar.bg,
         color: colorConfigs.topbar.color,
         marginLeft: 0,
-        zIndex: 1,
+        zIndex: 3,
       }}
     >
       <Toolbar
@@ -86,44 +91,66 @@ const Topbar = (props) => {
           top: 3,
           right: 20,
           padding: 15,
-          justifyContent: "flex-end",
+          justifyContent: "space-between",
         }}
       >
-        <a
-          href="/admin"
-          className="home-title"
-          style={{ textDecoration: "none", color: "#000" }}
-        >
-          Admin
-        </a>
-        <ChevronRightIcon
-          className="icon-right-header"
-          style={{ marginRight: 870 }}
-        />
-        <ClockCircleOutlined style={{ marginRight: 7 }} />
-        <Typography style={{ fontWeight: "600", marginRight: 30, width: 200 }}>
-          {" "}
-          {time}
-        </Typography>
-        <Typography
-          style={{ fontWeight: "500", color: "#333", marginLeft: 20 }}
-        >
-          Xin chào, Phương
-        </Typography>
-        <Dropdown menu={{ items }}>
-          <Avatar
-            style={{
-              color: "#f56a00",
-              backgroundColor: "#fde3cf",
-              width: "35px",
-              height: "35px",
-              marginLeft: "10px",
+        <div tyle={{ display: "flex", flexDirection: "row" }}>
+          <Button
+            color="info"
+            variant="text"
+            onClick={() => {
+              props.setCollapsed(!props.collapsed);
             }}
-            onClick={(e) => e.preventDefault()}
           >
-            P
-          </Avatar>
-        </Dropdown>
+            {" "}
+            {props.collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          </Button>
+          <span>
+            <a
+              href="/admin"
+              className="home-title"
+              style={{ textDecoration: "none", color: "#000" }}
+            >
+              Admin
+            </a>
+          </span>
+          
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <ClockCircleOutlined style={{ marginRight: 7 }} />
+          <Typography
+            style={{ fontWeight: "600", marginRight: 30, width: 200 }}
+          >
+            {" "}
+            {time}
+          </Typography>
+          <Typography
+            style={{ fontWeight: "500", color: "#333", marginLeft: 20 }}
+          >
+            Xin chào, Phương
+          </Typography>
+          <Dropdown menu={{ items }}>
+            <Avatar
+              style={{
+                color: "#f56a00",
+                backgroundColor: "#fde3cf",
+                width: "35px",
+                height: "35px",
+                marginLeft: "10px",
+              }}
+              onClick={(e) => e.preventDefault()}
+            >
+              P
+            </Avatar>
+          </Dropdown>
+        </div>
       </Toolbar>
     </AppBar>
   );
