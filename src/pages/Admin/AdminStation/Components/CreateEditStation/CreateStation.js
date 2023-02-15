@@ -26,7 +26,6 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import customToast from "../../../../../components/ToastCustom";
 const CreateStation = (props) => {
   const { setShowDrawer, showDrawer, dataStation } = props;
-  console.log(dataStation);
   const [images, setImages] = useState();
   const [urlImage, setUrlImage] = useState();
   const [optionsProvince, setOptionsProvince] = useState([]);

@@ -41,5 +41,16 @@ class StationApi {
     });
     return res;
   }
+
+  exportExcel(params) {
+    const url = "station/export";
+    const res = axiosClient.post(url, {
+      data: {
+        ...params,
+      },
+    });
+    return res;
+  }
+
 }
 export { StationApi };
