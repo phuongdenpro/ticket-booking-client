@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import FormControlCustom from "../../../../../components/FormControl";
 import InputField from "../../../../../components/InputField";
-import { messageToast } from "../../../../../components/Toast";
+import { messageToast } from "../../../../../components/CustomToast";
 import SelectCustom from "../../../../../components/SelectCustom";
 import { ProvinceApi } from "../../../../../utils/provinceApi";
 import "./index.scss";
@@ -24,8 +24,8 @@ import { WardApi } from "../../../../../utils/wardApi";
 import UploadImage from "../../../../../components/UploadImage";
 import { isEmpty } from "lodash";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import customToast from "../../../../../components/CustomToast";
 const CreateStation = (props) => {
-  const toast = messageToast();
   const { setShowDrawer, showDrawer, type, dataStation } = props;
   console.log(dataStation);
   const [images, setImages] = useState();
@@ -49,7 +49,7 @@ const CreateStation = (props) => {
 
       setOptionsProvince(options);
     } catch (error) {
-      toast("error", "Có lỗi xảy ra");
+      customToast.error("Có lỗi xảy ra");
     }
   };
 
@@ -134,7 +134,6 @@ const CreateStation = (props) => {
     resolver: yupResolver(schema),
   });
 
-
   const { handleSubmit, reset, formState, setValue } = methods;
   const { errors } = formState;
   const toggleDrawer = (open) => (event) => {
@@ -192,7 +191,7 @@ const CreateStation = (props) => {
   };
   useEffect(() => {
     reset();
-  }, [showDrawer,type]);
+  }, [showDrawer, type]);
   console.log(type);
 
   useEffect(() => {
@@ -201,7 +200,6 @@ const CreateStation = (props) => {
 
   const getTitle = (type) => {
     if (type === "update") {
-
       return "Cập nhật";
     } else {
       return "Tạo mới";

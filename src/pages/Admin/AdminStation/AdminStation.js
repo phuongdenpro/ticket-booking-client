@@ -28,10 +28,9 @@ import { StationApi } from "../../../utils/stationApi";
 import TableCustom from "../../../components/TableCustom";
 import StationList from "./Components/StationList";
 import ModalAlert from "../../../components/Modal";
-import { messageToast } from "../../../components/Toast";
+import customToast from "../../../components/CustomToast";
 
 const AdminStation = (props) => {
-  const toast = messageToast();
   const [loadings, setLoadings] = useState([]);
   const [showDrawer, setShowDrawer] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -146,7 +145,7 @@ const AdminStation = (props) => {
     if (!isEmpty(selected)) {
       setOpenModal(true);
     } else {
-      toast("warning", "Vui lòng chọn mã");
+      customToast.warning("Vui lòng chọn mã");
     }
   };
 
@@ -160,13 +159,13 @@ const AdminStation = (props) => {
       const response = await stationApi.deleteMultiple({ ids: selected });
 
       if (response.status == 200) {
-        toast("success", "Xóa thành công");
+        customToast.success( "Xóa thành công");
       }
       handleGetData();
       setOpenModal(false);
       setSelected([]);
     } catch (error) {
-      toast("error", "Có lỗi xảy ra");
+      customToast.error("Có lỗi xảy ra");
     }
   };
   useEffect(() => {

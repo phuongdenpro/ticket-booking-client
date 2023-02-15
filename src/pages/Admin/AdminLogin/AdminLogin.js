@@ -17,10 +17,9 @@ import imgLogin from "../../../assets/imgLogin.png";
 import { AdminApi } from "../../../utils/adminApi";
 import "./AdminLogin.scss";
 import Cookies from "js-cookie";
-import { messageToast } from "../../../components/Toast";
+import customToast from "../../../components/CustomToast";
 
 const Login = () => {
-  const toast = messageToast();
   const emailRef = useRef();
   const passwordRef = useRef();
   const navigate = useNavigate();
@@ -53,11 +52,11 @@ const Login = () => {
       navigate("/admin");
 
       notification.config({ top: 70 });
-      toast("success","Đăng nhập thành công");
+      customToast.success("Đăng nhập thành công");
 
       
     } catch (error) {
-      toast("error","Đăng nhập thất bại");
+      customToast.error("Đăng nhập thất bại");
     } finally {
       stopLoading(0);
     }
