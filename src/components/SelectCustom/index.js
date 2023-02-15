@@ -39,10 +39,15 @@ const SelectCustom = (props) => {
           }}
           onChange={(event, newValue) => {
             if (onChange) {
-              return onChange(event, newValue);
+              console.log('vào');
+              return onChange(newValue);
             }
             return onChangeDefault(newValue);
           }}
+          onInputChange={(event, newValue) => {
+            return onChangeDefault(newValue);
+          }}
+
           defaultValue={defaultValue}
           freeSolo={freeSolo}
           style={style}
@@ -52,7 +57,7 @@ const SelectCustom = (props) => {
               placeholder={placeholder}
               error={error}
               helperText={helperText}
-              value={value}
+              value={value?.value}
               {...params}
             />
           )}

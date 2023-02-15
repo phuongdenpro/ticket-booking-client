@@ -2,11 +2,12 @@ import React, { useMemo } from "react";
 import * as yup from "yup";
 import { LoadingButton } from "@mui/lab";
 import { useEffect, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Autocomplete,
+  Button,
   Drawer,
   FormControl,
   Grid,
@@ -14,16 +15,19 @@ import {
 } from "@mui/material";
 import FormControlCustom from "../../../../../components/FormControl";
 import InputField from "../../../../../components/InputField";
-import { messageToast } from "../../../../../components/Toast";
+import { messageToast } from "../../../../../components/CustomToast";
 import SelectCustom from "../../../../../components/SelectCustom";
 import { ProvinceApi } from "../../../../../utils/provinceApi";
 import "./index.scss";
 import { DistrictApi } from "../../../../../utils/districtApi";
 import { WardApi } from "../../../../../utils/wardApi";
 import UploadImage from "../../../../../components/UploadImage";
+import { isEmpty } from "lodash";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import customToast from "../../../../../components/CustomToast";
 const CreateStation = (props) => {
-  const toast = messageToast();
   const { setShowDrawer, showDrawer, type, dataStation } = props;
+  console.log(dataStation);
   const [images, setImages] = useState();
   const [urlImage, setUrlImage] = useState();
   const [optionsProvince, setOptionsProvince] = useState([]);
@@ -45,18 +49,16 @@ const CreateStation = (props) => {
 
       setOptionsProvince(options);
     } catch (error) {
-      toast("error", "Có lỗi xảy ra");
+      customToast.error("Có lỗi xảy ra");
     }
   };
 
   const getDataDistrict = async () => {
     try {
-      console.log(selectedProvince.value);
       const districtApi = new DistrictApi();
       const res = await districtApi.getDistrictByProvinceId(
         selectedProvince.value
       );
-      console.log(res);
       const options = [];
       res.data.data.map((item) =>
         options.push({ label: item.name, value: item.code })
@@ -67,7 +69,6 @@ const CreateStation = (props) => {
 
   const getDataWard = async () => {
     try {
-      console.log(selectedDistrict.value);
       const wardApi = new WardApi();
       const res = await wardApi.getWardByDistrictId(selectedDistrict.value);
       console.log(res);
@@ -81,7 +82,7 @@ const CreateStation = (props) => {
 
   const defaultValues = useMemo(
     () => ({
-      name: dataStation?.sku || "",
+      name: dataStation?.name || "",
       address: dataStation?.address || "",
       wardId: dataStation?.wardId || "",
       images: "" || null,
@@ -90,10 +91,17 @@ const CreateStation = (props) => {
   );
 
   const schema = yup.object().shape({
-    name: yup.string().required("Mã SKU không được phép bỏ trống"),
-    address: yup.string().required("Tên sản phẩm không được phép bỏ trống"),
-    type: yup.string().required("Loại sản phẩm không được phép bỏ trống"),
-    brand: yup.string().required("Thương hiệu không đươc phép bỏ trống"),
+    name: yup.string().required("Tên bến xe không được phép bỏ trống"),
+    address: yup.string().required("Địa chỉ không được phép bỏ trống"),
+
+    wardId: yup
+      .object()
+      .typeError("Phường/thị xã không được bỏ trống")
+      .required("Phường/thị xã không được bỏ trống"),
+    provinceId: yup
+      .string()
+      .required("Tỉnh/thành phố xã không được phép bỏ trống"),
+    districtId: yup.string().required("Quận/huyện không được phép bỏ trống"),
   });
 
   useEffect(() => {
@@ -114,8 +122,9 @@ const CreateStation = (props) => {
   }, [selectedProvince]);
 
   useEffect(() => {
-    if (!selectedDistrict) setOptionsWard([]);
-    else {
+    if (!selectedDistrict) {
+      setOptionsWard([]);
+    } else {
       getDataWard();
     }
   }, [selectedDistrict]);
@@ -169,12 +178,25 @@ const CreateStation = (props) => {
     await readFileAsync();
   };
 
-  const onSubmit = (value = defaultValues) => {};
+  const onSubmit = (value = defaultValues) => {
+    console.log(value);
+    if (type === "update") {
+    } else {
+    }
+  };
 
   const goBack = () => {
     setShowDrawer(false);
     reset();
   };
+  useEffect(() => {
+    reset();
+  }, [showDrawer, type]);
+  console.log(type);
+
+  useEffect(() => {
+    reset();
+  }, [props.type]);
 
   const getTitle = (type) => {
     if (type === "update") {
@@ -187,7 +209,7 @@ const CreateStation = (props) => {
   return (
     <Drawer
       PaperProps={{
-        sx: { width: "40%" },
+        sx: { width: "45%" },
       }}
       anchor={"right"}
       open={showDrawer}
@@ -198,18 +220,35 @@ const CreateStation = (props) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="title-drawer">
             <div className="btn-close" onClick={goBack}>
-              <ArrowBackIosIcon className="icon-back" />
-
-              <span>{getTitle(type)}</span>
+              <ArrowBackIosIcon
+                className="icon-back"
+                style={{ marginTop: 10 }}
+              />
+              <span style={{ fontSize: 30, fontWeight: "bolder" }}>
+                {getTitle(type)}
+              </span>
             </div>
           </div>
-          <div className="content-drawer">
-            <div className="title-group">
-              <span>{getTitle(type)} bến xe</span>
+          <div className="content-drawer" style={{ marginTop: 30 }}>
+            <div
+              className="title-group"
+              style={{ alignItems: "center", justifyContent: "center" }}
+            >
+              <span
+                style={{
+                  fontSize: 25,
+                  marginTop: 20,
+                  marginLeft: 280,
+                  fontWeight: "bold",
+                  textTransform: "uppercase",
+                }}
+              >
+                {getTitle(type)} bến xe
+              </span>
             </div>
-            <div className="content">
-              <Grid container spacing={2}>
-                <Grid item xs={9}>
+            <div className="content" style={{ marginLeft: 40 }}>
+              <Grid container spacing={2} style={{ marginTop: 10 }}>
+                <Grid item xs={11.25}>
                   <FormControlCustom label={"Tên bến xe"} fullWidth>
                     <InputField
                       name={"name"}
@@ -219,52 +258,45 @@ const CreateStation = (props) => {
                     />
                   </FormControlCustom>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={3.8}>
                   <FormControlCustom label={"Chọn địa chỉ"} fullWidth>
-                    <Autocomplete
-                      noOptionsText={"Không có dữ liệu"}
-                      disablePortal
-                      id="combo-box-demo"
-                      className={"select-custom"}
+                    <SelectCustom
+                      name={"provinceId"}
+                      placeholder={"Chọn tỉnh/thành phố"}
+                      error={Boolean(errors?.provinceId)}
+                      helperText={errors?.provinceId?.message}
+                      onChange={setSelectedProvince}
                       options={optionsProvince}
-                      onChange={(event, value) => setSelectedProvince(value)}
-                      renderInput={(params) => (
-                        <TextField {...params} placeholder={"Chọn tỉnh/thành phố"} />
-                      )}
+                      optionLabelKey={"label"}
                     />
                   </FormControlCustom>
                 </Grid>
-                <Grid item xs={4} style={{ marginTop: 20 }}>
+                <Grid item xs={4} style={{ marginTop: 23 }}>
                   <FormControlCustom label={""} fullWidth>
-                    <Autocomplete
-                      noOptionsText={"Không có dữ liệu"}
-                      disablePortal
-                      id="combo-box-demo"
-                      className={"select-custom"}
+                    <SelectCustom
+                      name={"districtId"}
+                      placeholder={"Chọn quận/huyện"}
+                      error={Boolean(errors?.districtId)}
+                      helperText={errors?.districtId?.message}
+                      onChange={setSelectedDistrict}
                       options={optionsDistrict}
-                      onChange={(event, value) => setSelectedDistrict(value)}
-                      renderInput={(params) => (
-                        <TextField {...params} placeholder={"Chọn quận/huyện"} />
-                      )}
+                      optionLabelKey={"label"}
                     />
                   </FormControlCustom>
                 </Grid>
-                <Grid item xs={4} style={{ marginTop: 20 }}>
+                <Grid item xs={3.5} style={{ marginTop: 23 }}>
                   <FormControlCustom label={""} fullWidth>
-                    <Autocomplete
-                      noOptionsText={"Không có dữ liệu"}
-                      disablePortal
-                      id="combo-box-demo"
-                      className={"select-custom"}
+                    <SelectCustom
+                      name={"wardId"}
+                      placeholder={"Chọn phường/thị xã"}
+                      error={Boolean(errors?.wardId)}
+                      helperText={errors?.wardId?.message}
                       options={optionsWard}
-                      onChange={(event, value) => setSelectedWard(value)}
-                      renderInput={(params) => (
-                        <TextField {...params} placeholder={"Chọn phường/thị xã"} />
-                      )}
+                      optionLabelKey={"label"}
                     />
                   </FormControlCustom>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={11.25}>
                   <FormControlCustom label={"Địa chỉ chi tiết"} fullWidth>
                     <InputField
                       name={"address"}
@@ -276,7 +308,10 @@ const CreateStation = (props) => {
                 </Grid>
               </Grid>
             </div>
-            <div className="title-group">
+            <div
+              className="title-group"
+              style={{ marginLeft: 40, marginTop: 10 }}
+            >
               <span>Hình ảnh bến xe</span>
             </div>
             <div className="view-image">
@@ -286,6 +321,43 @@ const CreateStation = (props) => {
             </div>
 
             <div className="content"></div>
+          </div>
+
+          <div className="footer-drawer">
+            <Grid
+              container
+              spacing={3}
+              justifyContent="space-between"
+              alignItems="center"
+              style={{ marginTop: 20 }}
+            >
+              <Grid item xs={6} display="flex" justifyContent="end">
+                <Button
+                  className="btn-secondary-disable"
+                  onClick={goBack}
+                  variant="outlined"
+                  style={{ width: "80%" }}
+                >
+                  Quay lại
+                </Button>
+              </Grid>
+              <Grid item xs={6} display="flex" justifyContent="end">
+                <LoadingButton
+                  className={
+                    !isEmpty(errors)
+                      ? "btn-primary-disable"
+                      : "btn-tertiary-normal"
+                  }
+                  // onClick={onSubmit}
+                  type="submit"
+                  color="primary"
+                  variant="contained"
+                  style={{ width: "80%", marginRight: 50 }}
+                >
+                  {"Xác nhận"}
+                </LoadingButton>
+              </Grid>
+            </Grid>
           </div>
         </form>
       </FormProvider>

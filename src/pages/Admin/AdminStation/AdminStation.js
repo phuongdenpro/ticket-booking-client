@@ -28,14 +28,14 @@ import { StationApi } from "../../../utils/stationApi";
 import TableCustom from "../../../components/TableCustom";
 import StationList from "./Components/StationList";
 import ModalAlert from "../../../components/Modal";
-import { messageToast } from "../../../components/Toast";
+import customToast from "../../../components/CustomToast";
 
 const AdminStation = (props) => {
-  const toast = messageToast();
   const [loadings, setLoadings] = useState([]);
   const [showDrawer, setShowDrawer] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [idStation, setIdStation] = useState(null);
+  const [detailStation, setDetailStation] = useState("");
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [selectedStation, setSelectedStation] = useState([]);
@@ -55,6 +55,16 @@ const AdminStation = (props) => {
     });
     setData(response);
   };
+  const getDetailStation = async (id) => {
+    if (!id) return;
+    const stationApi = new StationApi();
+    const response = await stationApi.getStationById(id);
+    setDetailStation(response.data.data);
+  };
+  useEffect(() => {
+    getDetailStation(idStation);
+  }, [idStation]);
+
   useEffect(() => {
     const tmpSelected = [];
     if (!isEmpty(selected)) {
@@ -135,7 +145,7 @@ const AdminStation = (props) => {
     if (!isEmpty(selected)) {
       setOpenModal(true);
     } else {
-      toast('warning', 'Vui lòng chọn mã');
+      customToast.warning("Vui lòng chọn mã");
     }
   };
 
@@ -149,14 +159,13 @@ const AdminStation = (props) => {
       const response = await stationApi.deleteMultiple({ ids: selected });
 
       if (response.status == 200) {
-        toast('success', 'Xóa thành công');
+        customToast.success( "Xóa thành công");
       }
       handleGetData();
       setOpenModal(false);
       setSelected([]);
     } catch (error) {
-      toast('error', 'Có lỗi xảy ra');
-      
+      customToast.error("Có lỗi xảy ra");
     }
   };
   useEffect(() => {
@@ -220,7 +229,10 @@ const AdminStation = (props) => {
               variant="contained"
               color="warning"
               className={"btn-create"}
-              onClick={() => setShowDrawer(true)}
+              onClick={() => {
+                setShowDrawer(true);
+                setFormType("create");
+              }}
               startIcon={<AddIcon />}
               style={{ marginTop: 20, marginRight: 20 }}
             >
@@ -298,6 +310,7 @@ const AdminStation = (props) => {
       <CreateStation
         setShowDrawer={setShowDrawer}
         showDrawer={showDrawer}
+        dataStation={detailStation}
         type={formType}
       ></CreateStation>
       <ModalAlert

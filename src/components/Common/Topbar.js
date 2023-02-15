@@ -10,10 +10,9 @@ import sizeConfigs from "../../config/sizeConfigs";
 import { AdminApi } from "../../utils/adminApi";
 import Cookies from "js-cookie";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { messageToast } from "../Toast";
+import customToast from "../CustomToast";
 
 const Topbar = (props) => {
-  const toast = messageToast();
   const navigate = useNavigate();
   const [time, setTime] = useState();
   useEffect(() => {
@@ -42,10 +41,10 @@ const Topbar = (props) => {
       const response = adminApi.logout();
       navigate("/admin/login");
       Cookies.remove("access_token");
-      toast("success", "Đăng xuất thành công");
+      customToast.success("Đăng xuất thành công");
 
     } catch (error) {
-      toast("error", "Có lỗi xảy ra");
+      customToast.error("Có lỗi xảy ra");
     }
   };
   const items = [
