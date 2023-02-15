@@ -23,16 +23,18 @@ import AddIcon from "@mui/icons-material/Add";
 import PrintIcon from "@mui/icons-material/Print";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchInput from "../../../components/InputSearch";
-import CreateStation from "./Components/CreateStation";
+import CreateStation from "./Components/CreateEditStation/CreateStation";
 import { StationApi } from "../../../utils/stationApi";
 import TableCustom from "../../../components/TableCustom";
 import StationList from "./Components/StationList";
 import ModalAlert from "../../../components/Modal";
-import customToast from "../../../components/CustomToast";
+import customToast from "../../../components/ToastCustom";
+import EditStation from "./Components/CreateEditStation/EditStation";
 
 const AdminStation = (props) => {
   const [loadings, setLoadings] = useState([]);
-  const [showDrawer, setShowDrawer] = useState(false);
+  const [showDrawerEdit, setShowDrawerEdit] = useState(false);
+  const [showDrawerCreate, setShowDrawerCreate] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [idStation, setIdStation] = useState(null);
   const [detailStation, setDetailStation] = useState("");
@@ -42,7 +44,6 @@ const AdminStation = (props) => {
   const [selected, setSelected] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [filterParams, setFilterParams] = useState(null);
-  const [formType, setFormType] = useState(null);
   const [data, setData] = useState([]);
 
   const handleGetData = async () => {
@@ -86,10 +87,10 @@ const AdminStation = (props) => {
   }, [searchValue]);
 
   useEffect(() => {
-    if (!showDrawer) {
+    if (!showDrawerEdit) {
       setIdStation("");
     }
-  }, [showDrawer]);
+  }, [showDrawerEdit]);
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -121,9 +122,8 @@ const AdminStation = (props) => {
   };
 
   const handelShowDetail = (id) => {
-    setShowDrawer(true);
+    setShowDrawerEdit(true);
     setIdStation(id);
-    setFormType("update");
   };
 
   const handleSearch = (e) => {
@@ -206,7 +206,7 @@ const AdminStation = (props) => {
     event.preventDefault();
   };
   return (
-    <Box sx={{ height: 520, width: "100%" }}>
+    <Box sx={{ height: 800, width: "100%" }}>
       <Grid container className={"align-items-center header_title"}>
         <Grid item md={7}>
           <h2 className={"txt-title"}>QUẢN LÝ BẾN XE</h2>
@@ -230,8 +230,7 @@ const AdminStation = (props) => {
               color="warning"
               className={"btn-create"}
               onClick={() => {
-                setShowDrawer(true);
-                setFormType("create");
+                setShowDrawerCreate(true);
               }}
               startIcon={<AddIcon />}
               style={{ marginTop: 20, marginRight: 20 }}
@@ -308,11 +307,15 @@ const AdminStation = (props) => {
         </div>
       </div>
       <CreateStation
-        setShowDrawer={setShowDrawer}
-        showDrawer={showDrawer}
-        dataStation={detailStation}
-        type={formType}
+        setShowDrawer={setShowDrawerCreate}
+        showDrawer={showDrawerCreate}
       ></CreateStation>
+
+      <EditStation
+        setShowDrawer={setShowDrawerEdit}
+        showDrawer={showDrawerEdit}
+        dataStation={detailStation}
+      ></EditStation>
       <ModalAlert
         open={openModal}
         handleClose={() => handleCloseModal()}

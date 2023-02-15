@@ -15,7 +15,6 @@ import {
 } from "@mui/material";
 import FormControlCustom from "../../../../../components/FormControl";
 import InputField from "../../../../../components/InputField";
-import { messageToast } from "../../../../../components/CustomToast";
 import SelectCustom from "../../../../../components/SelectCustom";
 import { ProvinceApi } from "../../../../../utils/provinceApi";
 import "./index.scss";
@@ -24,10 +23,9 @@ import { WardApi } from "../../../../../utils/wardApi";
 import UploadImage from "../../../../../components/UploadImage";
 import { isEmpty } from "lodash";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import customToast from "../../../../../components/CustomToast";
-const CreateStation = (props) => {
-  const { setShowDrawer, showDrawer, type, dataStation } = props;
-  console.log(dataStation);
+import customToast from "../../../../../components/ToastCustom";
+const EditStation = (props) => {
+  const { setShowDrawer, showDrawer, dataStation } = props;
   const [images, setImages] = useState();
   const [urlImage, setUrlImage] = useState();
   const [optionsProvince, setOptionsProvince] = useState([]);
@@ -48,9 +46,7 @@ const CreateStation = (props) => {
       );
 
       setOptionsProvince(options);
-    } catch (error) {
-      customToast.error("Có lỗi xảy ra");
-    }
+    } catch (error) {}
   };
 
   const getDataDistrict = async () => {
@@ -180,9 +176,6 @@ const CreateStation = (props) => {
 
   const onSubmit = (value = defaultValues) => {
     console.log(value);
-    if (type === "update") {
-    } else {
-    }
   };
 
   const goBack = () => {
@@ -191,20 +184,7 @@ const CreateStation = (props) => {
   };
   useEffect(() => {
     reset();
-  }, [showDrawer, type]);
-  console.log(type);
-
-  useEffect(() => {
-    reset();
-  }, [props.type]);
-
-  const getTitle = (type) => {
-    if (type === "update") {
-      return "Cập nhật";
-    } else {
-      return "Tạo mới";
-    }
-  };
+  }, [showDrawer]);
 
   return (
     <Drawer
@@ -225,7 +205,7 @@ const CreateStation = (props) => {
                 style={{ marginTop: 10 }}
               />
               <span style={{ fontSize: 30, fontWeight: "bolder" }}>
-                {getTitle(type)}
+                Cập nhật
               </span>
             </div>
           </div>
@@ -243,7 +223,7 @@ const CreateStation = (props) => {
                   textTransform: "uppercase",
                 }}
               >
-                {getTitle(type)} bến xe
+                Cập nhật bến xe
               </span>
             </div>
             <div className="content" style={{ marginLeft: 40 }}>
@@ -365,4 +345,4 @@ const CreateStation = (props) => {
   );
 };
 
-export default CreateStation;
+export default EditStation;

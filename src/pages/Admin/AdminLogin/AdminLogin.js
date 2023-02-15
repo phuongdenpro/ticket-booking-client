@@ -17,7 +17,7 @@ import imgLogin from "../../../assets/imgLogin.png";
 import { AdminApi } from "../../../utils/adminApi";
 import "./AdminLogin.scss";
 import Cookies from "js-cookie";
-import customToast from "../../../components/CustomToast";
+import customToast from "../../../components/ToastCustom";
 
 const Login = () => {
   const emailRef = useRef();
@@ -139,7 +139,7 @@ const Login = () => {
         <Grid md={6.5} className="item-content-right">
           <div className="container-right">
             <div className="text-welcome">Chào mừng bạn quay lại</div>
-            <h5 className="text">Vui lòng đăng nhập để sử dụng dịch vụ</h5>
+            <h5 className="text">Vui lòng đăng nhập để sử dụng hệ thống</h5>
             <div>
               <img src={imgLogin} alt="Image" className="image-right" />
             </div>
