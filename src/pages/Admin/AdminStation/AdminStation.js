@@ -48,6 +48,7 @@ const AdminStation = (props) => {
   const [data, setData] = useState([]);
 
   const handleGetData = async () => {
+    console.log("vào");
     enterLoading(0);
     const stationApi = new StationApi();
     const response = await stationApi.getAllStations({
@@ -66,6 +67,13 @@ const AdminStation = (props) => {
   useEffect(() => {
     getDetailStation(idStation);
   }, [idStation]);
+
+
+  useEffect(() => {
+    handleGetData()
+  }, [showDrawerCreate]);
+
+
 
   useEffect(() => {
     const tmpSelected = [];
@@ -92,6 +100,7 @@ const AdminStation = (props) => {
       setIdStation("");
     }
   }, [showDrawerEdit]);
+
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -172,6 +181,7 @@ const AdminStation = (props) => {
   useEffect(() => {
     handleGetData();
   }, [page, pageSize, filterParams]);
+
 
   const enterLoading = (index) => {
     setLoadings((prevLoadings) => {
@@ -337,6 +347,7 @@ const AdminStation = (props) => {
       <CreateStation
         setShowDrawer={setShowDrawerCreate}
         showDrawer={showDrawerCreate}
+        handleGetData={handleGetData}
       ></CreateStation>
 
       <EditStation

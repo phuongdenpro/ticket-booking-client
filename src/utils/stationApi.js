@@ -22,6 +22,15 @@ class StationApi {
     return res;
   }
 
+  createStation(params) {
+    const url = `station`;
+    const res = axiosClient.post(url, {
+      ...params,
+    });
+    return res;
+  }
+
+
   deleteStation(id, params) {
     const url = `station/id/${id}`;
     const res = axiosClient.get(url, {

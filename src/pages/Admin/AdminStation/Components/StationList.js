@@ -62,11 +62,11 @@ const StationList = (props) => {
       headerClassName: "theme",
       description: "This column has a value getter and is not sortable.",
       sortable: false,
-      flex: 80,
+      flex: 100,
       renderCell: (params) => {
         return (
           <img
-            src={params.row.images?.[0]}
+            src={params.row.images?.[0]?.url}
             onError={({ currentTarget }) => {
               currentTarget.onerror = null;
             }}
