@@ -26,9 +26,9 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import customToast from "../../../../../components/ToastCustom";
 import { UploadApi } from "../../../../../utils/uploadApi";
 import { StationApi } from "../../../../../utils/stationApi";
-const CreateStation = ({ setShowDrawer, showDrawer,handleGetData }) => {
+const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
   const [images, setImages] = useState([]);
-  const [urlImage, setUrlImage] = useState();
+  const [urlImage, setUrlImage] = useState([]);
   const [optionsProvince, setOptionsProvince] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState({});
   const [optionsDistrict, setOptionsDistrict] = useState([]);
@@ -81,7 +81,6 @@ const CreateStation = ({ setShowDrawer, showDrawer,handleGetData }) => {
     name: "",
     address: "",
     wardId: "",
-    images: null,
   }));
 
   const schema = yup.object().shape({
@@ -137,14 +136,15 @@ const CreateStation = ({ setShowDrawer, showDrawer,handleGetData }) => {
 
   const getUrlFromIMG = async (fromData) => {
     const data = new FormData();
-    data.append("images", fromData[0].file, fromData[0].file.name);
+    fromData.map((item) => data.append('images', item.file, item.name));
     const uploadApi = new UploadApi();
     const response = await uploadApi.uploadMutiFile(data);
-    setUrlImage([response?.data?.data?.images[0].Location]);
+
+    setUrlImage(response?.data?.data?.images.map((item) => item.Location));
+    
   };
 
   const onChange = (imageList) => {
-    console.log(imageList);
     // data for submit
     setImages(imageList);
     funcUpload(imageList);
@@ -176,8 +176,9 @@ const CreateStation = ({ setShowDrawer, showDrawer,handleGetData }) => {
   };
 
   const onSubmit = (value = defaultValues) => {
-    const imageParams = urlImage.map((item) => {
-      return { url: item };
+    const imageParams = [];
+    urlImage.map((item) => {
+      imageParams.push({ url: item });
     });
 
     const params = {
@@ -199,8 +200,10 @@ const CreateStation = ({ setShowDrawer, showDrawer,handleGetData }) => {
   };
 
   const goBack = () => {
-    setShowDrawer(false);
     reset();
+    setShowDrawer(false);
+    setImages([]);
+    setUrlImage([]);
   };
   useEffect(() => {
     handleGetData();

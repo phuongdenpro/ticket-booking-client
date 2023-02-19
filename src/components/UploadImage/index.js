@@ -61,7 +61,7 @@ const UploadImage = (props) => {
         value={images}
         onChange={onChange}
         maxNumber={maxNumber}
-        dataURLKey="data_url"
+        dataURLKey="url"
         acceptType={['jpg', 'png']}
       >
         {({ imageList, onImageUpload, onImageRemoveAll, onImageUpdate, onImageRemove, isDragging, dragProps }) => (
@@ -78,7 +78,7 @@ const UploadImage = (props) => {
                 <Button className="close" onClick={() => onImageRemove(index)}>
                   <CancelIcon />
                 </Button>
-                <img src={image.data_url || image} alt="" width="100" />
+                <img src={image.url || image} alt="" width="100" />
               </div>
             ))}
 
