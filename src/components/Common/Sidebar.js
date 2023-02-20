@@ -22,10 +22,7 @@ import DepartureBoardIcon from "@mui/icons-material/DepartureBoard";
 import DirectionsTransitIcon from "@mui/icons-material/DirectionsTransit";
 const { Title } = Typography;
 
-const rootSubmenuKeys = [
-  "user",
-  "dashboard",
-];
+const rootSubmenuKeys = ["user", "dashboard"];
 
 const Sidebar = (props) => {
   const [openKeys, setOpenKeys] = useState();
@@ -52,7 +49,10 @@ const Sidebar = (props) => {
       "Quản Lý Người Dùng",
       "user",
       <UserOutlined />,
-      [getChildItem("Người dùng", "user/user"), getChildItem("Nhóm người dùng", "user/group-user")],
+      [
+        getChildItem("Người dùng", "user/user"),
+        getChildItem("Nhóm người dùng", "user/group-user"),
+      ],
       true
     ),
     getItem("Quản lý Chuyến Xe", "trip", <DepartureBoardIcon />),
@@ -95,10 +95,13 @@ const Sidebar = (props) => {
         openKeys={openKeys}
         onOpenChange={onOpenChange}
         items={items}
+        inlineCollapsed={props.collapsed}
         onSelect={onSelect}
         onClick={onClick}
-        style={{minHeight:'100vh', width:'100%'}}
-        
+        style={{
+          minHeight: "100vh",
+          overflow: "auto",
+        }}
       />
     </div>
   );

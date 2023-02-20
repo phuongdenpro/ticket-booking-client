@@ -24,11 +24,11 @@ import UploadImage from "../../../../../components/UploadImage";
 import { isEmpty } from "lodash";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import customToast from "../../../../../components/ToastCustom";
-const CreateStation = (props) => {
-  const { setShowDrawer, showDrawer, dataStation } = props;
-  console.log(dataStation);
-  const [images, setImages] = useState();
-  const [urlImage, setUrlImage] = useState();
+import { UploadApi } from "../../../../../utils/uploadApi";
+import { StationApi } from "../../../../../utils/stationApi";
+const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
+  const [images, setImages] = useState([]);
+  const [urlImage, setUrlImage] = useState([]);
   const [optionsProvince, setOptionsProvince] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState({});
   const [optionsDistrict, setOptionsDistrict] = useState([]);
@@ -47,8 +47,7 @@ const CreateStation = (props) => {
       );
 
       setOptionsProvince(options);
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const getDataDistrict = async () => {
@@ -78,15 +77,11 @@ const CreateStation = (props) => {
     } catch (error) {}
   };
 
-  const defaultValues = useMemo(
-    () => ({
-      name: dataStation?.name || "",
-      address: dataStation?.address || "",
-      wardId: dataStation?.wardId || "",
-      images: "" || null,
-    }),
-    [dataStation]
-  );
+  const defaultValues = useMemo(() => ({
+    name: "",
+    address: "",
+    wardId: "",
+  }));
 
   const schema = yup.object().shape({
     name: yup.string().required("Tên bến xe không được phép bỏ trống"),
@@ -104,9 +99,9 @@ const CreateStation = (props) => {
 
   useEffect(() => {
     reset({ ...defaultValues });
-    setImages(dataStation?.images || []);
-    setUrlImage(dataStation?.images || []);
-  }, [dataStation]);
+    setImages([]);
+    setUrlImage([]);
+  }, [showDrawer]);
 
   useEffect(() => {
     getDataProvince();
@@ -129,6 +124,7 @@ const CreateStation = (props) => {
 
   const methods = useForm({
     mode: "onSubmit",
+    defaultValues,
     resolver: yupResolver(schema),
   });
 
@@ -140,9 +136,12 @@ const CreateStation = (props) => {
 
   const getUrlFromIMG = async (fromData) => {
     const data = new FormData();
-    data.append("images", fromData[0].file, fromData[0].file.name);
-    // const a = await uploadImage(data);
-    // setUrlImage([a?.data?.images[0].Location]);
+    fromData.map((item) => data.append('images', item.file, item.name));
+    const uploadApi = new UploadApi();
+    const response = await uploadApi.uploadMutiFile(data);
+
+    setUrlImage(response?.data?.data?.images.map((item) => item.Location));
+    
   };
 
   const onChange = (imageList) => {
@@ -177,23 +176,39 @@ const CreateStation = (props) => {
   };
 
   const onSubmit = (value = defaultValues) => {
-    console.log(value);
-    
+    const imageParams = [];
+    urlImage.map((item) => {
+      imageParams.push({ url: item });
+    });
+
+    const params = {
+      name: value.name,
+      address: value.address,
+      wardId: value.wardId.value,
+      images: imageParams,
+    };
+    try {
+      const stationApi = new StationApi();
+      const res = stationApi.createStation(params);
+      customToast.success("Thêm mới thành công");
+      handleGetData();
+      setShowDrawer(false);
+    } catch (error) {
+      customToast.error("Thêm thất bại");
+    }
+    handleGetData();
   };
 
   const goBack = () => {
-    setShowDrawer(false);
     reset();
+    setShowDrawer(false);
+    setImages([]);
+    setUrlImage([]);
   };
   useEffect(() => {
+    handleGetData();
     reset();
   }, [showDrawer]);
-
-
-  useEffect(() => {
-    reset();
-  }, [props.type]);
-
 
   return (
     <Drawer

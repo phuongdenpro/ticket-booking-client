@@ -16,6 +16,7 @@ import {
   Divider,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import fileDownload from "js-file-download";
 import { Breadcrumb, Col, message, notification, Row, Space } from "antd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { isEmpty } from "lodash";
@@ -47,6 +48,7 @@ const AdminStation = (props) => {
   const [data, setData] = useState([]);
 
   const handleGetData = async () => {
+    console.log("vào");
     enterLoading(0);
     const stationApi = new StationApi();
     const response = await stationApi.getAllStations({
@@ -65,6 +67,13 @@ const AdminStation = (props) => {
   useEffect(() => {
     getDetailStation(idStation);
   }, [idStation]);
+
+
+  useEffect(() => {
+    handleGetData()
+  }, [showDrawerCreate]);
+
+
 
   useEffect(() => {
     const tmpSelected = [];
@@ -91,6 +100,7 @@ const AdminStation = (props) => {
       setIdStation("");
     }
   }, [showDrawerEdit]);
+
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -159,7 +169,7 @@ const AdminStation = (props) => {
       const response = await stationApi.deleteMultiple({ ids: selected });
 
       if (response.status == 200) {
-        customToast.success( "Xóa thành công");
+        customToast.success("Xóa thành công");
       }
       handleGetData();
       setOpenModal(false);
@@ -171,6 +181,7 @@ const AdminStation = (props) => {
   useEffect(() => {
     handleGetData();
   }, [page, pageSize, filterParams]);
+
 
   const enterLoading = (index) => {
     setLoadings((prevLoadings) => {
@@ -205,6 +216,32 @@ const AdminStation = (props) => {
   const handleSubmit = (event) => {
     event.preventDefault();
   };
+
+  const funExportExcel = async () => {
+    try {
+      
+      const stationApi = new StationApi();
+      const response = await stationApi.exportExcel();
+      console.log(response.data);
+      if (response.status == 200) {
+        const fileName = 'DS_Ben_Xe' + new Date().toISOString() + '.xlsx';
+        fileDownload(response.data.data, fileName);
+        customToast.success('Tải xuống thành công');
+      }
+    } catch (error) {
+      customToast.error('Tải xuống thất bại');
+    }
+  };
+  const exportExcel = () => {
+    const params = {
+      branch: "ALL",
+      status: "ALL",
+      outOfDate: "ALL",
+    };
+    const data = {};
+    // mutationExportExcel.mutate(params);
+    // toast('info', 'Coming soon');
+  };
   return (
     <Box sx={{ height: 800, width: "100%" }}>
       <Grid container className={"align-items-center header_title"}>
@@ -222,6 +259,7 @@ const AdminStation = (props) => {
               variant="contained"
               color="success"
               startIcon={<PrintIcon />}
+              onClick={funExportExcel}
             >
               <span className={"txt"}>In danh sách</span>
             </Button>
@@ -309,6 +347,7 @@ const AdminStation = (props) => {
       <CreateStation
         setShowDrawer={setShowDrawerCreate}
         showDrawer={showDrawerCreate}
+        handleGetData={handleGetData}
       ></CreateStation>
 
       <EditStation

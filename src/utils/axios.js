@@ -4,9 +4,6 @@ import Cookies from "js-cookie";
 const base_url = process.env.REACT_APP_BASE_URL;
 const axiosClient = axios.create({
   baseURL: base_url,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 axiosClient.interceptors.request.use(
