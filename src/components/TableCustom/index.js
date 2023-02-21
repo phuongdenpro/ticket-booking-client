@@ -9,6 +9,8 @@ import Paper from "@mui/material/Paper";
 import { Checkbox, Stack, TableFooter, TablePagination } from "@mui/material";
 import "./index.scss";
 import { GridOverlay } from "@mui/x-data-grid";
+import noData from '../../assets/no-data.png';
+import { isEmpty } from 'lodash';
 
 const TableCustom = (props) => {
   const {
@@ -68,13 +70,13 @@ const TableCustom = (props) => {
       <TableContainer
         className="table-custom"
         component={Paper}
-        sx={{ maxHeight: 400 }}
+        sx={{ maxHeight: 470 }}
       >
         <Table
           stickyHeader
           sx={{ minWidth: 650 }}
           size="medium"
-          aria-label="sticky table"
+          aria-label="a dense table"
           padding="none"
         >
           <TableHead>
@@ -90,8 +92,8 @@ const TableCustom = (props) => {
                     }
                     checked={
                       selected &&
-                      rows.length > 0 &&
-                      selected.length === rows.length
+                      rows?.length > 0 &&
+                      selected?.length === rows?.length
                     }
                     onChange={
                       loadOnServerSide ? onSelectAllClick : handleSelectAllClick
@@ -164,6 +166,14 @@ const TableCustom = (props) => {
           )} */}
           </TableBody>
         </Table>
+        {isEmpty(rows) && (
+          <div className={'btn-add-product'} style={{display:'block'}} >
+            <div className={'view-btn-add'}>
+              <img src={noData} className="empty-data"/>
+              <span>Không có dữ liệu</span>
+            </div>
+          </div>
+        )}
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}

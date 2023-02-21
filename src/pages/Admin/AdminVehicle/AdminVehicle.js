@@ -1,9 +1,111 @@
-import React from 'react'
+import { Box, Button, Divider, Grid } from "@mui/material";
+import React from "react";
+import AddIcon from "@mui/icons-material/Add";
+import PrintIcon from "@mui/icons-material/Print";
+import DeleteIcon from "@mui/icons-material/Delete";
+import SearchInput from "../../../components/InputSearch";
+import VehicleList from "./components/VehicleList";
+import { FormProvider, useForm } from "react-hook-form";
+import FormControlCustom from "../../../components/FormControl";
+import SelectCustom from "../../../components/SelectCustom";
 
-const AdminVehicle = (props)=>{
-    return (
-        <div>AdminVehicle</div>
-      )
-}
+const AdminVehicle = (props) => {
+  const defaultValues = {
+    brand: null,
+    status: null,
+    supplier: null,
+    outOfDate: null,
+    branch: null,
+  };
 
-export default AdminVehicle
+  const methods = useForm({
+    defaultValues,
+  });
+  const { handleSubmit, reset, watch } = methods;
+  return (
+    <Box sx={{ height: 800, width: "100%" }}>
+      <Grid container className={"align-items-center header_title"}>
+        <Grid item md={7}>
+          <h2 className={"txt-title"}>DANH SÁCH XE</h2>
+        </Grid>
+        <Grid item md={5}>
+          <Box
+            style={{ display: "flex", justifyContent: "flex-end" }}
+            flexDirection={{ xs: "column", md: "row" }}
+          >
+            <Button
+              className={"btn-create"}
+              style={{ marginTop: 20, marginRight: 20 }}
+              variant="contained"
+              color="success"
+              startIcon={<PrintIcon />}
+            >
+              <span className={"txt"}>In danh sách</span>
+            </Button>
+            <Button
+              variant="contained"
+              color="warning"
+              className={"btn-create"}
+              startIcon={<AddIcon />}
+              style={{ marginTop: 20, marginRight: 20 }}
+            >
+              <span className={"txt"}>Thêm mới</span>
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
+      <Divider />
+      <Grid className="search" container style={{marginTop:20, marginBottom:20}}>
+        <FormProvider {...methods}>
+          <Grid item md={6} style={{marginRight:200}}>
+            <Box style={{ display: 'flex', justifyContent: 'flex-start' }} flexDirection={{ xs: 'column', md: 'row' }}>
+              <FormControlCustom label="Loại xe" fullWidth>
+                <div className="view-input" style={{marginRight:20}}>
+                  <SelectCustom  placeholder={'Tất cả'} name={'status'} />
+                </div>
+              </FormControlCustom>
+              <FormControlCustom label="Số tầng" fullWidth>
+                <div className="view-input" style={{marginRight:20}}>
+                  <SelectCustom placeholder={'Tất cả'} name={'outOfDate'} />
+                </div>
+              </FormControlCustom>
+              <FormControlCustom label="Biển số" fullWidth>
+                <div className="view-input">
+                  <SelectCustom placeholder={'Tất cả'} name={'brand'} />
+                </div>
+              </FormControlCustom>
+              
+            </Box>
+          </Grid>
+          <Grid item md={4} style={{marginTop:3}}>
+          <div style={{ marginBottom: 5 }}>
+            <span className="txt-find" style={{ marginBottom: 20 }}>
+              Tìm kiếm
+            </span>
+          </div>
+
+          <SearchInput
+            className="txt-search"
+            placeholder={"Tìm kiếm theo tên, mô tả xe"}
+            // value={searchValue}
+            // setSearchValue={setSearchValue}
+            // handleSearch={handleSearch}
+          />
+        </Grid>
+        </FormProvider>
+      </Grid>
+      <Grid item style={{ display: 'flex', justifyContent: 'flex-end', marginBottom:20, marginRight:30 }} md={6}>
+          <span className="title-price">Tổng số xe: </span>
+          <span className="txt-price">0</span>
+        </Grid>
+      <div style={{ display: "flex", height: "100%" }}>
+        <div style={{ flexGrow: 1 }}>
+          <VehicleList>
+          </VehicleList>
+        </div>
+      </div>
+    </Box>
+  );
+};
+
+export default AdminVehicle;
