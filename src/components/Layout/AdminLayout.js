@@ -21,6 +21,7 @@ const AdminLayout = () => {
         trigger={null}
         collapsible
         collapsed={collapsed}
+        onCollapse={(value) => setCollapsed(value)}
         width={270}
         style={{
           height: "100vh",
@@ -40,6 +41,8 @@ const AdminLayout = () => {
           p: 2,
           width: collapsed ? `calc(100% - 80px)` : `calc(100% - 270px)`,
           minHeight: "100vh",
+          background: colorConfigs.mainBg,
+
         }}
         style={{marginLeft: collapsed? 80 : 270}}
 

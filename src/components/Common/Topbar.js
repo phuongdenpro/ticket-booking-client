@@ -96,11 +96,11 @@ const Topbar = (props) => {
       >
         <div tyle={{ display: "flex", flexDirection: "row" }}>
           <Button
-            color="info"
             variant="text"
             onClick={() => {
               props.setCollapsed(!props.collapsed);
             }}
+            style={{color: '#000'}}
           >
             {" "}
             {props.collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
