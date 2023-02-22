@@ -56,7 +56,6 @@ const Sidebar = (props) => {
       true
     ),
     getItem("Quản lý Chuyến Xe", "trip", <DepartureBoardIcon />),
-    getItem("Quản Lý Nhà Xe", "passenger", <DirectionsTransitIcon />),
     getItem("Quản Lý Xe", "vehicle", <CarOutlined />),
     getItem("Quản Lý Vé", "ticket", <IdcardOutlined />),
     getItem("Quản Lý Bến Xe", "station", <CarRentalIcon />),

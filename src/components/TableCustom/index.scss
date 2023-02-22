@@ -19,4 +19,28 @@
       }
     }
   }
+
+  .btn-add-product {
+    border-bottom: 1px solid #d7d7d7;
+    border-left: 1px solid #d7d7d7;
+    border-right: 1px solid #d7d7d7;
+    width: 100%;
+    border-radius: unset;
+    height: 7rem;
+    .view-btn-add {
+      padding-top: 1rem;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      .empty-data {
+        width: 90px;
+        height: 70px;
+      }
+      span {
+        font-size: 12px;
+        color: #afafaf;
+      }
+    }
+  }
   

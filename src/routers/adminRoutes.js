@@ -3,7 +3,6 @@ import AppsOutlinedIcon from "@mui/icons-material/AppsOutlined";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import FormatListBulletedOutlinedIcon from "@mui/icons-material/FormatListBulletedOutlined";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
-import AdminPassenger from "../pages/Admin/AdminPassenger/AdminPassenger";
 import AdminTicket from "../pages/Admin/AdminTicket/AdminTicket";
 import AdminDashboard from "../pages/Admin/AdminDashboard/AdminDashboard";
 import AdminStation from "../pages/Admin/AdminStation/AdminStation";
@@ -20,10 +19,6 @@ const adminRoutes = [
   {
     path: "/admin/user/user",
     element: <AdminUser />,
-  },
-  {
-    path: "/admin/passenger",
-    element: <AdminPassenger />,
   },
   {
     path: "/admin/station",
