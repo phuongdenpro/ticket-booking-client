@@ -21,7 +21,7 @@ const AdminLayout = () => {
         trigger={null}
         collapsible
         collapsed={collapsed}
-        width={250}
+        width={270}
         style={{
           height: "100vh",
           overflow: "auto",
@@ -38,10 +38,10 @@ const AdminLayout = () => {
         sx={{
           flexGrow: 1,
           p: 2,
-          width: collapsed ? `calc(100% - 80px)` : `calc(100% - 250px)`,
+          width: collapsed ? `calc(100% - 80px)` : `calc(100% - 270px)`,
           minHeight: "100vh",
         }}
-        style={{marginLeft: collapsed? 80 : 250}}
+        style={{marginLeft: collapsed? 80 : 270}}
 
       >
         <Toolbar></Toolbar>

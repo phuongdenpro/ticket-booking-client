@@ -10,6 +10,7 @@ import {
   CarOutlined,
   IdcardOutlined,
   DollarCircleOutlined,
+  OrderedListOutlined,
 } from "@ant-design/icons";
 import { Avatar, Button, Menu } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -22,7 +23,7 @@ import DepartureBoardIcon from "@mui/icons-material/DepartureBoard";
 import DirectionsTransitIcon from "@mui/icons-material/DirectionsTransit";
 const { Title } = Typography;
 
-const rootSubmenuKeys = ["user", "dashboard"];
+const rootSubmenuKeys = ["user", "dashboard","ticket","order"];
 
 const Sidebar = (props) => {
   const [openKeys, setOpenKeys] = useState();
@@ -55,14 +56,22 @@ const Sidebar = (props) => {
       ],
       true
     ),
-    getItem("Quản lý Chuyến Xe", "trip", <DepartureBoardIcon />),
+    getItem("Quản Lý Vé", "ticket", <IdcardOutlined />,[
+      getChildItem("Đặt vé", "ticker/create"),
+      getChildItem("Bảng giá", "ticket/price-list"),
+      getChildItem("Danh sách vé", "ticket"),
+    ],true),
+    
     getItem("Quản Lý Xe", "vehicle", <CarOutlined />),
-    getItem("Quản Lý Vé", "ticket", <IdcardOutlined />),
     getItem("Quản Lý Bến Xe", "station", <CarRentalIcon />),
-    getItem("Chương Trình Khuyến Mãi", "promotion", <DollarCircleOutlined />),
+    getItem("Quản lý Chuyến Xe", "trip", <DepartureBoardIcon />),
+    getItem("Khuyến Mãi", "promotion", <DollarCircleOutlined />),
+    getItem('Hóa đơn', "order", <OrderedListOutlined />, [
+      getChildItem("Hóa đơn đặt vé", "order/order-list"),
+      getChildItem("Hóa đơn hồi vé", "order/order-refund"),
+    ]),
     getItem("Thống kê", "dashboard", <BarChartOutlined />, [
       getChildItem("Thống kê doanh thu", "dashboard/cost"),
-      getChildItem("Thống kê người dùng", "dashboard/user"),
       getChildItem("Thống kê vé", "dashboard/ticket"),
       getChildItem("Thống kê tổng hợp ", "dashboard/default"),
     ]),
