@@ -23,10 +23,10 @@ const AdminVehicle = (props) => {
   });
   const { handleSubmit, reset, watch } = methods;
   return (
-    <Box sx={{ height: 800, width: "100%" }}>
+    <Box sx={{ height: 480, width: "100%" }}>
       <Grid container className={"align-items-center header_title"}>
         <Grid item md={7}>
-          <h2 className={"txt-title"}>DANH SÁCH XE</h2>
+          <h2 className={"txt-title"} style={{marginTop:20}}>DANH SÁCH XE</h2>
         </Grid>
         <Grid item md={5}>
           <Box
@@ -38,6 +38,7 @@ const AdminVehicle = (props) => {
               style={{ marginTop: 20, marginRight: 20 }}
               variant="contained"
               color="success"
+              size="large"
               startIcon={<PrintIcon />}
             >
               <span className={"txt"}>In danh sách</span>
@@ -47,6 +48,7 @@ const AdminVehicle = (props) => {
               color="warning"
               className={"btn-create"}
               startIcon={<AddIcon />}
+              size="large"
               style={{ marginTop: 20, marginRight: 20 }}
             >
               <span className={"txt"}>Thêm mới</span>
@@ -54,7 +56,7 @@ const AdminVehicle = (props) => {
           </Box>
         </Grid>
       </Grid>
-      <Divider />
+      <Divider style={{marginTop:20}} />
       <Grid className="search" container style={{marginTop:20, marginBottom:20}}>
         <FormProvider {...methods}>
           <Grid item md={6} style={{marginRight:200}}>

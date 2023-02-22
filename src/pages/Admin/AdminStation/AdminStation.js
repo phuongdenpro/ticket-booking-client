@@ -246,7 +246,7 @@ const AdminStation = (props) => {
     <Box sx={{ height: 530, width: "100%" }}>
       <Grid container className={"align-items-center header_title"}>
         <Grid item md={7}>
-          <h2 className={"txt-title"}>QUẢN LÝ BẾN XE</h2>
+          <h2 className={"txt-title"} style={{marginTop:20}}>QUẢN LÝ BẾN XE</h2>
         </Grid>
         <Grid item md={5}>
           <Box
@@ -258,6 +258,7 @@ const AdminStation = (props) => {
               style={{ marginTop: 20, marginRight: 20 }}
               variant="contained"
               color="success"
+              size="large"
               startIcon={<PrintIcon />}
               onClick={funExportExcel}
             >
@@ -267,6 +268,7 @@ const AdminStation = (props) => {
               variant="contained"
               color="warning"
               className={"btn-create"}
+              size="large"
               onClick={() => {
                 setShowDrawerCreate(true);
               }}
@@ -280,6 +282,7 @@ const AdminStation = (props) => {
               variant="contained"
               color="error"
               className={"btn-create"}
+              size="large"
               startIcon={<DeleteIcon />}
               style={{ marginTop: 20 }}
               onClick={() => handleOpenModal()}
@@ -289,7 +292,7 @@ const AdminStation = (props) => {
           </Box>
         </Grid>
       </Grid>
-      <Divider />
+      <Divider style={{marginTop:20}}/>
 
       <Grid
         container

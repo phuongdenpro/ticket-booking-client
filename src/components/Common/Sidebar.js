@@ -10,6 +10,7 @@ import {
   CarOutlined,
   IdcardOutlined,
   DollarCircleOutlined,
+  OrderedListOutlined,
 } from "@ant-design/icons";
 import { Avatar, Button, Menu } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -22,7 +23,7 @@ import DepartureBoardIcon from "@mui/icons-material/DepartureBoard";
 import DirectionsTransitIcon from "@mui/icons-material/DirectionsTransit";
 const { Title } = Typography;
 
-const rootSubmenuKeys = ["user", "dashboard"];
+const rootSubmenuKeys = ["subUser", "subDashboard", "subTicket", "subOrder"];
 
 const Sidebar = (props) => {
   const [openKeys, setOpenKeys] = useState();
@@ -47,24 +48,39 @@ const Sidebar = (props) => {
     getItem("Dashboard", "", <DashboardOutlined />),
     getItem(
       "Quản Lý Người Dùng",
-      "user",
+      "subUser",
       <UserOutlined />,
       [
-        getChildItem("Người dùng", "user/user"),
-        getChildItem("Nhóm người dùng", "user/group-user"),
+        getChildItem("Người dùng", "user"),
+        getChildItem("Nhóm người dùng", "group-user"),
       ],
       true
     ),
-    getItem("Quản lý Chuyến Xe", "trip", <DepartureBoardIcon />),
+    getItem(
+      "Quản Lý Vé",
+      "subTicket",
+      <IdcardOutlined />,
+      [
+        getChildItem("Đặt vé", "create-ticket"),
+        getChildItem("Bảng giá", "ticket/price-list"),
+        getChildItem("Danh sách vé", "ticket-list"),
+      ],
+      true
+    ),
+
     getItem("Quản Lý Xe", "vehicle", <CarOutlined />),
-    getItem("Quản Lý Vé", "ticket", <IdcardOutlined />),
     getItem("Quản Lý Bến Xe", "station", <CarRentalIcon />),
-    getItem("Chương Trình Khuyến Mãi", "promotion", <DollarCircleOutlined />),
-    getItem("Thống kê", "dashboard", <BarChartOutlined />, [
-      getChildItem("Thống kê doanh thu", "dashboard/cost"),
-      getChildItem("Thống kê người dùng", "dashboard/user"),
-      getChildItem("Thống kê vé", "dashboard/ticket"),
-      getChildItem("Thống kê tổng hợp ", "dashboard/default"),
+    getItem("Quản lý Chuyến Xe", "trip", <DepartureBoardIcon />),
+    getItem("Khuyến Mãi", "promotion", <DollarCircleOutlined />),
+    getItem("Hóa đơn", "subOrder", <OrderedListOutlined />, [
+      getChildItem("Hóa đơn đặt vé", "order-list"),
+      getChildItem("Hóa đơn hồi vé", "order-refund-list"),
+    ]),
+    getItem("Thống kê", "subDashboard", <BarChartOutlined />, [
+      getChildItem("Thống kê vé", "dashboard-ticket"),
+      getChildItem("Thống kê khuyến mãi ", "dashboard-promotion"),
+      getChildItem("Thống kê doanh thu", "dashboard-cost"),
+      
     ]),
   ];
 
@@ -87,22 +103,29 @@ const Sidebar = (props) => {
   };
 
   return (
-    <div>
+    <>
+      <div
+        style={{
+          background: "rgb(18, 10, 39)",
+          minHeight: "10vh",
+        }}
+      >
+        <span style={{color:"#fff", textTransform:'uppercase'}}> đặt vé xe</span>
+      </div>
       <Menu
         mode="inline"
         theme="dark"
         openKeys={openKeys}
         onOpenChange={onOpenChange}
         items={items}
-        inlineCollapsed={props.collapsed}
         onSelect={onSelect}
         onClick={onClick}
         style={{
-          minHeight: "100vh",
+          minHeight: "90vh",
           overflow: "auto",
         }}
       />
-    </div>
+    </>
   );
 };
 

@@ -78,7 +78,7 @@ const Topbar = (props) => {
     <AppBar
       position="fixed"
       sx={{
-        width: props.collapsed ? `calc(100% - 80px)` : `calc(100% - 250px)`,
+        width: props.collapsed ? `calc(100% - 80px)` : `calc(100% - 270px)`,
         ml: sizeConfigs.sidebar.width,
         backgroundColor: colorConfigs.topbar.bg,
         color: colorConfigs.topbar.color,
@@ -96,11 +96,11 @@ const Topbar = (props) => {
       >
         <div tyle={{ display: "flex", flexDirection: "row" }}>
           <Button
-            color="info"
             variant="text"
             onClick={() => {
               props.setCollapsed(!props.collapsed);
             }}
+            style={{color: '#000'}}
           >
             {" "}
             {props.collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
