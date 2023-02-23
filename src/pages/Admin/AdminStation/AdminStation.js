@@ -68,12 +68,9 @@ const AdminStation = (props) => {
     getDetailStation(idStation);
   }, [idStation]);
 
-
   useEffect(() => {
-    handleGetData()
+    handleGetData();
   }, [showDrawerCreate]);
-
-
 
   useEffect(() => {
     const tmpSelected = [];
@@ -100,7 +97,6 @@ const AdminStation = (props) => {
       setIdStation("");
     }
   }, [showDrawerEdit]);
-
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -182,7 +178,6 @@ const AdminStation = (props) => {
     handleGetData();
   }, [page, pageSize, filterParams]);
 
-
   const enterLoading = (index) => {
     setLoadings((prevLoadings) => {
       const newLoadings = [...prevLoadings];
@@ -219,17 +214,16 @@ const AdminStation = (props) => {
 
   const funExportExcel = async () => {
     try {
-      
       const stationApi = new StationApi();
       const response = await stationApi.exportExcel();
       console.log(response.data);
       if (response.status == 200) {
-        const fileName = 'DS_Ben_Xe' + new Date().toISOString() + '.xlsx';
+        const fileName = "DS_Ben_Xe" + new Date().toISOString() + ".xlsx";
         fileDownload(response.data.data, fileName);
-        customToast.success('Tải xuống thành công');
+        customToast.success("Tải xuống thành công");
       }
     } catch (error) {
-      customToast.error('Tải xuống thất bại');
+      customToast.error("Tải xuống thất bại");
     }
   };
   const exportExcel = () => {
@@ -243,155 +237,155 @@ const AdminStation = (props) => {
     // toast('info', 'Coming soon');
   };
   return (
-    <Box sx={{ height: 530, width: "100%" }}>
-      <Grid container className={"align-items-center header_title"}>
-        <Grid item md={7}>
-          <h2 className={"txt-title"} style={{marginTop:20}}>QUẢN LÝ BẾN XE</h2>
-        </Grid>
-        <Grid item md={5}>
-          <Box
-            style={{ display: "flex", justifyContent: "flex-end" }}
-            flexDirection={{ xs: "column", md: "row" }}
-          >
-            <Button
-              className={"btn-create"}
-              style={{ marginTop: 20, marginRight: 20 }}
-              variant="contained"
-              color="success"
-              size="large"
-              startIcon={<PrintIcon />}
-              onClick={funExportExcel}
+    
+      <Box sx={{ height: 520, width: "100%"}}>
+        <Grid container className={"align-items-center header_title"}>
+          <Grid item md={7}>
+            <h2 className={"txt-title"} style={{ marginTop: 20 }}>
+              QUẢN LÝ BẾN XE
+            </h2>
+          </Grid>
+          <Grid item md={5}>
+            <Box
+              style={{ display: "flex", justifyContent: "flex-end" }}
+              flexDirection={{ xs: "column", md: "row" }}
             >
-              <span className={"txt"}>In danh sách</span>
-            </Button>
-            <Button
-              variant="contained"
-              color="warning"
-              className={"btn-create"}
-              size="large"
-              onClick={() => {
-                setShowDrawerCreate(true);
+              <Button
+                className={"btn-create"}
+                style={{ marginTop: 20, marginRight: 20 }}
+                variant="contained"
+                color="success"
+                startIcon={<PrintIcon />}
+                onClick={funExportExcel}
+              >
+                <span className={"txt"}>In danh sách</span>
+              </Button>
+              <Button
+                variant="contained"
+                color="warning"
+                className={"btn-create"}
+                onClick={() => {
+                  setShowDrawerCreate(true);
+                }}
+                startIcon={<AddIcon />}
+                style={{ marginTop: 20, marginRight: 20 }}
+              >
+                <span className={"txt"}>Thêm mới</span>
+              </Button>
+
+              <Button
+                variant="contained"
+                color="error"
+                className={"btn-create"}
+                startIcon={<DeleteIcon />}
+                style={{ marginTop: 20 }}
+                onClick={() => handleOpenModal()}
+              >
+                <span className={"txt"}>Xóa</span>
+              </Button>
+            </Box>
+          </Grid>
+        </Grid>
+        <Divider style={{ marginTop: 20 }} />
+
+        <Grid
+          container
+          className="search"
+          style={{ marginTop: 15, marginBottom: 18 }}
+        >
+          <Grid item md={4}>
+            <div style={{ marginBottom: 5 }}>
+              <span className="txt-find" style={{ marginBottom: 20 }}>
+                Tìm kiếm
+              </span>
+            </div>
+
+            <SearchInput
+              className="txt-search"
+              placeholder={"Tìm kiếm theo tên, địa chỉ bến xe"}
+              value={searchValue}
+              setSearchValue={setSearchValue}
+              handleSearch={handleSearch}
+            />
+          </Grid>
+          <Grid item md={4}></Grid>
+          <Grid item md={4}>
+            <div
+              style={{
+                marginBottom: 5,
+                float: "right",
+                marginTop: 30,
+                marginRight: 10,
               }}
-              startIcon={<AddIcon />}
-              style={{ marginTop: 20, marginRight: 20 }}
             >
-              <span className={"txt"}>Thêm mới</span>
-            </Button>
-
-            <Button
-              variant="contained"
-              color="error"
-              className={"btn-create"}
-              size="large"
-              startIcon={<DeleteIcon />}
-              style={{ marginTop: 20 }}
-              onClick={() => handleOpenModal()}
-            >
-              <span className={"txt"}>Xóa</span>
-            </Button>
-          </Box>
+              <span style={{ fontSize: 20, fontWeight: "bolder" }}>
+                Tổng số bến xe: {data?.data?.pagination?.total || 0}
+              </span>
+            </div>
+          </Grid>
         </Grid>
-      </Grid>
-      <Divider style={{marginTop:20}}/>
 
-      <Grid
-        container
-        className="search"
-        style={{ marginTop: 15, marginBottom: 18 }}
-      >
-        <Grid item md={4}>
-          <div style={{ marginBottom: 5 }}>
-            <span className="txt-find" style={{ marginBottom: 20 }}>
-              Tìm kiếm
-            </span>
+        <div style={{ display: "flex", height: "100%" }}>
+          <div style={{ flexGrow: 1 }}>
+            <StationList
+              data={data?.data?.data || []}
+              handleShowDetail={handelShowDetail}
+              selectionModel={selected}
+              handleSelectionModeChange={handleSelectAllClick}
+              handleClick={handleClick}
+              handleChangePage={handleChangePage}
+              onChangeRowsPerPage={handleChangeRowsPerPage}
+              total={data?.data?.pagination?.total}
+              page={page}
+              pageSize={pageSize}
+            ></StationList>
           </div>
-
-          <SearchInput
-            className="txt-search"
-            placeholder={"Tìm kiếm theo tên, địa chỉ bến xe"}
-            value={searchValue}
-            setSearchValue={setSearchValue}
-            handleSearch={handleSearch}
-          />
-        </Grid>
-        <Grid item md={4}></Grid>
-        <Grid item md={4}>
-          <div
-            style={{
-              marginBottom: 5,
-              float: "right",
-              marginTop: 30,
-              marginRight: 10,
-            }}
-          >
-            <span style={{ fontSize: 20, fontWeight: "bolder" }}>
-              Tổng số bến xe: {data?.data?.pagination?.total || 0}
-            </span>
-          </div>
-        </Grid>
-      </Grid>
-
-      <div style={{ display: "flex", height: "100%" }}>
-        <div style={{ flexGrow: 1 }}>
-          <StationList
-            data={data?.data?.data || []}
-            handleShowDetail={handelShowDetail}
-            selectionModel={selected}
-            handleSelectionModeChange={handleSelectAllClick}
-            handleClick={handleClick}
-            handleChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
-            total={data?.data?.pagination?.total}
-            page={page}
-            pageSize={pageSize}
-          ></StationList>
         </div>
-      </div>
-      <CreateStation
-        setShowDrawer={setShowDrawerCreate}
-        showDrawer={showDrawerCreate}
-        handleGetData={handleGetData}
-      ></CreateStation>
+        <CreateStation
+          setShowDrawer={setShowDrawerCreate}
+          showDrawer={showDrawerCreate}
+          handleGetData={handleGetData}
+        ></CreateStation>
 
-      <EditStation
-        setShowDrawer={setShowDrawerEdit}
-        showDrawer={showDrawerEdit}
-        dataStation={detailStation}
-      ></EditStation>
-      <ModalAlert
-        open={openModal}
-        handleClose={() => handleCloseModal()}
-        handleCancel={() => handleCloseModal()}
-        handleConfirm={() => handleConfirm()}
-        title={"Xác nhận xóa"}
-        description={
-          "Thao tác sẽ không thể hoàn tác, bạn có chắc chắn muốn tiếp tục không?"
-        }
-        type={"error"}
-        icon={true}
-        renderContentModal={
-          <div className="view-input-discount">
-            <span>Mã station: </span>
-            {selectedStation?.map((sku) => {
-              return (
-                <div>
-                  <span
-                    style={{
-                      fontSize: "17px",
-                      fontWeight: "500",
-                      marginLeft: "2px",
-                    }}
-                  >
-                    {sku?.id}
-                    {","}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        }
-      />
-    </Box>
+        <EditStation
+          setShowDrawer={setShowDrawerEdit}
+          showDrawer={showDrawerEdit}
+          dataStation={detailStation}
+        ></EditStation>
+        <ModalAlert
+          open={openModal}
+          handleClose={() => handleCloseModal()}
+          handleCancel={() => handleCloseModal()}
+          handleConfirm={() => handleConfirm()}
+          title={"Xác nhận xóa"}
+          description={
+            "Thao tác sẽ không thể hoàn tác, bạn có chắc chắn muốn tiếp tục không?"
+          }
+          type={"error"}
+          icon={true}
+          renderContentModal={
+            <div className="view-input-discount">
+              <span>Mã station: </span>
+              {selectedStation?.map((sku) => {
+                return (
+                  <div>
+                    <span
+                      style={{
+                        fontSize: "17px",
+                        fontWeight: "500",
+                        marginLeft: "2px",
+                      }}
+                    >
+                      {sku?.id}
+                      {","}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          }
+        />
+      </Box>
   );
 };
 

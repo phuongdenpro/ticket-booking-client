@@ -51,7 +51,7 @@ const AdminDashboard = (props) => {
   };
 
   const topCustomers = {
-    head: ["user", "total orders", "total spending"],
+    head: ["user", "Tổng đơn đặt", "Tổng chi"],
     body: [
       {
         username: "john doe",
@@ -198,23 +198,23 @@ const AdminDashboard = (props) => {
           </div>
         </div>
         <div className="col-8">
-                    <div className="card">
-                        <div className="card__header">
-                            <h3>latest orders</h3>
-                        </div>
-                        <div className="card__body">
-                            <TableDashboard
-                                headData={latestOrders.header}
-                                renderHead={(item, index) => renderOrderHead(item, index)}
-                                bodyData={latestOrders.body}
-                                renderBody={(item, index) => renderOrderBody(item, index)}
-                            />
-                        </div>
-                        <div className="card__footer">
-                            <Link to='/'>view all</Link>
-                        </div>
-                    </div>
-                </div>
+          <div className="card">
+            <div className="card__header">
+              <h3>latest orders</h3>
+            </div>
+            <div className="card__body">
+              <TableDashboard
+                headData={latestOrders.header}
+                renderHead={(item, index) => renderOrderHead(item, index)}
+                bodyData={latestOrders.body}
+                renderBody={(item, index) => renderOrderBody(item, index)}
+              />
+            </div>
+            <div className="card__footer">
+              <Link to="/">view all</Link>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
