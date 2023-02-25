@@ -70,7 +70,7 @@ const TableCustom = (props) => {
       <TableContainer
         className="table-custom"
         component={Paper}
-        sx={{ maxHeight: 470 }}
+        sx={{ maxHeight: 460 }}
       >
         <Table
           stickyHeader
