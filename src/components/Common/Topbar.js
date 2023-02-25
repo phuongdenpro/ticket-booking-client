@@ -78,7 +78,7 @@ const Topbar = (props) => {
     <AppBar
       position="fixed"
       sx={{
-        width: props.collapsed ? `calc(100% - 80px)` : `calc(100% - 270px)`,
+        width: props.collapsed ? `calc(100% - 80px)` : `calc(100% - 250px)`,
         ml: sizeConfigs.sidebar.width,
         backgroundColor: colorConfigs.topbar.bg,
         color: colorConfigs.topbar.color,
