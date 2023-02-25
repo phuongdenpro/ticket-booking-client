@@ -179,7 +179,7 @@ const AdminDashboard = (props) => {
             />
           </div>
         </div>
-        <div className="col-4">
+        <div className="col-5">
           <div className="card">
             <div className="card__header">
               <h3>Top custom</h3>
@@ -197,7 +197,7 @@ const AdminDashboard = (props) => {
             </div>
           </div>
         </div>
-        <div className="col-8">
+        <div className="col-7">
           <div className="card">
             <div className="card__header">
               <h3>latest orders</h3>
