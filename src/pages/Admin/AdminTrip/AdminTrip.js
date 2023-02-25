@@ -40,7 +40,6 @@ const AdminTrip = (props) => {
               style={{ marginTop: 20, marginRight: 20 }}
               variant="contained"
               color="info"
-              size="large"
               startIcon={<RefreshOutlinedIcon />}
             >
               <span className={"txt"}>Làm mới</span>
@@ -50,7 +49,6 @@ const AdminTrip = (props) => {
               style={{ marginTop: 20, marginRight: 20 }}
               variant="contained"
               color="success"
-              size="large"
               startIcon={<DownloadOutlinedIcon />}
             >
               <span className={"txt"}>Xuất danh sách</span>
@@ -60,7 +58,6 @@ const AdminTrip = (props) => {
               color="warning"
               className={"btn-create"}
               startIcon={<AddIcon />}
-              size="large"
               style={{ marginTop: 20, marginRight: 20 }}
             >
               <span className={"txt"}>Thêm mới</span>
