@@ -38,7 +38,6 @@ const AdminVehicle = (props) => {
               style={{ marginTop: 20, marginRight: 20 }}
               variant="contained"
               color="success"
-              size="large"
               startIcon={<PrintIcon />}
             >
               <span className={"txt"}>In danh sách</span>
@@ -48,7 +47,6 @@ const AdminVehicle = (props) => {
               color="warning"
               className={"btn-create"}
               startIcon={<AddIcon />}
-              size="large"
               style={{ marginTop: 20, marginRight: 20 }}
             >
               <span className={"txt"}>Thêm mới</span>

@@ -40,7 +40,6 @@ const AdminGroupUser = (props) => {
               style={{ marginTop: 20, marginRight: 20 }}
               variant="contained"
               color="info"
-              size="large"
               startIcon={<RefreshOutlinedIcon />}
             >
               <span className={"txt"}>Làm mới</span>
@@ -50,7 +49,6 @@ const AdminGroupUser = (props) => {
               color="warning"
               className={"btn-create"}
               startIcon={<AddIcon />}
-              size="large"
               style={{ marginTop: 20, marginRight: 20 }}
             >
               <span className={"txt"}>Thêm mới</span>
