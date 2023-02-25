@@ -15,7 +15,7 @@ const AdminLayout = () => {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", background: colorConfigs.mainBg}}>
       <Topbar collapsed={collapsed} setCollapsed={setCollapsed} width={width} height={height}/>
       <Sider
         trigger={null}

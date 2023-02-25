@@ -70,11 +70,11 @@ const TableCustom = (props) => {
       <TableContainer
         className="table-custom"
         component={Paper}
-        sx={{ maxHeight: 410 }}
+        sx={{ maxHeight: 460 }}
       >
         <Table
           stickyHeader
-          sx={{ minWidth: 410 }}
+          sx={{ minWidth: 460 }}
           size="medium"
           aria-label="a dense table"
           padding="none"
