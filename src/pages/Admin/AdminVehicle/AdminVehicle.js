@@ -8,6 +8,7 @@ import VehicleList from "./components/VehicleList";
 import { FormProvider, useForm } from "react-hook-form";
 import FormControlCustom from "../../../components/FormControl";
 import SelectCustom from "../../../components/SelectCustom";
+import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
 
 const AdminVehicle = (props) => {
   const defaultValues = {
@@ -38,9 +39,9 @@ const AdminVehicle = (props) => {
               style={{ marginTop: 20, marginRight: 20 }}
               variant="contained"
               color="success"
-              startIcon={<PrintIcon />}
+              startIcon={<DownloadOutlinedIcon />}
             >
-              <span className={"txt"}>In danh sách</span>
+              <span className={"txt"}>Xuất danh sách</span>
             </Button>
             <Button
               variant="contained"

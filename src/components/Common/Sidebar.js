@@ -107,10 +107,16 @@ const Sidebar = (props) => {
       <div
         style={{
           background: "rgb(18, 10, 39)",
-          minHeight: "10vh",
+          minHeight: "15vh",
+          alignItems:'center',
+          justifyContent:'center',
+          display: "flex",
+          flexDirection:'column',
+          items:'center',
         }}
       >
-        <span style={{color:"#fff", textTransform:'uppercase'}}> đặt vé xe</span>
+        <img src={logo} alt="logo" style={{ width: props.collapsed? '50%':"30%" }} />
+        <span style={{color:'white', fontWeight:'bold', fontSize:25}}>PDcar</span>
       </div>
       <Menu
         mode="inline"
@@ -121,7 +127,7 @@ const Sidebar = (props) => {
         onSelect={onSelect}
         onClick={onClick}
         style={{
-          minHeight: "90vh",
+          minHeight: "85vh",
           overflow: "auto",
         }}
       />

@@ -2,11 +2,12 @@
   .MuiTableHead-root {
     border: 1px solid #e4e4e4;
     background-color: rgba(245, 245, 245, 0.5);
-
+    
     .MuiTableCell-root {
       padding: 5px 0 5px 0;
-      color: #00202f;
+      color: #000;
       font-family: "SourceSansPro";
+      height: 50px;
     }
   }
 

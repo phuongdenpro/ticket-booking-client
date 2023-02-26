@@ -109,8 +109,8 @@ const TableCustom = (props) => {
                   key={header.field}
                   width={header.flex}
                   align={header.headerAlign}
-                  style={{fontWeight:'bold', fontSize:'16px'}}
-
+                  style={{fontWeight:'bold', fontSize:'16px', height:'70px'}}
+                  
                 >
                   {header.headerName}
                 </TableCell>
@@ -148,7 +148,7 @@ const TableCustom = (props) => {
                     </TableCell>
                   )}
                   {columns?.map((column) => (
-                    <TableCell width={column.flex} align={column.headerAlign}>
+                    <TableCell width={column.flex} align={column.headerAlign} style={{height:'60px'}}>
                       {renderRow(row, column, index)}
                     </TableCell>
                   ))}

@@ -1,6 +1,8 @@
-import { Button } from "@mui/material";
+import { Button, IconButton, Tooltip } from "@mui/material";
 import TableCustom from "../../../../components/TableCustom";
 import moment from "moment";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import EditIcon from "@mui/icons-material/Edit";
 moment.locale("vi");
 
 const StationList = (props) => {
@@ -24,6 +26,13 @@ const StationList = (props) => {
       headerAlign: "center",
       headerClassName: "theme",
       flex: 50,
+    },
+    {
+      field: "code",
+      headerName: "Mã bến xe",
+      headerAlign: "center",
+      headerClassName: "theme",
+      flex: 100,
     },
     {
       field: "name",
@@ -55,55 +64,33 @@ const StationList = (props) => {
         );
       },
     },
-    {
-      field: "images",
-      headerName: "Hình ảnh",
-      headerAlign: "center",
-      headerClassName: "theme",
-      description: "This column has a value getter and is not sortable.",
-      sortable: false,
-      flex: 100,
-      renderCell: (params) => {
-        return (
-          <img
-            src={params.row.images?.[0]?.url}
-            onError={({ currentTarget }) => {
-              currentTarget.onerror = null;
-            }}
-            alt=""
-            style={{
-              aspectRatio: 1,
-              width: "60%",
-              height: "40%",
-              backgroundSize: "cover",
-            }}
-          />
-        );
-      },
-    },
 
     {
       field: "action",
       headerName: "Thao tác",
-      flex: 85,
+      flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
       renderCell: (params) => {
         return (
-          <Button onClick={() => handleShowDetail(params.id)} style={{ backgroundColor: "transparent" }}>
-            <span
-              style={{
-                textDecorationLine: "underline",
-                color: "#1A89AC",
-                fontSize: "0.8rem",
-                display: "inline-block",
-                textTransform: "none",
-              }}
-            >
-              Cập nhật
-            </span>
-          </Button>
+          <div>
+            {" "}
+            
+            <Tooltip title="Xem chi tiết">
+              <IconButton>
+                <VisibilityIcon style={{ backgroundColor: "white", borderRadius: 5 }}/>
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Cập nhật">
+              <IconButton>
+                <EditIcon
+                  onClick={() => handleShowDetail(params.id)}
+                  style={{ backgroundColor: "white", borderRadius: 5 }}
+                />
+              </IconButton>
+            </Tooltip>
+          </div>
         );
       },
     },
