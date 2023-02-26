@@ -42,7 +42,7 @@ class StationApi {
   }
 
   deleteMultiple(params) {
-    const url = "station/multiple";
+    const url = "station/multiple/ids";
     const res = axiosClient.delete(url, {
       data: {
         ...params,
