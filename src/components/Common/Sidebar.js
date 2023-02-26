@@ -107,7 +107,7 @@ const Sidebar = (props) => {
       <div
         style={{
           background: "rgb(18, 10, 39)",
-          minHeight: "15vh",
+          minHeight: "16vh",
           alignItems:'center',
           justifyContent:'center',
           display: "flex",
@@ -127,7 +127,7 @@ const Sidebar = (props) => {
         onSelect={onSelect}
         onClick={onClick}
         style={{
-          minHeight: "85vh",
+          minHeight: "84vh",
           overflow: "auto",
         }}
       />
