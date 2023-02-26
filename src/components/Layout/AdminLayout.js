@@ -22,7 +22,7 @@ const AdminLayout = () => {
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
-        width={250}
+        width={245}
         style={{
           height: "100vh",
           overflow: "auto",
@@ -39,11 +39,11 @@ const AdminLayout = () => {
         sx={{
           flexGrow: 1,
           p: 2,
-          width: collapsed ? `calc(100% - 80px)` : `calc(100% - 250px)`,
+          width: collapsed ? `calc(100% - 80px)` : `calc(100% - 245px)`,
           minHeight: "100vh",
 
         }}
-        style={{marginLeft: collapsed? 80 : 250}}
+        style={{marginLeft: collapsed? 80 : 245}}
 
       >
         <Toolbar></Toolbar>
