@@ -30,6 +30,7 @@ import TableCustom from "../../../components/TableCustom";
 import StationList from "./Components/StationList";
 import ModalAlert from "../../../components/Modal";
 import customToast from "../../../components/ToastCustom";
+import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
 import EditStation from "./Components/CreateEditStation/EditStation";
 
 const AdminStation = (props) => {
@@ -255,10 +256,10 @@ const AdminStation = (props) => {
                 style={{ marginTop: 20, marginRight: 20 }}
                 variant="contained"
                 color="success"
-                startIcon={<PrintIcon />}
+                startIcon={<DownloadOutlinedIcon />}
                 onClick={funExportExcel}
               >
-                <span className={"txt"}>In danh sách</span>
+                <span className={"txt"}>Xuất danh sách</span>
               </Button>
               <Button
                 variant="contained"

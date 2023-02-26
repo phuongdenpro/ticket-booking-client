@@ -15,7 +15,7 @@ const AdminLayout = () => {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
   return (
-    <Box sx={{ display: "flex", background: colorConfigs.mainBg}}>
+    <Box sx={{ display: "flex"}}>
       <Topbar collapsed={collapsed} setCollapsed={setCollapsed} width={width} height={height}/>
       <Sider
         trigger={null}
@@ -41,7 +41,6 @@ const AdminLayout = () => {
           p: 2,
           width: collapsed ? `calc(100% - 80px)` : `calc(100% - 250px)`,
           minHeight: "100vh",
-          background: colorConfigs.mainBg,
 
         }}
         style={{marginLeft: collapsed? 80 : 250}}
