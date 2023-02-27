@@ -47,12 +47,12 @@ const Sidebar = (props) => {
   const items = [
     getItem("Dashboard", "", <DashboardOutlined />),
     getItem(
-      "Quản Lý Người Dùng",
+      "Quản Lý Khách Hàng",
       "subUser",
       <UserOutlined />,
       [
-        getChildItem("Người dùng", "user"),
-        getChildItem("Nhóm người dùng", "group-user"),
+        getChildItem("Khách hàng", "customer"),
+        getChildItem("Nhóm khách hàng", "group-customer"),
       ],
       true
     ),

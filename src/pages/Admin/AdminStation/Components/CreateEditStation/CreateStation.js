@@ -78,12 +78,14 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
   };
 
   const defaultValues = useMemo(() => ({
+    code: "",
     name: "",
     address: "",
     wardId: "",
   }));
 
   const schema = yup.object().shape({
+    code: yup.string().required("Mã bến xe không được phép bỏ trống"),
     name: yup.string().required("Tên bến xe không được phép bỏ trống"),
     address: yup.string().required("Địa chỉ không được phép bỏ trống"),
 
@@ -136,14 +138,14 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
 
   const getUrlFromIMG = async (fromData) => {
     const data = new FormData();
-    fromData.map((item) => data.append('images', item.file, item.name));
+    fromData.map((item) => data.append("images", item.file, item.name));
     const uploadApi = new UploadApi();
     const response = await uploadApi.uploadMutiFile(data);
 
     setUrlImage(response?.data?.data?.images.map((item) => item.Location));
-    
   };
 
+  console.log(urlImage);
   const onChange = (imageList) => {
     // data for submit
     setImages(imageList);
@@ -181,7 +183,9 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
       imageParams.push({ url: item });
     });
 
+    console.log(imageParams);
     const params = {
+      code: value.code,
       name: value.name,
       address: value.address,
       wardId: value.wardId.value,
@@ -252,7 +256,17 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
             </div>
             <div className="content" style={{ marginLeft: 40 }}>
               <Grid container spacing={2} style={{ marginTop: 10 }}>
-                <Grid item xs={11.25}>
+                <Grid item xs={5.6}>
+                  <FormControlCustom label={"Mã bến xe"} fullWidth>
+                    <InputField
+                      name={"code"}
+                      placeholder={"Nhập mã bến xe"}
+                      error={Boolean(errors.code)}
+                      helperText={errors?.code?.message}
+                    />
+                  </FormControlCustom>
+                </Grid>
+                <Grid item xs={5.6}>
                   <FormControlCustom label={"Tên bến xe"} fullWidth>
                     <InputField
                       name={"name"}
