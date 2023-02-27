@@ -193,7 +193,7 @@ const AdminDashboard = (props) => {
               />
             </div>
             <div className="card__footer">
-              <Link to="/admin/user">View All Customers</Link>
+              <Link to="/admin/customer">View All Customers</Link>
             </div>
           </div>
         </div>

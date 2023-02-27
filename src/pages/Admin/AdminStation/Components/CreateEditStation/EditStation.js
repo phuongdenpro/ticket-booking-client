@@ -26,7 +26,6 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import customToast from "../../../../../components/ToastCustom";
 const EditStation = (props) => {
   const { setShowDrawer, showDrawer, dataStation } = props;
-  console.log(dataStation);
   const [images, setImages] = useState();
   const [urlImage, setUrlImage] = useState();
   const [optionsProvince, setOptionsProvince] = useState([]);
@@ -36,7 +35,6 @@ const EditStation = (props) => {
   const [optionsWard, setOptionsWard] = useState([]);
   const [selectedWard, setSelectedWard] = useState({});
 
-  console.log(images);
   const getDataProvince = async () => {
     try {
       const provinceApi = new ProvinceApi();
@@ -80,6 +78,7 @@ const EditStation = (props) => {
 
   const defaultValues = useMemo(
     () => ({
+      code: dataStation.code || "",
       name: dataStation?.name || "",
       address: dataStation?.address || "",
       wardId: dataStation?.wardId || "",
@@ -230,16 +229,26 @@ const EditStation = (props) => {
             </div>
             <div className="content" style={{ marginLeft: 40 }}>
               <Grid container spacing={2} style={{ marginTop: 10 }}>
-                <Grid item xs={11.25}>
-                  <FormControlCustom label={"Tên bến xe"} fullWidth>
-                    <InputField
-                      name={"name"}
-                      placeholder={"Nhập tên bến xe"}
-                      error={Boolean(errors.name)}
-                      helperText={errors?.name?.message}
-                    />
-                  </FormControlCustom>
-                </Grid>
+              <Grid item xs={5.6}>
+              <FormControlCustom label={"Mã bến xe"} fullWidth>
+                <InputField
+                  name={"code"}
+                  placeholder={"Nhập mã bến xe"}
+                  error={Boolean(errors.code)}
+                  helperText={errors?.code?.message}
+                />
+              </FormControlCustom>
+            </Grid>
+            <Grid item xs={5.6}>
+              <FormControlCustom label={"Tên bến xe"} fullWidth>
+                <InputField
+                  name={"name"}
+                  placeholder={"Nhập tên bến xe"}
+                  error={Boolean(errors.name)}
+                  helperText={errors?.name?.message}
+                />
+              </FormControlCustom>
+            </Grid>
                 <Grid item xs={3.8}>
                   <FormControlCustom label={"Chọn địa chỉ"} fullWidth>
                     <SelectCustom

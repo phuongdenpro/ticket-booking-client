@@ -25,11 +25,11 @@ const adminRoutes = [
     element: <AdminDashboard />,
   },
   {
-    path: "/admin/user",
+    path: "/admin/customer",
     element: <AdminUser />,
   },
   {
-    path: "/admin/group-user",
+    path: "/admin/group-customer",
     element: <AdminGroupUser />,
   },
   {

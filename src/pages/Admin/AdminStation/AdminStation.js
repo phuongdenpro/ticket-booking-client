@@ -32,11 +32,13 @@ import ModalAlert from "../../../components/Modal";
 import customToast from "../../../components/ToastCustom";
 import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
 import EditStation from "./Components/CreateEditStation/EditStation";
+import DetailStation from "./Components/DetailStation/DetailStation";
 
 const AdminStation = (props) => {
   const [loadings, setLoadings] = useState([]);
   const [showDrawerEdit, setShowDrawerEdit] = useState(false);
   const [showDrawerCreate, setShowDrawerCreate] = useState(false);
+  const [showDrawerDetail, setShowDrawerDetail] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [idStation, setIdStation] = useState(null);
   const [detailStation, setDetailStation] = useState("");
@@ -130,6 +132,11 @@ const AdminStation = (props) => {
 
   const handelShowDetail = (id) => {
     setShowDrawerEdit(true);
+    setIdStation(id);
+  };
+
+  const handelDetail = (id) => {
+    setShowDrawerDetail(true);
     setIdStation(id);
   };
 
@@ -331,6 +338,7 @@ const AdminStation = (props) => {
             <StationList
               data={data?.data?.data || []}
               handleShowDetail={handelShowDetail}
+              handelDetail={handelDetail}
               selectionModel={selected}
               handleSelectionModeChange={handleSelectAllClick}
               handleClick={handleClick}
@@ -353,6 +361,13 @@ const AdminStation = (props) => {
           showDrawer={showDrawerEdit}
           dataStation={detailStation}
         ></EditStation>
+
+        <DetailStation
+          setShowDrawerDetail={setShowDrawerDetail}
+          showDrawerDetail={showDrawerDetail}
+          dataStation={detailStation}
+        ></DetailStation>
+
         <ModalAlert
           open={openModal}
           handleClose={() => handleCloseModal()}

@@ -11,6 +11,7 @@ const StationList = (props) => {
     selectionModel,
     handleSelectionModeChange,
     handleShowDetail,
+    handelDetail,
     handleClick,
     onChangeRowsPerPage,
     handleChangePage,
@@ -79,9 +80,12 @@ const StationList = (props) => {
             
             <Tooltip title="Xem chi tiết">
               <IconButton>
-                <VisibilityIcon style={{ backgroundColor: "white", borderRadius: 5 }}/>
+                <VisibilityIcon
+                onClick={() => handelDetail(params.id)}
+                style={{ backgroundColor: "white", borderRadius: 5 }}/>
               </IconButton>
             </Tooltip>
+            
             <Tooltip title="Cập nhật">
               <IconButton>
                 <EditIcon
