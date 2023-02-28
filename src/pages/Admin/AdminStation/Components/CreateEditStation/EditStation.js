@@ -35,17 +35,17 @@ const EditStation = (props) => {
   const [selectedDistrict, setSelectedDistrict] = useState({});
   const [optionsWard, setOptionsWard] = useState([]);
   const [selectedWard, setSelectedWard] = useState({});
-console.log(dataStation?.ward?.code);
+
   const getDataProvince = async () => {
-      const provinceApi = new ProvinceApi();
-      const res = await provinceApi.getAllProvince();
+    const provinceApi = new ProvinceApi();
+    const res = await provinceApi.getAllProvince();
 
-      const options = [];
-      res.data.data.map((item) =>
-        options.push({ label: item.name, value: item.code })
-      );
+    const options = [];
+    res.data.data.map((item) =>
+      options.push({ name: item.name, code: item.code })
+    );
 
-      setOptionsProvince(options);
+    setOptionsProvince(options);
   };
 
   const getDataDistrict = async () => {
@@ -56,7 +56,7 @@ console.log(dataStation?.ward?.code);
       );
       const options = [];
       res.data.data.map((item) =>
-        options.push({ label: item.name, value: item.code })
+        options.push({ name: item.name, code: item.code })
       );
       setOptionsDistrict(options);
     } catch (error) {}
@@ -66,10 +66,9 @@ console.log(dataStation?.ward?.code);
     try {
       const wardApi = new WardApi();
       const res = await wardApi.getWardByDistrictId(selectedDistrict.value);
-      console.log(res);
       const options = [];
       res.data.data.map((item) =>
-        options.push({ label: item.name, value: item.code })
+        options.push({ name: item.name, code: item.code })
       );
       setOptionsWard(options);
     } catch (error) {}
@@ -77,9 +76,11 @@ console.log(dataStation?.ward?.code);
 
   const defaultValues = useMemo(
     () => ({
-      code: dataStation.code || "",
+      code: dataStation?.code || "",
       name: dataStation?.name || "",
       address: dataStation?.address || "",
+      provinceId: dataStation?.province?.code || "",
+      districtId: dataStation?.district?.code || "",
       wardId: dataStation?.ward?.code || "",
       images: "" || null,
     }),
@@ -89,17 +90,17 @@ console.log(dataStation?.ward?.code);
   const getDataAddress = async () => {
     const wardApi = new WardApi();
 
-    const wardDefault = await wardApi.getDetailWardByCode(dataStation?.ward?.code);
-    console.log(wardDefault);
-    
-  }
+    const wardDefault = await wardApi.getDetailWardByCode(
+      dataStation?.ward?.code
+    );
+  };
 
   const schema = yup.object().shape({
     name: yup.string().required("Tên bến xe không được phép bỏ trống"),
     address: yup.string().required("Địa chỉ không được phép bỏ trống"),
 
     wardId: yup
-      .object()
+    .string()
       .typeError("Phường/thị xã không được bỏ trống")
       .required("Phường/thị xã không được bỏ trống"),
     provinceId: yup
@@ -116,7 +117,7 @@ console.log(dataStation?.ward?.code);
 
   useEffect(() => {
     getDataProvince();
-    getDataAddress()
+    getDataAddress();
   }, []);
 
   useEffect(() => {
@@ -133,7 +134,6 @@ console.log(dataStation?.ward?.code);
       getDataWard();
     }
   }, [selectedDistrict]);
-
 
   const methods = useForm({
     mode: "onSubmit",
@@ -187,6 +187,7 @@ console.log(dataStation?.ward?.code);
   };
 
   const onSubmit = (value = defaultValues) => {
+    console.log(value);
     const imageParams = [];
     urlImage.map((item) => {
       imageParams.push({ url: item });
@@ -253,37 +254,35 @@ console.log(dataStation?.ward?.code);
             </div>
             <div className="content" style={{ marginLeft: 40 }}>
               <Grid container spacing={2} style={{ marginTop: 10 }}>
-              <Grid item xs={5.6}>
-              <FormControlCustom label={"Mã bến xe"} fullWidth>
-                <InputField
-                  name={"code"}
-                  placeholder={"Nhập mã bến xe"}
-                  error={Boolean(errors.code)}
-                  helperText={errors?.code?.message}
-                />
-              </FormControlCustom>
-            </Grid>
-            <Grid item xs={5.6}>
-              <FormControlCustom label={"Tên bến xe"} fullWidth>
-                <InputField
-                  name={"name"}
-                  placeholder={"Nhập tên bến xe"}
-                  error={Boolean(errors.name)}
-                  helperText={errors?.name?.message}
-                />
-              </FormControlCustom>
-            </Grid>
+                <Grid item xs={5.6}>
+                  <FormControlCustom label={"Mã bến xe"} fullWidth>
+                    <InputField
+                      name={"code"}
+                      placeholder={"Nhập mã bến xe"}
+                      error={Boolean(errors.code)}
+                      helperText={errors?.code?.message}
+                    />
+                  </FormControlCustom>
+                </Grid>
+                <Grid item xs={5.6}>
+                  <FormControlCustom label={"Tên bến xe"} fullWidth>
+                    <InputField
+                      name={"name"}
+                      placeholder={"Nhập tên bến xe"}
+                      error={Boolean(errors.name)}
+                      helperText={errors?.name?.message}
+                    />
+                  </FormControlCustom>
+                </Grid>
                 <Grid item xs={3.8}>
                   <FormControlCustom label={"Chọn địa chỉ"} fullWidth>
                     <SelectCustom
                       name={"provinceId"}
-                      defaultValue={1}
                       placeholder={"Chọn tỉnh/thành phố"}
                       error={Boolean(errors?.provinceId)}
                       helperText={errors?.provinceId?.message}
                       onChange={setSelectedProvince}
                       options={optionsProvince}
-                      optionLabelKey={"label"}
                     />
                   </FormControlCustom>
                 </Grid>
@@ -291,13 +290,11 @@ console.log(dataStation?.ward?.code);
                   <FormControlCustom label={""} fullWidth>
                     <SelectCustom
                       name={"districtId"}
-                      defaultValue={1}
                       placeholder={"Chọn quận/huyện"}
                       error={Boolean(errors?.districtId)}
                       helperText={errors?.districtId?.message}
                       onChange={setSelectedDistrict}
                       options={optionsDistrict}
-                      optionLabelKey={"label"}
                     />
                   </FormControlCustom>
                 </Grid>
@@ -308,9 +305,7 @@ console.log(dataStation?.ward?.code);
                       placeholder={"Chọn phường/thị xã"}
                       error={Boolean(errors?.wardId)}
                       helperText={errors?.wardId?.message}
-                      defaultValue={dataStation?.ward?.code}
                       options={optionsWard}
-                      optionLabelKey={"label"}
                     />
                   </FormControlCustom>
                 </Grid>
