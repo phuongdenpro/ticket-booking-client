@@ -43,7 +43,7 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
 
       const options = [];
       res.data.data.map((item) =>
-        options.push({ label: item.name, value: item.code })
+        options.push({ name: item.name, code: item.code })
       );
 
       setOptionsProvince(options);
@@ -54,11 +54,11 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
     try {
       const districtApi = new DistrictApi();
       const res = await districtApi.getDistrictByProvinceId(
-        selectedProvince.value
+        selectedProvince.code
       );
       const options = [];
       res.data.data.map((item) =>
-        options.push({ label: item.name, value: item.code })
+        options.push({ name: item.name, code: item.code })
       );
       setOptionsDistrict(options);
     } catch (error) {}
@@ -67,11 +67,11 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
   const getDataWard = async () => {
     try {
       const wardApi = new WardApi();
-      const res = await wardApi.getWardByDistrictId(selectedDistrict.value);
+      const res = await wardApi.getWardByDistrictId(selectedDistrict.code);
       console.log(res);
       const options = [];
       res.data.data.map((item) =>
-        options.push({ label: item.name, value: item.code })
+        options.push({ name: item.name, code: item.code })
       );
       setOptionsWard(options);
     } catch (error) {}
@@ -285,7 +285,6 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
                       helperText={errors?.provinceId?.message}
                       onChange={setSelectedProvince}
                       options={optionsProvince}
-                      optionLabelKey={"label"}
                     />
                   </FormControlCustom>
                 </Grid>
@@ -294,12 +293,10 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
                     <SelectCustom
                       name={"districtId"}
                       placeholder={"Chọn quận/huyện"}
-                      
                       error={Boolean(errors?.districtId)}
                       helperText={errors?.districtId?.message}
                       onChange={setSelectedDistrict}
                       options={optionsDistrict}
-                      optionLabelKey={"label"}
                     />
                   </FormControlCustom>
                 </Grid>
@@ -311,7 +308,6 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
                       error={Boolean(errors?.wardId)}
                       helperText={errors?.wardId?.message}
                       options={optionsWard}
-                      optionLabelKey={"label"}
                     />
                   </FormControlCustom>
                 </Grid>

@@ -2,8 +2,6 @@ import { Autocomplete, TextField } from '@mui/material';
 import { Controller, useFormContext } from 'react-hook-form';
 import './index.scss';
 
-
-
 const SelectCustom = (props) => {
   const {
     name,
@@ -20,7 +18,7 @@ const SelectCustom = (props) => {
     style,
   } = props;
 
-  const defaultOption = options.find((option) => option.value === defaultValue);
+  const defaultOption = options.find((option) => option?.code === defaultValue);
   const defaultLabel = defaultOption ? defaultOption.label : '';
   const getOptionLabel = (option) => option.name;
 
@@ -32,6 +30,8 @@ const SelectCustom = (props) => {
       render={({ field: { onChange: onChangeDefault, value } }) => (
         <Autocomplete
           noOptionsText={'Không có dữ liệu'}
+          defaultChecked={options.find((option) => option?.code === defaultValue)}
+
           options={options}
           value={value || undefined}
           limitTags={limitTags}
