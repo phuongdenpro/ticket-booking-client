@@ -1,7 +1,9 @@
-import { Button } from "@mui/material";
+import { Button, IconButton, Tooltip } from "@mui/material";
 
 import DataTable from "../../../../components/DataTable";
 import TableCustom from "../../../../components/TableCustom";
+import ClearIcon from '@mui/icons-material/Clear';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
 
 const UserGroupList = (props) => {
   const {
@@ -22,14 +24,6 @@ const UserGroupList = (props) => {
       field: "stt",
       headerName: "STT",
       flex: 40,
-      headerAlign: "center",
-      headerClassName: "theme",
-      sortable: false,
-    },
-    {
-      field: "id",
-      headerName: "Mã nhóm",
-      flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
@@ -67,22 +61,26 @@ const UserGroupList = (props) => {
       sortable: false,
       renderCell: (params) => {
         return (
-          <Button
-            onClick={() => handleShowDetail(params.id)}
-            style={{ backgroundColor: "transparent" }}
-          >
-            <span
-              style={{
-                textDecorationLine: "underline",
-                color: "#1A89AC",
-                fontSize: "0.8rem",
-                display: "inline-block",
-                textTransform: "none",
-              }}
-            >
-              Cập nhật
-            </span>
-          </Button>
+          <div>
+            {" "}
+            
+            <Tooltip title="Cập nhật">
+              <IconButton>
+                <BorderColorIcon
+                 
+                  style={{ backgroundColor: "white", borderRadius: 5,fill: "#fca11a", width:17,height:17}}
+                />
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Xóa">
+            <IconButton>
+              <ClearIcon
+             
+              style={{ backgroundColor: "white", borderRadius: 5,fill: "#fb0b12",width:17,height:17 }}/>
+            </IconButton>
+          </Tooltip>
+          </div>
         );
       },
     },

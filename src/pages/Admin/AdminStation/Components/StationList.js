@@ -3,6 +3,7 @@ import TableCustom from "../../../../components/TableCustom";
 import moment from "moment";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
+import BorderColorIcon from '@mui/icons-material/BorderColor';
 moment.locale("vi");
 
 const StationList = (props) => {
@@ -82,15 +83,15 @@ const StationList = (props) => {
               <IconButton>
                 <VisibilityIcon
                 onClick={() => handelDetail(params.id)}
-                style={{ backgroundColor: "white", borderRadius: 5 }}/>
+                style={{ backgroundColor: "white", borderRadius: 5,fill: "#1a89ac",width:17,height:17 }}/>
               </IconButton>
             </Tooltip>
             
             <Tooltip title="Cập nhật">
               <IconButton>
-                <EditIcon
+                <BorderColorIcon
                   onClick={() => handleShowDetail(params.id)}
-                  style={{ backgroundColor: "white", borderRadius: 5 }}
+                  style={{ backgroundColor: "white", borderRadius: 5,fill: "#fca11a", width:17,height:17}}
                 />
               </IconButton>
             </Tooltip>

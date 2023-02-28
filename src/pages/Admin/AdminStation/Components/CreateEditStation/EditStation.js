@@ -24,6 +24,7 @@ import UploadImage from "../../../../../components/UploadImage";
 import { isEmpty } from "lodash";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import customToast from "../../../../../components/ToastCustom";
+import { UploadApi } from "../../../../../utils/uploadApi";
 const EditStation = (props) => {
   const { setShowDrawer, showDrawer, dataStation } = props;
   const [images, setImages] = useState();
@@ -34,9 +35,8 @@ const EditStation = (props) => {
   const [selectedDistrict, setSelectedDistrict] = useState({});
   const [optionsWard, setOptionsWard] = useState([]);
   const [selectedWard, setSelectedWard] = useState({});
-
+console.log(dataStation?.ward?.code);
   const getDataProvince = async () => {
-    try {
       const provinceApi = new ProvinceApi();
       const res = await provinceApi.getAllProvince();
 
@@ -46,7 +46,6 @@ const EditStation = (props) => {
       );
 
       setOptionsProvince(options);
-    } catch (error) {}
   };
 
   const getDataDistrict = async () => {
@@ -81,11 +80,19 @@ const EditStation = (props) => {
       code: dataStation.code || "",
       name: dataStation?.name || "",
       address: dataStation?.address || "",
-      wardId: dataStation?.wardId || "",
+      wardId: dataStation?.ward?.code || "",
       images: "" || null,
     }),
     [dataStation]
   );
+
+  const getDataAddress = async () => {
+    const wardApi = new WardApi();
+
+    const wardDefault = await wardApi.getDetailWardByCode(dataStation?.ward?.code);
+    console.log(wardDefault);
+    
+  }
 
   const schema = yup.object().shape({
     name: yup.string().required("Tên bến xe không được phép bỏ trống"),
@@ -109,6 +116,7 @@ const EditStation = (props) => {
 
   useEffect(() => {
     getDataProvince();
+    getDataAddress()
   }, []);
 
   useEffect(() => {
@@ -126,6 +134,7 @@ const EditStation = (props) => {
     }
   }, [selectedDistrict]);
 
+
   const methods = useForm({
     mode: "onSubmit",
     resolver: yupResolver(schema),
@@ -139,9 +148,11 @@ const EditStation = (props) => {
 
   const getUrlFromIMG = async (fromData) => {
     const data = new FormData();
-    data.append("images", fromData[0].file, fromData[0].file.name);
-    // const a = await uploadImage(data);
-    // setUrlImage([a?.data?.images[0].Location]);
+    fromData.map((item) => data.append("images", item.file, item.name));
+    const uploadApi = new UploadApi();
+    const response = await uploadApi.uploadMutiFile(data);
+
+    setUrlImage(response?.data?.data?.images.map((item) => item.Location));
   };
 
   const onChange = (imageList) => {
@@ -176,7 +187,20 @@ const EditStation = (props) => {
   };
 
   const onSubmit = (value = defaultValues) => {
-    console.log(value);
+    const imageParams = [];
+    urlImage.map((item) => {
+      imageParams.push({ url: item });
+    });
+
+    console.log(imageParams);
+    const params = {
+      code: value.code,
+      name: value.name,
+      address: value.address,
+      wardId: value.wardId.value,
+      images: imageParams,
+    };
+    console.log(params);
   };
 
   const goBack = () => {
@@ -253,6 +277,7 @@ const EditStation = (props) => {
                   <FormControlCustom label={"Chọn địa chỉ"} fullWidth>
                     <SelectCustom
                       name={"provinceId"}
+                      defaultValue={1}
                       placeholder={"Chọn tỉnh/thành phố"}
                       error={Boolean(errors?.provinceId)}
                       helperText={errors?.provinceId?.message}
@@ -266,6 +291,7 @@ const EditStation = (props) => {
                   <FormControlCustom label={""} fullWidth>
                     <SelectCustom
                       name={"districtId"}
+                      defaultValue={1}
                       placeholder={"Chọn quận/huyện"}
                       error={Boolean(errors?.districtId)}
                       helperText={errors?.districtId?.message}
@@ -282,6 +308,7 @@ const EditStation = (props) => {
                       placeholder={"Chọn phường/thị xã"}
                       error={Boolean(errors?.wardId)}
                       helperText={errors?.wardId?.message}
+                      defaultValue={dataStation?.ward?.code}
                       options={optionsWard}
                       optionLabelKey={"label"}
                     />
