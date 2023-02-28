@@ -9,8 +9,8 @@ import Paper from "@mui/material/Paper";
 import { Checkbox, Stack, TableFooter, TablePagination } from "@mui/material";
 import "./index.scss";
 import { GridOverlay } from "@mui/x-data-grid";
-import noData from '../../assets/no-data.png';
-import { isEmpty } from 'lodash';
+import noData from "../../assets/no-data.png";
+import { isEmpty } from "lodash";
 
 const TableCustom = (props) => {
   const {
@@ -55,15 +55,15 @@ const TableCustom = (props) => {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * pageSize - rows.length) : 0;
 
-    const renderNoRowsOverlay = () => {
-      return (
-        <GridOverlay className="gird-overlay">
-          <Stack alignItems="center" justifyContent="center" spacing={2}>
-            <p>Không có dữ liệu</p>
-          </Stack>
-        </GridOverlay>
-      );
-    };
+  const renderNoRowsOverlay = () => {
+    return (
+      <GridOverlay className="gird-overlay">
+        <Stack alignItems="center" justifyContent="center" spacing={2}>
+          <p>Không có dữ liệu</p>
+        </Stack>
+      </GridOverlay>
+    );
+  };
 
   return (
     <Paper sx={{ width: "100%" }}>
@@ -109,8 +109,11 @@ const TableCustom = (props) => {
                   key={header.field}
                   width={header.flex}
                   align={header.headerAlign}
-                  style={{fontWeight:'bold', fontSize:'16px', height:'70px'}}
-                  
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "16px",
+                    height: "70px",
+                  }}
                 >
                   {header.headerName}
                 </TableCell>
@@ -148,7 +151,11 @@ const TableCustom = (props) => {
                     </TableCell>
                   )}
                   {columns?.map((column) => (
-                    <TableCell width={column.flex} align={column.headerAlign} style={{height:'60px'}}>
+                    <TableCell
+                      width={column.flex}
+                      align={column.headerAlign}
+                      style={{ height: "60px" }}
+                    >
                       {renderRow(row, column, index)}
                     </TableCell>
                   ))}
@@ -167,16 +174,16 @@ const TableCustom = (props) => {
           </TableBody>
         </Table>
         {isEmpty(rows) && (
-          <div className={'btn-add-product'} style={{display:'block'}} >
-            <div className={'view-btn-add'}>
-              <img src={noData} className="empty-data"/>
+          <div className={"btn-add-product"} style={{ display: "block" }}>
+            <div className={"view-btn-add"}>
+              <img src={noData} className="empty-data" />
               <span>Không có dữ liệu</span>
             </div>
           </div>
         )}
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
+        rowsPerPageOptions={[10, 20, 50]}
         component="div"
         count={total || 0}
         rowsPerPage={pageSize || 0}

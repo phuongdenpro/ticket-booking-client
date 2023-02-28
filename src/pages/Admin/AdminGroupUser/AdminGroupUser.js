@@ -14,16 +14,9 @@ import { GroupCusApi } from "../../../utils/groupCusApi";
 
 const AdminGroupUser = (props) => {
   const [loadings, setLoadings] = useState([]);
-  const [showDrawerEdit, setShowDrawerEdit] = useState(false);
-  const [showDrawerCreate, setShowDrawerCreate] = useState(false);
-  const [showDrawerDetail, setShowDrawerDetail] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
-  const [idStation, setIdStation] = useState(null);
-  const [detailStation, setDetailStation] = useState("");
+
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [selectedStation, setSelectedStation] = useState([]);
-  const [selected, setSelected] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [filterParams, setFilterParams] = useState(null);
   const [data, setData] = useState([]);
@@ -41,6 +34,18 @@ const AdminGroupUser = (props) => {
   useEffect(() => {
     handleGetData();
   }, [page, pageSize, filterParams]);
+  const handleSearch = (e) => {
+    setFilterParams({ keywords: searchValue || undefined });
+  };
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setPageSize(+event.target.value);
+    setPage(0);
+  };
+
   return (
     <Box sx={{ height: 480, width: "100%" }}>
       <Grid container className={"align-items-center header_title"}>
@@ -84,10 +89,10 @@ const AdminGroupUser = (props) => {
 
           <SearchInput
             className="txt-search"
-            placeholder={"Tìm kiếm khách hàng"}
-            // value={searchValue}
-            // setSearchValue={setSearchValue}
-            // handleSearch={handleSearch}
+            placeholder={"Nhập thông tin tìm kiếm"}
+            value={searchValue}
+            setSearchValue={setSearchValue}
+            handleSearch={handleSearch}
           />
         </Grid>
       </Grid>
@@ -105,7 +110,14 @@ const AdminGroupUser = (props) => {
       </Grid>
       <div style={{ display: "flex", height: "100%" }}>
         <div style={{ flexGrow: 1 }}>
-          <UserGroupList data={data?.data?.data || []}></UserGroupList>
+          <UserGroupList
+            data={data?.data?.data || []}
+            handleChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+            total={data?.data?.pagination?.total}
+            page={page}
+            pageSize={pageSize}
+          ></UserGroupList>
         </div>
       </div>
     </Box>

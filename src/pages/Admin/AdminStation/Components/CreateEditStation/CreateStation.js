@@ -294,6 +294,7 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
                     <SelectCustom
                       name={"districtId"}
                       placeholder={"Chọn quận/huyện"}
+                      
                       error={Boolean(errors?.districtId)}
                       helperText={errors?.districtId?.message}
                       onChange={setSelectedDistrict}

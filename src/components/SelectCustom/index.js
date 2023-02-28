@@ -11,7 +11,7 @@ const SelectCustom = (props) => {
     limitTags = 1,
     error = false,
     helperText = '',
-    defaultValue = undefined,
+    defaultValue=undefined,
     placeholder = '',
     multiple = false,
     onChange,
@@ -19,6 +19,10 @@ const SelectCustom = (props) => {
     freeSolo = false,
     style,
   } = props;
+
+  const defaultOption = options.find((option) => option.value === defaultValue);
+  const defaultLabel = defaultOption ? defaultOption.label : '';
+  const getOptionLabel = (option) => option.name;
 
   const { control } = useFormContext();
   return (
@@ -39,7 +43,6 @@ const SelectCustom = (props) => {
           }}
           onChange={(event, newValue) => {
             if (onChange) {
-              console.log('vào');
               return onChange(newValue);
             }
             return onChangeDefault(newValue);
@@ -48,7 +51,7 @@ const SelectCustom = (props) => {
             return onChangeDefault(newValue);
           }}
 
-          defaultValue={defaultValue}
+          defaultValue={defaultOption}
           freeSolo={freeSolo}
           style={style}
           renderInput={params => (
