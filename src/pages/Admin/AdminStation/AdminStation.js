@@ -51,7 +51,6 @@ const AdminStation = (props) => {
   const [data, setData] = useState([]);
 
   const handleGetData = async () => {
-    console.log("vào");
     enterLoading(0);
     const stationApi = new StationApi();
     const response = await stationApi.getAllStations({
@@ -179,7 +178,7 @@ const AdminStation = (props) => {
       setOpenModal(false);
       setSelected([]);
     } catch (error) {
-      customToast.error("Có lỗi xảy ra");
+      customToast.error(error.response.data.message);
     }
   };
   useEffect(() => {
@@ -224,7 +223,6 @@ const AdminStation = (props) => {
     try {
       const stationApi = new StationApi();
       const response = await stationApi.exportExcel();
-      console.log(response.data);
       if (response.status == 200) {
         const fileName = "DS_Ben_Xe" + new Date().toISOString() + ".xlsx";
         fileDownload(response.data.data, fileName);
@@ -236,9 +234,6 @@ const AdminStation = (props) => {
   };
   const exportExcel = () => {
     const params = {
-      branch: "ALL",
-      status: "ALL",
-      outOfDate: "ALL",
     };
     const data = {};
     // mutationExportExcel.mutate(params);
@@ -359,6 +354,7 @@ const AdminStation = (props) => {
         setShowDrawer={setShowDrawerEdit}
         showDrawer={showDrawerEdit}
         dataStation={detailStation}
+        handleGetData={handleGetData}
       ></EditStation>
 
       <DetailStation

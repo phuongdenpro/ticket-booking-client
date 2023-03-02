@@ -45,8 +45,8 @@ const StationList = (props) => {
       editable: true,
     },
     {
-      field: "address",
-      headerName: "Địa chỉ",
+      field: "fullAddress",
+      headerName: "Địa chỉ chi tiết",
       headerAlign: "center",
       headerClassName: "theme",
       flex: 410,

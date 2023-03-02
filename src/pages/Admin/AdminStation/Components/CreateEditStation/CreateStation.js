@@ -68,7 +68,6 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
     try {
       const wardApi = new WardApi();
       const res = await wardApi.getWardByDistrictId(selectedDistrict.code);
-      console.log(res);
       const options = [];
       res.data.data.map((item) =>
         options.push({ name: item.name, code: item.code })
@@ -145,7 +144,6 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
     setUrlImage(response?.data?.data?.images.map((item) => item.Location));
   };
 
-  console.log(urlImage);
   const onChange = (imageList) => {
     // data for submit
     setImages(imageList);
@@ -177,28 +175,28 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
     await readFileAsync();
   };
 
-  const onSubmit = (value = defaultValues) => {
+  const onSubmit = async (value = defaultValues) => {
     const imageParams = [];
     urlImage.map((item) => {
       imageParams.push({ url: item });
     });
 
-    console.log(imageParams);
     const params = {
       code: value.code,
       name: value.name,
       address: value.address,
-      wardId: value.wardId.value,
+      wardId: value.wardId.code,
       images: imageParams,
     };
     try {
       const stationApi = new StationApi();
-      const res = stationApi.createStation(params);
+      const res = await stationApi.createStation(params);
       customToast.success("Thêm mới thành công");
       handleGetData();
       setShowDrawer(false);
     } catch (error) {
-      customToast.error("Thêm thất bại");
+      customToast.error(error.response.data.message);
+      
     }
     handleGetData();
   };
@@ -306,16 +304,17 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
                       name={"wardId"}
                       placeholder={"Chọn phường/thị xã"}
                       error={Boolean(errors?.wardId)}
+                      defaultValue={defaultValues?.wardId}
                       helperText={errors?.wardId?.message}
                       options={optionsWard}
                     />
                   </FormControlCustom>
                 </Grid>
                 <Grid item xs={11.25}>
-                  <FormControlCustom label={"Địa chỉ chi tiết"} fullWidth>
+                  <FormControlCustom label={"Địa chỉ"} fullWidth>
                     <InputField
                       name={"address"}
-                      placeholder={"Nhập địa chỉ chi tiết"}
+                      placeholder={"Nhập địa chỉ"}
                       error={Boolean(errors.address)}
                       helperText={errors?.address?.message}
                     />

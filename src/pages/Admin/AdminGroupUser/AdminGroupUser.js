@@ -22,7 +22,6 @@ const AdminGroupUser = (props) => {
   const [data, setData] = useState([]);
 
   const handleGetData = async () => {
-    console.log("vào");
     const groupCusApi = new GroupCusApi();
     const response = await groupCusApi.getAll({
       page: page + 1,
@@ -32,8 +31,13 @@ const AdminGroupUser = (props) => {
     setData(response);
   };
   useEffect(() => {
+    setFilterParams({ ...filterParams, keywords: searchValue });
+  }, [searchValue]);
+
+  useEffect(() => {
     handleGetData();
   }, [page, pageSize, filterParams]);
+
   const handleSearch = (e) => {
     setFilterParams({ keywords: searchValue || undefined });
   };
@@ -105,8 +109,8 @@ const AdminGroupUser = (props) => {
         }}
         md={6}
       >
-        <span className="title-price">Tổng số khách hàng: </span>
-        <span className="txt-price"> 0</span>
+        <span className="title-price" style={{color:'#000', marginRight:5, fontSize:15, fontWeight:'bold'}}>Tổng số nhóm khách hàng: </span>
+        <span className="txt-price"> {data?.data?.pagination?.total}</span>
       </Grid>
       <div style={{ display: "flex", height: "100%" }}>
         <div style={{ flexGrow: 1 }}>
@@ -115,6 +119,7 @@ const AdminGroupUser = (props) => {
             handleChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
             total={data?.data?.pagination?.total}
+            handleGetData={handleGetData}
             page={page}
             pageSize={pageSize}
           ></UserGroupList>

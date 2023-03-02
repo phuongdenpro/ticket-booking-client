@@ -50,13 +50,10 @@ const Login = () => {
         adminApi.save_token(response.data);
       }
       navigate("/admin");
-
-      notification.config({ top: 70 });
       customToast.success("Đăng nhập thành công");
-
       
     } catch (error) {
-      customToast.error("Đăng nhập thất bại");
+      customToast.error("Tên đăng nhập hoặc mật khẩu không đúng");
     } finally {
       stopLoading(0);
     }

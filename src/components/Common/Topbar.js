@@ -49,7 +49,7 @@ const Topbar = (props) => {
       Cookies.remove("access_token");
       customToast.success("Đăng xuất thành công");
     } catch (error) {
-      customToast.error("Có lỗi xảy ra");
+      customToast.error(error.response.data.message);
     }
   };
   const items = [
