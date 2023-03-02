@@ -61,5 +61,14 @@ class StationApi {
     return res;
   }
 
+  updateStation(id, params) {
+    const url = `station/id/${id}`;
+    const res = axiosClient.patch(url, {
+      ...params,
+    });
+    return res;
+    
+  }
+
 }
 export { StationApi };

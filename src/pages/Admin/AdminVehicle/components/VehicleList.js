@@ -34,23 +34,7 @@ const VehicleList = (props) => {
       headerClassName: 'theme',
       sortable: false,
     },
-    
-    {
-      field: 'description',
-      flex: 130,
-      headerName: 'Mô tả',
-      headerAlign: 'center',
-      headerClassName: 'theme',
-    },
-    {
-      field: 'type',
-      headerName: 'Loại xe',
-
-      flex: 100,
-      headerAlign: 'center',
-      headerClassName: 'theme',
-      sortable: false,
-    },
+   
     {
       field: 'images',
       headerName: 'Ảnh',
@@ -77,6 +61,23 @@ const VehicleList = (props) => {
       },
     },
     {
+      field: 'description',
+      flex: 200,
+      headerName: 'Mô tả',
+      headerAlign: 'center',
+      headerClassName: 'theme',
+    },
+    {
+      field: 'type',
+      headerName: 'Loại xe',
+
+      flex: 100,
+      headerAlign: 'center',
+      headerClassName: 'theme',
+      sortable: false,
+    },
+    
+    {
       field: 'licensePlate',
       headerName: 'Biển số xe',
       flex: 120,
@@ -88,7 +89,7 @@ const VehicleList = (props) => {
     {
       field: 'floorNumber',
       headerName: 'Số tầng',
-      flex: 220,
+      flex: 100,
       headerAlign: 'center',
       headerClassName: 'theme',
       sortable: false,
@@ -96,7 +97,7 @@ const VehicleList = (props) => {
     {
       field: 'totalSeat',
       headerName: 'Tổng số ghế',
-      flex: 220,
+      flex: 100,
       headerAlign: 'center',
       headerClassName: 'theme',
       sortable: false,

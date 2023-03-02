@@ -66,103 +66,102 @@ const TableCustom = (props) => {
   };
 
   return (
-    <Paper sx={{ width: "100%" }}>
-      <TableContainer
-        className="table-custom"
-        component={Paper}
-        sx={{ maxHeight: 400 }}
+    <TableContainer
+      className="table-custom"
+      component={Paper}
+      // sx={{ maxHeight: 400 }}
+    >
+      <Table
+        stickyHeader
+        size="small"
+        aria-label="a dense table"
+        padding="none"
+        sx={{ minWidth: 1050 }}
       >
-        <Table
-          stickyHeader
-          sx={{ minWidth: 400 }}
-          size="medium"
-          aria-label="a dense table"
-          padding="none"
-        >
-          <TableHead>
-            <TableRow>
-              {checkboxSelection && (
-                <TableCell align={headerCheckBoxAlignment} padding="checkbox">
-                  <Checkbox
-                    color="primary"
-                    indeterminate={
-                      selected &&
-                      selected?.length > 0 &&
-                      selected.length < rows.length
-                    }
-                    checked={
-                      selected &&
-                      rows?.length > 0 &&
-                      selected?.length === rows?.length
-                    }
-                    onChange={
-                      loadOnServerSide ? onSelectAllClick : handleSelectAllClick
-                    }
-                    inputProps={{
-                      "aria-label": "select all desserts",
-                    }}
-                  />
-                </TableCell>
-              )}
-              {columns?.map((header) => (
-                <TableCell
-                  key={header.field}
-                  width={header.flex}
-                  align={header.headerAlign}
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: "16px",
-                    height: "70px",
+        <TableHead>
+          <TableRow>
+            {checkboxSelection && (
+              <TableCell align={headerCheckBoxAlignment} padding="checkbox">
+                <Checkbox
+                  color="primary"
+                  indeterminate={
+                    selected &&
+                    selected?.length > 0 &&
+                    selected.length < rows.length
+                  }
+                  checked={
+                    selected &&
+                    rows?.length > 0 &&
+                    selected?.length === rows?.length
+                  }
+                  onChange={
+                    loadOnServerSide ? onSelectAllClick : handleSelectAllClick
+                  }
+                  inputProps={{
+                    "aria-label": "select all desserts",
                   }}
-                >
-                  {header.headerName}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows?.map((row, index) => {
-              const isItemSelected = isSelected(row.id);
-              return (
-                <TableRow
-                  key={row.id}
-                  role="checkbox"
-                  aria-checked={isItemSelected}
-                  tabIndex={-1}
-                  selected={checkboxSelection && isItemSelected}
-                >
-                  {checkboxSelection && (
-                    <TableCell
-                      align={checkBoxAlignment}
-                      padding="checkbox"
-                      onClick={(event) => {
-                        loadOnServerSide
-                          ? onRowClick(event, row.id)
-                          : handleClick(event, row.id);
+                />
+              </TableCell>
+            )}
+            {columns?.map((header) => (
+              <TableCell
+                key={header.field}
+                width={header.flex}
+                align={header.headerAlign}
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "16px",
+                  height: "70px",
+                }}
+              >
+                {header.headerName}
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows?.map((row, index) => {
+            const isItemSelected = isSelected(row.id);
+            return (
+              <TableRow
+                key={row.id}
+                role="checkbox"
+                aria-checked={isItemSelected}
+                tabIndex={-1}
+                selected={checkboxSelection && isItemSelected}
+              >
+                {checkboxSelection && (
+                  <TableCell
+                    align={checkBoxAlignment}
+                    padding="checkbox"
+                    onClick={(event) => {
+                      loadOnServerSide
+                        ? onRowClick(event, row.id)
+                        : handleClick(event, row.id);
+                    }}
+                  >
+                    <Checkbox
+                      color="primary"
+                      checked={isItemSelected}
+                      inputProps={{
+                        "aria-labelledby": "check-box-" + index,
                       }}
-                    >
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{
-                          "aria-labelledby": "check-box-" + index,
-                        }}
-                      />
-                    </TableCell>
-                  )}
-                  {columns?.map((column) => (
-                    <TableCell
-                      width={column.flex}
-                      align={column.headerAlign}
-                      style={{ height: "60px" }}
-                    >
-                      {renderRow(row, column, index)}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              );
-            })}
-            {/* {emptyRows > 0 && (
+                    />
+                  </TableCell>
+                )}
+                {columns?.map((column) => (
+                  <TableCell
+                    width={column.flex}
+                    align={column.headerAlign}
+                    style={{ height: "60px" }}
+                  >
+                    {renderRow(row, column, index)}
+                  </TableCell>
+                ))}
+              </TableRow>
+            );
+          })}
+          {/* {emptyRows > 0 && (
             <TableRow
               style={{
                 height: 33 * emptyRows,
@@ -171,17 +170,16 @@ const TableCustom = (props) => {
               <TableCell colSpan={rows.length} />
             </TableRow>
           )} */}
-          </TableBody>
-        </Table>
-        {isEmpty(rows) && (
-          <div className={"btn-add-product"} style={{ display: "block" }}>
-            <div className={"view-btn-add"}>
-              <img src={noData} className="empty-data" />
-              <span>Không có dữ liệu</span>
-            </div>
+        </TableBody>
+      </Table>
+      {isEmpty(rows) && (
+        <div className={"btn-add-product"} style={{ display: "block" }}>
+          <div className={"view-btn-add"}>
+            <img src={noData} className="empty-data" />
+            <span>Không có dữ liệu</span>
           </div>
-        )}
-      </TableContainer>
+        </div>
+      )}
       <TablePagination
         rowsPerPageOptions={[10, 20, 50]}
         component="div"
@@ -192,7 +190,7 @@ const TableCustom = (props) => {
         labelRowsPerPage={"Số hàng hiển thị"}
         onRowsPerPageChange={onChangeRowsPerPage}
       />
-    </Paper>
+    </TableContainer>
   );
 };
 export default TableCustom;

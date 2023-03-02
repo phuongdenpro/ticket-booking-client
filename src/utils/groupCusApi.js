@@ -12,7 +12,10 @@ class GroupCusApi {
     return res;
   }
 
- 
-
+  deleteById(id, params) {
+    const url = `customer-group/id/${id}`;
+    const res = axiosClient.delete(url, params);
+    return res;
+  }
 }
 export { GroupCusApi };

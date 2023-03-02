@@ -25,8 +25,9 @@ import { isEmpty } from "lodash";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import customToast from "../../../../../components/ToastCustom";
 import { UploadApi } from "../../../../../utils/uploadApi";
+import { StationApi } from "../../../../../utils/stationApi";
 const EditStation = (props) => {
-  const { setShowDrawer, showDrawer, dataStation } = props;
+  const { setShowDrawer, showDrawer, dataStation, handleGetData } = props;
   const [images, setImages] = useState();
   const [urlImage, setUrlImage] = useState();
   const [optionsProvince, setOptionsProvince] = useState([]);
@@ -52,7 +53,7 @@ const EditStation = (props) => {
     try {
       const districtApi = new DistrictApi();
       const res = await districtApi.getDistrictByProvinceId(
-        selectedProvince.value
+        selectedProvince.code
       );
       const options = [];
       res.data.data.map((item) =>
@@ -65,7 +66,7 @@ const EditStation = (props) => {
   const getDataWard = async () => {
     try {
       const wardApi = new WardApi();
-      const res = await wardApi.getWardByDistrictId(selectedDistrict.value);
+      const res = await wardApi.getWardByDistrictId(selectedDistrict.code);
       const options = [];
       res.data.data.map((item) =>
         options.push({ name: item.name, code: item.code })
@@ -76,49 +77,57 @@ const EditStation = (props) => {
 
   const defaultValues = useMemo(
     () => ({
+      id: dataStation?.id,
       code: dataStation?.code || "",
       name: dataStation?.name || "",
       address: dataStation?.address || "",
-      provinceId: dataStation?.province?.code || "",
-      districtId: dataStation?.district?.code || "",
-      wardId: dataStation?.ward?.code || "",
+      provinceId:
+        {
+          code: dataStation?.province?.code,
+          name: dataStation?.province?.name,
+        } || "",
+      districtId:
+        {
+          code: dataStation?.district?.code,
+          name: dataStation?.district?.name,
+        } || "",
+      wardId:
+        {
+          code: dataStation?.ward?.code,
+          name: dataStation?.ward?.name,
+        } || "",
       images: "" || null,
     }),
     [dataStation]
   );
 
-  const getDataAddress = async () => {
-    const wardApi = new WardApi();
-
-    const wardDefault = await wardApi.getDetailWardByCode(
-      dataStation?.ward?.code
-    );
-  };
-
   const schema = yup.object().shape({
     name: yup.string().required("Tên bến xe không được phép bỏ trống"),
     address: yup.string().required("Địa chỉ không được phép bỏ trống"),
 
-    wardId: yup
-    .string()
-      .typeError("Phường/thị xã không được bỏ trống")
-      .required("Phường/thị xã không được bỏ trống"),
-    provinceId: yup
-      .string()
-      .required("Tỉnh/thành phố xã không được phép bỏ trống"),
-    districtId: yup.string().required("Quận/huyện không được phép bỏ trống"),
+    // wardId: yup
+    //   .object()
+    //   .typeError("Phường/thị xã không được bỏ trống")
+    //   .required("Phường/thị xã không được bỏ trống"),
+    // provinceId: yup
+    //   .object()
+    //   .typeError("Tỉnh/thành phố không được phép bỏ trống")
+    //   .required("Tỉnh/thành phố không được phép bỏ trống"),
+    // districtId: yup
+    //   .object()
+    //   .typeError("Quận/huyện  không được phép bỏ trống")
+    //   .required("Quận/huyện không được phép bỏ trống"),
   });
 
   useEffect(() => {
     reset({ ...defaultValues });
-    setImages(dataStation?.images || []);
-    setUrlImage(dataStation?.images || []);
-  }, [dataStation]);
-
-  useEffect(() => {
+    setImages(dataStation?.images?.map((item) => item.url) || []);
+    setUrlImage(dataStation?.images?.map((item) => item.url) || []);
+    setSelectedProvince(defaultValues?.provinceId);
+    setSelectedDistrict(defaultValues?.districtId);
+    setSelectedWard(defaultValues?.wardId);
     getDataProvince();
-    getDataAddress();
-  }, []);
+  }, [dataStation]);
 
   useEffect(() => {
     if (!selectedProvince) setOptionsDistrict([]);
@@ -186,22 +195,32 @@ const EditStation = (props) => {
     await readFileAsync();
   };
 
-  const onSubmit = (value = defaultValues) => {
-    console.log(value);
-    const imageParams = [];
-    urlImage.map((item) => {
-      imageParams.push({ url: item });
-    });
+  const onSubmit = async (value) => {
+    try {
+      const imageParams = [];
+      console.log(urlImage);
+      urlImage.map((item) => {
+        imageParams.push({ url: item });
+      });
 
-    console.log(imageParams);
-    const params = {
-      code: value.code,
-      name: value.name,
-      address: value.address,
-      wardId: value.wardId.value,
-      images: imageParams,
-    };
-    console.log(params);
+      const params = {
+        code: value.code,
+        name: value.name,
+        address: value.address,
+        wardId: selectedWard?.code,
+        images: imageParams,
+      };
+      console.log(params);
+      const stationApi = new StationApi();
+      const res = await stationApi.updateStation(defaultValues?.id, params);
+      console.log(res);
+      customToast.success("Cập nhật thành công");
+      handleGetData();
+      setShowDrawer(false);
+    } catch (error) {
+      customToast.error(error.response.data.message);
+    }
+    handleGetData();
   };
 
   const goBack = () => {
@@ -304,16 +323,17 @@ const EditStation = (props) => {
                       name={"wardId"}
                       placeholder={"Chọn phường/thị xã"}
                       error={Boolean(errors?.wardId)}
+                      onChange={setSelectedWard}
                       helperText={errors?.wardId?.message}
                       options={optionsWard}
                     />
                   </FormControlCustom>
                 </Grid>
                 <Grid item xs={11.25}>
-                  <FormControlCustom label={"Địa chỉ chi tiết"} fullWidth>
+                  <FormControlCustom label={"Địa chỉ"} fullWidth>
                     <InputField
                       name={"address"}
-                      placeholder={"Nhập địa chỉ chi tiết"}
+                      placeholder={"Nhập địa chỉ"}
                       error={Boolean(errors.address)}
                       helperText={errors?.address?.message}
                     />

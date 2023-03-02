@@ -18,9 +18,9 @@ const SelectCustom = (props) => {
     style,
   } = props;
 
-  const defaultOption = options.find((option) => option?.code === defaultValue);
-  const defaultLabel = defaultOption ? defaultOption.label : '';
-  const getOptionLabel = (option) => option.name;
+  // const defaultOption = options.find((option) => option?.code === defaultValue);
+  // const defaultLabel = defaultOption ? defaultOption.label : '';
+  // const getOptionLabel = (option) => option.name;
 
   const { control } = useFormContext();
   return (
@@ -29,9 +29,9 @@ const SelectCustom = (props) => {
       name={name}
       render={({ field: { onChange: onChangeDefault, value } }) => (
         <Autocomplete
+        autoComplete
           noOptionsText={'Không có dữ liệu'}
-          defaultChecked={options.find((option) => option?.code === defaultValue)}
-
+          isOptionEqualToValue={(option, value) => option?.code === value?.code}
           options={options}
           value={value || undefined}
           limitTags={limitTags}
@@ -51,7 +51,7 @@ const SelectCustom = (props) => {
             return onChangeDefault(newValue);
           }}
 
-          defaultValue={defaultOption}
+          defaultValue={defaultValue}
           freeSolo={freeSolo}
           style={style}
           renderInput={params => (
