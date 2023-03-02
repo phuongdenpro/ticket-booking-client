@@ -15,8 +15,13 @@ const AdminLayout = () => {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
   return (
-    <Box sx={{ display: "flex"}}>
-      <Topbar collapsed={collapsed} setCollapsed={setCollapsed} width={width} height={height}/>
+    <Box sx={{ display: "flex" }}>
+      <Topbar
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+        width={width}
+        height={height}
+      />
       <Sider
         trigger={null}
         collapsible
@@ -26,9 +31,9 @@ const AdminLayout = () => {
         style={{
           height: "100vh",
           overflow: "auto",
-          position:"fixed",
+          position: "fixed",
           top: 0,
-          bottom:0,
+          bottom: 0,
         }}
       >
         <Sidebar collapsed={collapsed} />
@@ -37,14 +42,15 @@ const AdminLayout = () => {
       <Box
         component="main"
         sx={{
+
           flexGrow: 1,
           p: 2,
           width: collapsed ? `calc(100% - 80px)` : `calc(100% - 245px)`,
           minHeight: "100vh",
-
         }}
-        style={{marginLeft: collapsed? 80 : 245}}
-
+        style={{
+          marginLeft: collapsed ? 80 : 245,
+        }}
       >
         <Toolbar></Toolbar>
         <Outlet></Outlet>

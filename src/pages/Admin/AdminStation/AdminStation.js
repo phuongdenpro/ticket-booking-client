@@ -233,14 +233,18 @@ const AdminStation = (props) => {
     }
   };
   const exportExcel = () => {
-    const params = {
-    };
+    const params = {};
     const data = {};
     // mutationExportExcel.mutate(params);
     // toast('info', 'Coming soon');
   };
   return (
-    <Box sx={{ height: 450, width: "100%" }}>
+    <Box
+      sx={{
+        height: "100vh",
+        width: "100%",
+      }}
+    >
       <Grid container className={"align-items-center header_title"}>
         <Grid item md={7}>
           <h2 className={"txt-title"} style={{ marginTop: 20 }}>
