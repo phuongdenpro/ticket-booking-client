@@ -113,6 +113,9 @@ input {
     text-align: center;
     text-transform: capitalize;
 }
+.avata-profile:hover {
+    cursor: pointer;
+}
 
 .light-background {
     background-color: var(--main-bg-light);

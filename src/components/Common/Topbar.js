@@ -136,7 +136,7 @@ const Topbar = (props) => {
           >
             Xin chào, Phương
           </Typography>
-          <Dropdown menu={{ items }}>
+          <Dropdown menu={{ items }} className="avata-profile">
             <Avatar
               style={{
                 color: "#f56a00",
@@ -144,6 +144,7 @@ const Topbar = (props) => {
                 width: "35px",
                 height: "35px",
                 marginLeft: "10px",
+                
               }}
               onClick={(e) => e.preventDefault()}
             >
