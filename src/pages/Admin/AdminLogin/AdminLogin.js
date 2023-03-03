@@ -1,16 +1,13 @@
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { Grid } from "@mui/material";
+import { Button, Form, Input } from "antd";
 import { React, useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { Grid, IconButton, InputAdornment } from "@mui/material";
-import { Button, Col, Row, Checkbox, Form, Input, notification } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import logo from "../../../assets/logo.png";
+import { Helmet } from "react-helmet";
+import { Link, useNavigate } from "react-router-dom";
 import imgLogin from "../../../assets/imgLogin.png";
+import customToast from "../../../components/ToastCustom";
 import { AdminApi } from "../../../utils/adminApi";
 import "./AdminLogin.scss";
-import Cookies from "js-cookie";
-import customToast from "../../../components/ToastCustom";
-import { Helmet } from "react-helmet";
 
 const Login = () => {
   const emailRef = useRef();

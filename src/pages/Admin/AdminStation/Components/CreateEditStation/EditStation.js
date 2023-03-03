@@ -104,19 +104,6 @@ const EditStation = (props) => {
   const schema = yup.object().shape({
     name: yup.string().required("Tên bến xe không được phép bỏ trống"),
     address: yup.string().required("Địa chỉ không được phép bỏ trống"),
-
-    // wardId: yup
-    //   .object()
-    //   .typeError("Phường/thị xã không được bỏ trống")
-    //   .required("Phường/thị xã không được bỏ trống"),
-    // provinceId: yup
-    //   .object()
-    //   .typeError("Tỉnh/thành phố không được phép bỏ trống")
-    //   .required("Tỉnh/thành phố không được phép bỏ trống"),
-    // districtId: yup
-    //   .object()
-    //   .typeError("Quận/huyện  không được phép bỏ trống")
-    //   .required("Quận/huyện không được phép bỏ trống"),
   });
 
   useEffect(() => {
@@ -128,6 +115,8 @@ const EditStation = (props) => {
     setSelectedWard(defaultValues?.wardId);
     getDataProvince();
   }, [dataStation]);
+
+  console.log(images);
 
   useEffect(() => {
     if (!selectedProvince) setOptionsDistrict([]);
@@ -160,12 +149,13 @@ const EditStation = (props) => {
     fromData.map((item) => data.append("images", item.file, item.name));
     const uploadApi = new UploadApi();
     const response = await uploadApi.uploadMutiFile(data);
-
     setUrlImage(response?.data?.data?.images.map((item) => item.Location));
   };
+  console.log(urlImage);
 
   const onChange = (imageList) => {
     // data for submit
+    console.log(imageList);
     setImages(imageList);
     funcUpload(imageList);
   };
@@ -207,7 +197,7 @@ const EditStation = (props) => {
         code: value.code,
         name: value.name,
         address: value.address,
-        wardId: selectedWard?.code,
+        wardCode: selectedWard?.code,
         images: imageParams,
       };
       console.log(params);
