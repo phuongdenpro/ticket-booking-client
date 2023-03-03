@@ -65,7 +65,7 @@ const AdminTrip = (props) => {
   });
   const { handleSubmit, reset, watch } = methods;
   return (
-    <Box sx={{ height: 480, width: "100%" }}>
+    <Box sx={{ height: '100%', width: "100%" }}>
       <Grid container className={"align-items-center header_title"}>
         <Grid item md={7}>
           <h2 className={"txt-title"} style={{ marginTop: 20 }}>
@@ -171,7 +171,7 @@ const AdminTrip = (props) => {
         <span className="title-price">Tổng số chuyến xe: </span>
         <span className="txt-price">{data?.data?.pagination?.total}</span>
       </Grid>
-      <div style={{ display: "flex", height: "100%" }}>
+      <div style={{ display: "flex"}}>
         <div style={{ flexGrow: 1 }}>
           <TripList
             data={data?.data?.data || []}
