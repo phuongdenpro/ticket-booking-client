@@ -80,7 +80,7 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
     code: "",
     name: "",
     address: "",
-    wardId: "",
+    wardCode: "",
   }));
 
   const schema = yup.object().shape({
@@ -88,7 +88,7 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
     name: yup.string().required("Tên bến xe không được phép bỏ trống"),
     address: yup.string().required("Địa chỉ không được phép bỏ trống"),
 
-    wardId: yup
+    wardCode: yup
       .object()
       .typeError("Phường/thị xã không được bỏ trống")
       .required("Phường/thị xã không được bỏ trống"),
@@ -140,12 +140,14 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
     fromData.map((item) => data.append("images", item.file, item.name));
     const uploadApi = new UploadApi();
     const response = await uploadApi.uploadMutiFile(data);
+    console.log(response);
 
     setUrlImage(response?.data?.data?.images.map((item) => item.Location));
   };
 
   const onChange = (imageList) => {
     // data for submit
+    console.log(imageList);
     setImages(imageList);
     funcUpload(imageList);
   };
@@ -176,6 +178,7 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
   };
 
   const onSubmit = async (value = defaultValues) => {
+    
     const imageParams = [];
     urlImage.map((item) => {
       imageParams.push({ url: item });
@@ -185,9 +188,10 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
       code: value.code,
       name: value.name,
       address: value.address,
-      wardId: value.wardId.code,
+      wardCode: value.wardCode.code,
       images: imageParams,
     };
+    console.log(params);
     try {
       const stationApi = new StationApi();
       const res = await stationApi.createStation(params);
@@ -301,11 +305,11 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
                 <Grid item xs={3.5} style={{ marginTop: 23 }}>
                   <FormControlCustom label={""} fullWidth>
                     <SelectCustom
-                      name={"wardId"}
+                      name={"wardCode"}
                       placeholder={"Chọn phường/thị xã"}
-                      error={Boolean(errors?.wardId)}
-                      defaultValue={defaultValues?.wardId}
-                      helperText={errors?.wardId?.message}
+                      error={Boolean(errors?.wardCode)}
+                      defaultValue={defaultValues?.wardCode}
+                      helperText={errors?.wardCode?.message}
                       options={optionsWard}
                     />
                   </FormControlCustom>
