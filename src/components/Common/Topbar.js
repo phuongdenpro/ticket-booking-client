@@ -88,9 +88,7 @@ const Topbar = (props) => {
     >
       <Toolbar
         style={{
-          top: 3,
           right: 20,
-          padding: 15,
           justifyContent: "space-between",
         }}
       >

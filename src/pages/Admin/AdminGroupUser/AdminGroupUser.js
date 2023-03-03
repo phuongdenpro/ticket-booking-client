@@ -51,7 +51,7 @@ const AdminGroupUser = (props) => {
   };
 
   return (
-    <Box sx={{ height: 480, width: "100%" }}>
+    <Box sx={{ height: '100%', width: "100%" }}>
       <Grid container className={"align-items-center header_title"}>
         <Grid item md={7}>
           <h2 className={"txt-title"} style={{ marginTop: 10 }}>
@@ -112,7 +112,7 @@ const AdminGroupUser = (props) => {
         <span className="title-price" style={{color:'#000', marginRight:5, fontSize:15, fontWeight:'bold'}}>Tổng số nhóm khách hàng: </span>
         <span className="txt-price"> {data?.data?.pagination?.total}</span>
       </Grid>
-      <div style={{ display: "flex", height: "100%" }}>
+      <div style={{ display: "flex"}}>
         <div style={{ flexGrow: 1 }}>
           <UserGroupList
             data={data?.data?.data || []}
