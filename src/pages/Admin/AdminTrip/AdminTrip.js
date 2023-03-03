@@ -11,6 +11,7 @@ import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import TripList from "./components/TripList";
 import { TripApi } from "../../../utils/tripApi";
+import customToast from "../../../components/ToastCustom";
 
 const AdminTrip = (props) => {
   const [data, setData] = useState([]);
@@ -25,13 +26,17 @@ const AdminTrip = (props) => {
   const [endDate, setEndDate] = useState(null);
 
   const handleGetData = async () => {
-    const tripApi = new TripApi();
-    const response = await tripApi.getAll({
-      page: page + 1,
-      pageSize: pageSize,
-      ...filterParams,
-    });
-    setData(response);
+    try {
+      const tripApi = new TripApi();
+      const response = await tripApi.getAll({
+        page: page + 1,
+        pageSize: pageSize,
+        ...filterParams,
+      });
+      setData(response);
+    } catch (error) {
+     customToast.error(error.response.data.message);
+    }
   };
 
   useEffect(() => {
@@ -65,7 +70,7 @@ const AdminTrip = (props) => {
   });
   const { handleSubmit, reset, watch } = methods;
   return (
-    <Box sx={{ height: '100%', width: "100%" }}>
+    <Box sx={{ height: "100%", width: "100%" }}>
       <Grid container className={"align-items-center header_title"}>
         <Grid item md={7}>
           <h2 className={"txt-title"} style={{ marginTop: 20 }}>
@@ -130,7 +135,7 @@ const AdminTrip = (props) => {
                 </div>
               </FormControlCustom>
               <FormControlCustom label="Ngày xuất phát" fullWidth>
-                <div className="view-input"  style={{ marginRight: 20 }}>
+                <div className="view-input" style={{ marginRight: 20 }}>
                   <SelectCustom placeholder={"Tất cả"} name={"brand"} />
                 </div>
               </FormControlCustom>
@@ -171,7 +176,7 @@ const AdminTrip = (props) => {
         <span className="title-price">Tổng số chuyến xe: </span>
         <span className="txt-price">{data?.data?.pagination?.total}</span>
       </Grid>
-      <div style={{ display: "flex"}}>
+      <div style={{ display: "flex" }}>
         <div style={{ flexGrow: 1 }}>
           <TripList
             data={data?.data?.data || []}
