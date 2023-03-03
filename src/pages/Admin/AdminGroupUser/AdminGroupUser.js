@@ -12,6 +12,7 @@ import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import UserGroupList from "./components/ListGroupUser";
 import { GroupCusApi } from "../../../utils/groupCusApi";
 import customToast from "../../../components/ToastCustom";
+import { Helmet } from "react-helmet";
 
 const AdminGroupUser = (props) => {
   const [loadings, setLoadings] = useState([]);
@@ -57,6 +58,9 @@ const AdminGroupUser = (props) => {
 
   return (
     <Box sx={{ height: "100%", width: "100%" }}>
+    <Helmet>
+    <title> PDBus - Nhóm khách hàng</title>
+  </Helmet>
       <Grid container className={"align-items-center header_title"}>
         <Grid item md={7}>
           <h2 className={"txt-title"} style={{ marginTop: 10 }}>

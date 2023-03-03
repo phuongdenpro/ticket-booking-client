@@ -1,9 +1,15 @@
-import React from 'react'
+import React from "react";
+import { Helmet } from "react-helmet";
 
-const AdminPromotion = (props)=>{
-    return (
-        <div>AdminPromotion</div>
-      )
-}
+const AdminPromotion = (props) => {
+  return (
+    <div>
+      <Helmet>
+        <title> PDBus - Chương trình khuyến mãi</title>
+      </Helmet>
+      AdminPromotion
+    </div>
+  );
+};
 
-export default AdminPromotion
+export default AdminPromotion;

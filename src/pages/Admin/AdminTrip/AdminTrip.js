@@ -12,6 +12,7 @@ import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import TripList from "./components/TripList";
 import { TripApi } from "../../../utils/tripApi";
 import customToast from "../../../components/ToastCustom";
+import { Helmet } from "react-helmet";
 
 const AdminTrip = (props) => {
   const [data, setData] = useState([]);
@@ -35,7 +36,7 @@ const AdminTrip = (props) => {
       });
       setData(response);
     } catch (error) {
-     customToast.error(error.response.data.message);
+      customToast.error(error.response.data.message);
     }
   };
 
@@ -71,6 +72,9 @@ const AdminTrip = (props) => {
   const { handleSubmit, reset, watch } = methods;
   return (
     <Box sx={{ height: "100%", width: "100%" }}>
+      <Helmet>
+        <title> PDBus - Quản lý chuyến xe</title>
+      </Helmet>
       <Grid container className={"align-items-center header_title"}>
         <Grid item md={7}>
           <h2 className={"txt-title"} style={{ marginTop: 20 }}>
