@@ -42,6 +42,8 @@ const Login = () => {
       if (response.status == 200) {
         adminApi.save_token(response.data);
       }
+      const info = await adminApi.profile();
+      adminApi.save_info(info?.data?.data);
       navigate("/admin");
       customToast.success("Đăng nhập thành công");
     } catch (error) {

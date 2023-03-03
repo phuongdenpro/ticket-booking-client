@@ -44,7 +44,7 @@ const Topbar = (props) => {
   const onClickLogout = async () => {
     const adminApi = new AdminApi();
     try {
-      const response = adminApi.logout();
+      const response = await adminApi.logout();
       navigate("/admin/login");
       Cookies.remove("access_token");
       customToast.success("Đăng xuất thành công");
@@ -52,6 +52,7 @@ const Topbar = (props) => {
       customToast.error(error.response.data.message);
     }
   };
+
   const items = [
     {
       label: "Thông tin tài khoản",
@@ -98,7 +99,7 @@ const Topbar = (props) => {
             onClick={() => {
               props.setCollapsed(!props.collapsed);
             }}
-            style={{color: '#000'}}
+            style={{ color: "#000" }}
           >
             {" "}
             {props.collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -107,13 +108,15 @@ const Topbar = (props) => {
             <a
               href="/admin"
               className="home-title"
-              style={{ textDecoration: "none", color: "#000", fontWeight: "bold" }}
-               
+              style={{
+                textDecoration: "none",
+                color: "#000",
+                fontWeight: "bold",
+              }}
             >
               Home
             </a>
           </span>
-          
         </div>
         <div
           style={{
@@ -133,7 +136,7 @@ const Topbar = (props) => {
           <Typography
             style={{ fontWeight: "500", color: "#333", marginLeft: 20 }}
           >
-            Xin chào, Phương
+            Xin chào, {Cookies.get("fullName")}
           </Typography>
           <Dropdown menu={{ items }} className="avata-profile">
             <Avatar
@@ -143,12 +146,10 @@ const Topbar = (props) => {
                 width: "35px",
                 height: "35px",
                 marginLeft: "10px",
-                
               }}
               onClick={(e) => e.preventDefault()}
-            >
-              P
-            </Avatar>
+              src="https://joesch.moe/api/v1/random?key=1"
+            ></Avatar>
           </Dropdown>
         </div>
       </Toolbar>
