@@ -10,6 +10,7 @@ import FormControlCustom from "../../../components/FormControl";
 import SelectCustom from "../../../components/SelectCustom";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import { VehicleApi } from "../../../utils/vehicleApi";
+import customToast from "../../../components/ToastCustom";
 
 const AdminVehicle = (props) => {
   const [data, setData] = useState([]);
@@ -23,13 +24,17 @@ const AdminVehicle = (props) => {
   const [floorNumber, setFloorNumber] = useState(null);
 
   const handleGetData = async () => {
-    const vehicleApi = new VehicleApi();
-    const response = await vehicleApi.getAll({
-      page: page + 1,
-      pageSize: pageSize,
-      ...filterParams,
-    });
-    setData(response);
+    try {
+      const vehicleApi = new VehicleApi();
+      const response = await vehicleApi.getAll({
+        page: page + 1,
+        pageSize: pageSize,
+        ...filterParams,
+      });
+      setData(response);
+    } catch (error) {
+      customToast.error(error.response.data.message);
+    }
   };
 
   useEffect(() => {
@@ -60,10 +65,10 @@ const AdminVehicle = (props) => {
   const methods = useForm({
     defaultValues,
   });
- 
+
   const { handleSubmit, reset, watch } = methods;
   return (
-    <Box sx={{ height: '100%', width: "100%" }}>
+    <Box sx={{ height: "100%", width: "100%" }}>
       <Grid container className={"align-items-center header_title"}>
         <Grid item md={7}>
           <h2 className={"txt-title"} style={{ marginTop: 20 }}>
@@ -155,7 +160,7 @@ const AdminVehicle = (props) => {
         <span className="title-price">Tổng số xe: </span>
         <span className="txt-price">0</span>
       </Grid>
-      <div style={{ display: "flex"}}>
+      <div style={{ display: "flex" }}>
         <div style={{ flexGrow: 1 }}>
           <VehicleList
             data={data?.data?.data || []}

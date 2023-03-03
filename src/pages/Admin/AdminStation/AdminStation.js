@@ -51,14 +51,18 @@ const AdminStation = (props) => {
   const [data, setData] = useState([]);
 
   const handleGetData = async () => {
-    enterLoading(0);
-    const stationApi = new StationApi();
-    const response = await stationApi.getAllStations({
-      page: page + 1,
-      pageSize: pageSize,
-      ...filterParams,
-    });
-    setData(response);
+    try {
+      enterLoading(0);
+      const stationApi = new StationApi();
+      const response = await stationApi.getAllStations({
+        page: page + 1,
+        pageSize: pageSize,
+        ...filterParams,
+      });
+      setData(response);
+    } catch (error) {
+      customToast.error(error.response.data.message);
+    }
   };
   const getDetailStation = async (id) => {
     if (!id) return;

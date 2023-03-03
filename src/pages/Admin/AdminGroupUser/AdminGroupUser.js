@@ -11,6 +11,7 @@ import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import UserGroupList from "./components/ListGroupUser";
 import { GroupCusApi } from "../../../utils/groupCusApi";
+import customToast from "../../../components/ToastCustom";
 
 const AdminGroupUser = (props) => {
   const [loadings, setLoadings] = useState([]);
@@ -22,13 +23,17 @@ const AdminGroupUser = (props) => {
   const [data, setData] = useState([]);
 
   const handleGetData = async () => {
-    const groupCusApi = new GroupCusApi();
-    const response = await groupCusApi.getAll({
-      page: page + 1,
-      pageSize: pageSize,
-      ...filterParams,
-    });
-    setData(response);
+    try {
+      const groupCusApi = new GroupCusApi();
+      const response = await groupCusApi.getAll({
+        page: page + 1,
+        pageSize: pageSize,
+        ...filterParams,
+      });
+      setData(response);
+    } catch (error) {
+      customToast.error(error.response.data.message);
+    }
   };
   useEffect(() => {
     setFilterParams({ ...filterParams, keywords: searchValue });
@@ -51,7 +56,7 @@ const AdminGroupUser = (props) => {
   };
 
   return (
-    <Box sx={{ height: '100%', width: "100%" }}>
+    <Box sx={{ height: "100%", width: "100%" }}>
       <Grid container className={"align-items-center header_title"}>
         <Grid item md={7}>
           <h2 className={"txt-title"} style={{ marginTop: 10 }}>
@@ -109,10 +114,20 @@ const AdminGroupUser = (props) => {
         }}
         md={6}
       >
-        <span className="title-price" style={{color:'#000', marginRight:5, fontSize:15, fontWeight:'bold'}}>Tổng số nhóm khách hàng: </span>
+        <span
+          className="title-price"
+          style={{
+            color: "#000",
+            marginRight: 5,
+            fontSize: 15,
+            fontWeight: "bold",
+          }}
+        >
+          Tổng số nhóm khách hàng:{" "}
+        </span>
         <span className="txt-price"> {data?.data?.pagination?.total}</span>
       </Grid>
-      <div style={{ display: "flex"}}>
+      <div style={{ display: "flex" }}>
         <div style={{ flexGrow: 1 }}>
           <UserGroupList
             data={data?.data?.data || []}
