@@ -11,6 +11,7 @@ import SelectCustom from "../../../components/SelectCustom";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import { VehicleApi } from "../../../utils/vehicleApi";
 import customToast from "../../../components/ToastCustom";
+import { Helmet } from "react-helmet";
 
 const AdminVehicle = (props) => {
   const [data, setData] = useState([]);
@@ -69,6 +70,9 @@ const AdminVehicle = (props) => {
   const { handleSubmit, reset, watch } = methods;
   return (
     <Box sx={{ height: "100%", width: "100%" }}>
+      <Helmet>
+        <title> PDBus - Quản lý xe</title>
+      </Helmet>
       <Grid container className={"align-items-center header_title"}>
         <Grid item md={7}>
           <h2 className={"txt-title"} style={{ marginTop: 20 }}>

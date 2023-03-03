@@ -2,15 +2,7 @@ import { React, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Grid, IconButton, InputAdornment } from "@mui/material";
-import {
-  Button,
-  Col,
-  Row,
-  Checkbox,
-  Form,
-  Input,
-  notification,
-} from "antd";
+import { Button, Col, Row, Checkbox, Form, Input, notification } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import logo from "../../../assets/logo.png";
 import imgLogin from "../../../assets/imgLogin.png";
@@ -18,6 +10,7 @@ import { AdminApi } from "../../../utils/adminApi";
 import "./AdminLogin.scss";
 import Cookies from "js-cookie";
 import customToast from "../../../components/ToastCustom";
+import { Helmet } from "react-helmet";
 
 const Login = () => {
   const emailRef = useRef();
@@ -46,12 +39,11 @@ const Login = () => {
     const adminApi = new AdminApi();
     try {
       const response = await adminApi.login(values);
-      if(response.status == 200){
+      if (response.status == 200) {
         adminApi.save_token(response.data);
       }
       navigate("/admin");
       customToast.success("Đăng nhập thành công");
-      
     } catch (error) {
       customToast.error("Tên đăng nhập hoặc mật khẩu không đúng");
     } finally {
@@ -61,6 +53,9 @@ const Login = () => {
   return (
     <div>
       <Grid container>
+        <Helmet>
+          <title> PDBus - Đăng nhập</title>
+        </Helmet>
         <Grid className="item-login" md={5.5} xs={24}>
           <div className="container">
             <div className="text-login">Đăng nhập</div>

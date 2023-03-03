@@ -107,9 +107,10 @@ const Topbar = (props) => {
             <a
               href="/admin"
               className="home-title"
-              style={{ textDecoration: "none", color: "#000" }}
+              style={{ textDecoration: "none", color: "#000", fontWeight: "bold" }}
+               
             >
-              Admin
+              Home
             </a>
           </span>
           

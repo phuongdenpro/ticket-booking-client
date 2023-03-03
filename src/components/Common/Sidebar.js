@@ -116,7 +116,7 @@ const Sidebar = (props) => {
         }}
       >
         <img src={logo} alt="logo" style={{ width: props.collapsed? '50%':"30%" }} />
-        <span style={{color:'white', fontWeight:'bold', fontSize:25}}>PDcar</span>
+        <span style={{color:'white', fontWeight:'bold', fontSize:25}}>PDBus</span>
       </div>
       <Menu
         mode="inline"

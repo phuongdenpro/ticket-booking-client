@@ -3,7 +3,6 @@ import AppsOutlinedIcon from "@mui/icons-material/AppsOutlined";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import FormatListBulletedOutlinedIcon from "@mui/icons-material/FormatListBulletedOutlined";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
-import AdminTicket from "../pages/Admin/AdminTicketList/AdminTicket";
 import AdminDashboard from "../pages/Admin/AdminDashboard/AdminDashboard";
 import AdminStation from "../pages/Admin/AdminStation/AdminStation";
 import AdminTrip from "../pages/Admin/AdminTrip/AdminTrip";
@@ -11,13 +10,14 @@ import AdminUser from "../pages/Admin/AdminUser/AdminUser";
 import AdminVehicle from "../pages/Admin/AdminVehicle/AdminVehicle";
 import AdminGroupUser from "../pages/Admin/AdminGroupUser/AdminGroupUser";
 import AdminPromotion from "../pages/Admin/AdminPromotion/AdminPromotion";
-import AdminAddTicket from "../pages/Admin/AdminTicketList/AdminTicket";
 import AdminPriceList from "../pages/Admin/AdminPriceList/AdminPriceList";
 import AdminOrder from "../pages/Admin/AdminOrder/AdminOrder";
 import AdminOrderRefund from "../pages/Admin/AdminOrderRefund/AdminOrderRefund";
 import AdminDashboardTicket from "../pages/Admin/AdminDashboardTicket/AdminDashboardTicket";
 import AdminDashboardPromotion from "../pages/Admin/AdminDashboardPromotion/AdminDashboardPromotion";
 import AdminDashboardCost from "../pages/Admin/AdminDashboardCost/AdminDashboardCost";
+import AdminAddTicket from "../pages/Admin/AdminAddTicket/AdminTicket";
+import AdminTicket from "../pages/Admin/AdminTicketList/AdminTicket";
 
 const adminRoutes = [
   {

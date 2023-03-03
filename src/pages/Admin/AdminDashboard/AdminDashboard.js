@@ -5,6 +5,7 @@ import Chart from "react-apexcharts";
 import { Link } from "react-router-dom";
 import TableDashboard from "../../../components/TableDashboard";
 import Badge from "../../../components/Badge";
+import { Helmet } from "react-helmet";
 const AdminDashboard = (props) => {
   const chartOptions = {
     series: [
@@ -154,6 +155,9 @@ const AdminDashboard = (props) => {
   );
   return (
     <div>
+      <Helmet>
+        <title> PDBus - Dashboard</title>
+      </Helmet>
       <h2 className="page-header">Dashboard</h2>
       <div className="row">
         <div className="col-6">

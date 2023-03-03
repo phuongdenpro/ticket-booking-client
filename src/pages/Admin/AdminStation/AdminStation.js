@@ -33,6 +33,7 @@ import customToast from "../../../components/ToastCustom";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import EditStation from "./Components/CreateEditStation/EditStation";
 import DetailStation from "./Components/DetailStation/DetailStation";
+import { Helmet } from "react-helmet";
 
 const AdminStation = (props) => {
   const [loadings, setLoadings] = useState([]);
@@ -249,6 +250,9 @@ const AdminStation = (props) => {
         width: "100%",
       }}
     >
+      <Helmet>
+        <title> PDBus - Quản lý bến xe</title>
+      </Helmet>
       <Grid container className={"align-items-center header_title"}>
         <Grid item md={7}>
           <h2 className={"txt-title"} style={{ marginTop: 20 }}>
