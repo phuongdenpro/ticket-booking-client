@@ -14,7 +14,7 @@ class AdminApi {
   }
 
   profile() {
-    const url ="auth/admin/profile";
+    const url ="admin/profile";
     const res = axiosClient.get(url);
     return res;
   }
