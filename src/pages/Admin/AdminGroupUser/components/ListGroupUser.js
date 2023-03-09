@@ -87,7 +87,7 @@ const UserGroupList = (props) => {
     },
     {
       field: "action",
-      headerName: "Thao tác",
+      headerName: "",
       flex: 70,
       headerAlign: "center",
       headerClassName: "theme",

@@ -1,5 +1,5 @@
 import { Box, Button, Divider, Grid } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import PrintIcon from "@mui/icons-material/Print";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -11,8 +11,51 @@ import UserList from "./components/UserList";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import { Helmet } from "react-helmet";
+import { CustomerApi } from "../../../utils/customerApi";
+import customToast from "../../../components/ToastCustom";
 
 const AdminUser = (props) => {
+  const [loadings, setLoadings] = useState([]);
+
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [searchValue, setSearchValue] = useState("");
+  const [filterParams, setFilterParams] = useState(null);
+  const [data, setData] = useState([]);
+
+  const handleGetData = async () => {
+    try {
+      const customerApi = new CustomerApi();
+      const response = await customerApi.getAll({
+        page: page + 1,
+        pageSize: pageSize,
+        ...filterParams,
+      });
+      setData(response);
+    } catch (error) {
+      customToast.error(error.response.data.message);
+    }
+  };
+  useEffect(() => {
+    setFilterParams({ ...filterParams, keywords: searchValue });
+  }, [searchValue]);
+
+  useEffect(() => {
+    handleGetData();
+  }, [page, pageSize, filterParams]);
+
+  const handleSearch = (e) => {
+    setFilterParams({ keywords: searchValue || undefined });
+  };
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setPageSize(+event.target.value);
+    setPage(0);
+  };
+
   const defaultValues = {
     brand: null,
     status: null,
@@ -110,7 +153,15 @@ const AdminUser = (props) => {
       </Grid>
       <div style={{ display: "flex", height: "100%" }}>
         <div style={{ flexGrow: 1 }}>
-          <UserList></UserList>
+          <UserList
+            data={data?.data?.data || []}
+            handleChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+            total={data?.data?.pagination?.total}
+            handleGetData={handleGetData}
+            page={page}
+            pageSize={pageSize}
+          ></UserList>
         </div>
       </div>
     </Box>
