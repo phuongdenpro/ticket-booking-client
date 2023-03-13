@@ -13,6 +13,8 @@ import UserGroupList from "./components/ListGroupUser";
 import { GroupCusApi } from "../../../utils/groupCusApi";
 import customToast from "../../../components/ToastCustom";
 import { Helmet } from "react-helmet";
+import AddGroupUser from "./components/AddGroupUser";
+import InfoGroupUser from "./components/InfoGroupUser";
 
 const AdminGroupUser = (props) => {
   const [loadings, setLoadings] = useState([]);
@@ -22,6 +24,10 @@ const AdminGroupUser = (props) => {
   const [searchValue, setSearchValue] = useState("");
   const [filterParams, setFilterParams] = useState(null);
   const [data, setData] = useState([]);
+  const [showDrawerCreate, setShowDrawerCreate] = useState(false);
+  const [showDrawerDetail, setShowDrawerDetail] = useState(false);
+  const [idGroupCustomer, setIdGroupCustomer] = useState(null);
+  const [detailGroupCustomer, setDetailGroupCustomer] = useState("");
 
   const handleGetData = async () => {
     try {
@@ -56,11 +62,33 @@ const AdminGroupUser = (props) => {
     setPage(0);
   };
 
+  const resetFilterParams = () => {
+    handleGetData();
+    setPage(0);
+    setPageSize(10);
+    setSearchValue("");
+    customToast.success("Làm mới dữ liệu thành công");
+  };
+  const handelDetail = (id) => {
+    setShowDrawerDetail(true);
+    setIdGroupCustomer(id);
+  };
+  const getDetailGroupCustomer = async (id) => {
+    if (!id) return;
+    const customerGroupApi = new GroupCusApi();
+    const response = await customerGroupApi.getGroupCusById(id);
+    setDetailGroupCustomer(response.data.data);
+  };
+
+  useEffect(() => {
+    getDetailGroupCustomer(idGroupCustomer);
+  }, [idGroupCustomer]);
+
   return (
     <Box sx={{ height: "100%", width: "100%" }}>
-    <Helmet>
-    <title> PDBus - Nhóm khách hàng</title>
-  </Helmet>
+      <Helmet>
+        <title> PDBus - Nhóm khách hàng</title>
+      </Helmet>
       <Grid container className={"align-items-center header_title"}>
         <Grid item md={7}>
           <h2 className={"txt-title"} style={{ marginTop: 10 }}>
@@ -78,6 +106,7 @@ const AdminGroupUser = (props) => {
               variant="contained"
               color="info"
               startIcon={<RefreshOutlinedIcon />}
+              onClick={resetFilterParams}
             >
               <span className={"txt"}>Làm mới</span>
             </Button>
@@ -87,6 +116,9 @@ const AdminGroupUser = (props) => {
               className={"btn-create"}
               startIcon={<AddIcon />}
               style={{ marginTop: 10, marginRight: 20 }}
+              onClick={() => {
+                setShowDrawerCreate(true);
+              }}
             >
               <span className={"txt"}>Thêm mới</span>
             </Button>
@@ -136,6 +168,7 @@ const AdminGroupUser = (props) => {
           <UserGroupList
             data={data?.data?.data || []}
             handleChangePage={handleChangePage}
+            handelDetail={handelDetail}
             onChangeRowsPerPage={handleChangeRowsPerPage}
             total={data?.data?.pagination?.total}
             handleGetData={handleGetData}
@@ -144,6 +177,16 @@ const AdminGroupUser = (props) => {
           ></UserGroupList>
         </div>
       </div>
+      <AddGroupUser
+        setShowDrawer={setShowDrawerCreate}
+        showDrawer={showDrawerCreate}
+        handleGetData={handleGetData}
+      ></AddGroupUser>
+      <InfoGroupUser
+        setShowDrawerDetail={setShowDrawerDetail}
+        showDrawerDetail={showDrawerDetail}
+        dataGroupCustomer={detailGroupCustomer}
+      ></InfoGroupUser>
     </Box>
   );
 };

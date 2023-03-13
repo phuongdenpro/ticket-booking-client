@@ -108,7 +108,7 @@ const DetailStation = (props) => {
               </div>
               <div className="col-8">
                 <Typography variant="h6" style={{ fontSize: 18 }}>
-                  {dataStation.address}
+                  {dataStation.fullAddress}
                 </Typography>
               </div>
             </div>

@@ -17,6 +17,7 @@ const UserGroupList = (props) => {
     selectionModel,
     handleSelectionModeChange,
     handleShowDetail,
+    handelDetail,
     handleClick,
     onChangeRowsPerPage,
     handleChangePage,
@@ -72,7 +73,7 @@ const UserGroupList = (props) => {
 
     {
       field: "description",
-      flex: 130,
+      flex: 150,
       headerName: "Mô tả",
       headerAlign: "center",
       headerClassName: "theme",
@@ -80,7 +81,7 @@ const UserGroupList = (props) => {
     {
       field: "note",
       headerName: "Ghi chú",
-      flex: 100,
+      flex: 150,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
@@ -88,7 +89,7 @@ const UserGroupList = (props) => {
     {
       field: "action",
       headerName: "",
-      flex: 70,
+      flex: 50,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
@@ -106,19 +107,7 @@ const UserGroupList = (props) => {
                     width: 17,
                     height: 17,
                   }}
-                />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Cập nhật">
-              <IconButton>
-                <BorderColorIcon
-                  style={{
-                    backgroundColor: "white",
-                    borderRadius: 5,
-                    fill: "#fca11a",
-                    width: 17,
-                    height: 17,
-                  }}
+                  onClick={() => handelDetail(params.id)}
                 />
               </IconButton>
             </Tooltip>

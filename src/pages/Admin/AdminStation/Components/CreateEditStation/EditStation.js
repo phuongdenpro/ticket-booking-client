@@ -237,7 +237,6 @@ const EditStation = (props) => {
             <div className="btn-close" onClick={goBack}>
               <ArrowBackIosIcon
                 className="icon-back"
-                style={{ marginTop: 10 }}
               />
               <span style={{ fontSize: 30, fontWeight: "bolder" }}>
                 Cập nhật
@@ -332,7 +331,6 @@ const EditStation = (props) => {
               </Grid>
             </div>
             <div
-              className="title-group"
               style={{ marginLeft: 40, marginTop: 10 }}
             >
               <span>Hình ảnh bến xe</span>

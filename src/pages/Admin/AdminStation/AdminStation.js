@@ -339,7 +339,7 @@ const AdminStation = (props) => {
         </Grid>
       </Grid>
 
-      <div style={{ display: "flex", height:'100%' }}>
+      <div style={{ display: "flex" }}>
         <div style={{ flexGrow: 1 }}>
           <StationList
             data={data?.data?.data || []}
