@@ -11,6 +11,22 @@ class GroupCusApi {
     });
     return res;
   }
+  getGroupCusById(id, params) {
+    const url = `customer-group/${id}/customers`;
+    const res = axiosClient.get(url, {
+      params: {
+        ...params,
+      },
+    });
+    return res;
+  }
+  create(params) {
+    const url = `customer-group`;
+    const res = axiosClient.post(url, {
+      ...params,
+    });
+    return res;
+  }
 
   deleteById(id, params) {
     const url = `customer-group/id/${id}`;

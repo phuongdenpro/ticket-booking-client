@@ -27,6 +27,7 @@ const TableCustom = (props) => {
     handleSelectAllClick,
     handleClick = (event, name) => {},
     handleChangePage,
+    pagination = true,
     page,
     pageSize,
     total,
@@ -76,7 +77,7 @@ const TableCustom = (props) => {
         size="small"
         aria-label="a dense table"
         padding="none"
-        sx={{ minWidth: 1050 }}
+
       >
         <TableHead>
           <TableRow>
@@ -180,7 +181,7 @@ const TableCustom = (props) => {
           </div>
         </div>
       )}
-      <TablePagination
+      {pagination &&(<TablePagination
         rowsPerPageOptions={[10, 20, 50]}
         component="div"
         count={total || 0}
@@ -189,7 +190,7 @@ const TableCustom = (props) => {
         onPageChange={handleChangePage}
         labelRowsPerPage={"Số hàng hiển thị"}
         onRowsPerPageChange={onChangeRowsPerPage}
-      />
+      />) }
     </TableContainer>
   );
 };

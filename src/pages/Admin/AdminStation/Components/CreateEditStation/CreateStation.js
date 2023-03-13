@@ -178,7 +178,6 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
   };
 
   const onSubmit = async (value = defaultValues) => {
-    
     const imageParams = [];
     urlImage.map((item) => {
       imageParams.push({ url: item });
@@ -200,7 +199,6 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
       setShowDrawer(false);
     } catch (error) {
       customToast.error(error.response.data.message);
-      
     }
     handleGetData();
   };
@@ -230,10 +228,7 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="title-drawer">
             <div className="btn-close" onClick={goBack}>
-              <ArrowBackIosIcon
-                className="icon-back"
-                style={{ marginTop: 10 }}
-              />
+              <ArrowBackIosIcon className="icon-back" />
               <span style={{ fontSize: 30, fontWeight: "bolder" }}>
                 Tạo mới
               </span>
@@ -248,7 +243,7 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
                 style={{
                   fontSize: 25,
                   marginTop: 20,
-                  marginLeft: 280,
+                  marginLeft: 230,
                   fontWeight: "bold",
                   textTransform: "uppercase",
                 }}
@@ -326,10 +321,7 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
                 </Grid>
               </Grid>
             </div>
-            <div
-              className="title-group"
-              style={{ marginLeft: 40, marginTop: 10 }}
-            >
+            <div style={{ marginLeft: 40, marginTop: 10 }}>
               <span>Hình ảnh bến xe</span>
             </div>
             <div className="view-image">
@@ -372,7 +364,7 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
                   variant="contained"
                   style={{ width: "80%", marginRight: 50 }}
                 >
-                  {"Xác nhận"}
+                  {"Lưu thông tin"}
                 </LoadingButton>
               </Grid>
             </Grid>
