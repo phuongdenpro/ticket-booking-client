@@ -16,10 +16,11 @@ import { LoadingButton } from "@mui/lab";
 import customToast from "../../../../components/ToastCustom";
 import { GroupCusApi } from "../../../../utils/groupCusApi";
 import CustomerList from "./ListCustomer";
+import EditGroupUser from "./EditGroupUser";
 
 const InfoGroupUser = (props) => {
-  const { setShowDrawerDetail, showDrawerDetail, dataGroupCustomer } = props;
-  console.log(dataGroupCustomer);
+  const { setShowDrawerDetail, showDrawerDetail, dataGroupCustomer,handleGetData } = props;
+  const [showDrawerEdit, setShowDrawerEdit] = useState(false);
   return (
     <Drawer
       PaperProps={{
@@ -46,6 +47,7 @@ const InfoGroupUser = (props) => {
             size="small"
             style={{ marginLeft: 300 }}
             color="secondary"
+            onClick={() => setShowDrawerEdit(true)}
           >
             sửa thông tin
           </Button>
@@ -99,6 +101,13 @@ const InfoGroupUser = (props) => {
         </div>
       </div>
       <CustomerList data={dataGroupCustomer.customers}></CustomerList>
+      <EditGroupUser
+        setShowDrawer={setShowDrawerEdit}
+        showDrawer={showDrawerEdit}
+        dataGroupCustomer={dataGroupCustomer}
+        setShowDrawerDetail={setShowDrawerDetail}
+        handleGetData={handleGetData}
+      ></EditGroupUser>
     </Drawer>
   );
 };

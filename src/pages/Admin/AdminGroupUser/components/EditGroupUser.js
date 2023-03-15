@@ -8,7 +8,7 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import * as yup from "yup";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import InputField from "../../../../components/InputField";
 import FormControlCustom from "../../../../components/FormControl";
 import "../../../../assets/scss/default.scss";
@@ -16,8 +16,14 @@ import { LoadingButton } from "@mui/lab";
 import customToast from "../../../../components/ToastCustom";
 import { GroupCusApi } from "../../../../utils/groupCusApi";
 
-const AddGroupUser = (props) => {
-  const { setShowDrawer, showDrawer, handleGetData } = props;
+const EditGroupUser = (props) => {
+  const {
+    setShowDrawer,
+    showDrawer,
+    dataGroupCustomer,
+    setShowDrawerDetail,
+    handleGetData,
+  } = props;
 
   const schema = yup.object().shape({
     code: yup
@@ -30,13 +36,15 @@ const AddGroupUser = (props) => {
       .required("Tên nhóm không được phép bỏ trống"),
   });
 
-  const defaultValues = {
-    code: "",
-    name: "",
-    note: "",
-    description: "",
-  };
-
+  const defaultValues = useMemo(
+    () => ({
+      code: dataGroupCustomer?.code,
+      name: dataGroupCustomer?.name,
+      note: dataGroupCustomer?.note,
+      description: dataGroupCustomer?.description,
+    }),
+    [dataGroupCustomer]
+  );
   const methods = useForm({
     mode: "onSubmit",
     defaultValues,
@@ -45,6 +53,9 @@ const AddGroupUser = (props) => {
 
   const { handleSubmit, reset, formState, setValue, watch } = methods;
   const { errors } = formState;
+  useEffect(() => {
+    reset({ ...defaultValues });
+  }, [dataGroupCustomer]);
 
   const goBack = () => {
     reset();
@@ -67,15 +78,15 @@ const AddGroupUser = (props) => {
     };
     try {
       const groupCusApi = new GroupCusApi();
-      const res = await groupCusApi.create(params);
-      customToast.success("Thêm mới thành công");
-      handleGetData();
+      const res = await groupCusApi.update(dataGroupCustomer.id, params);
+      customToast.success("Cập nhật thành công");
       setShowDrawer(false);
+      setShowDrawerDetail(false);
+      handleGetData();
       reset();
     } catch (error) {
       customToast.error(error.response.data.message);
     }
-    handleGetData();
   };
 
   return (
@@ -95,7 +106,7 @@ const AddGroupUser = (props) => {
               <ArrowBackIosIcon className="icon-back" />
             </div>
             <div>
-              <span>Thêm nhóm khách hàng</span>
+              <span>Cập nhật thông tin</span>
             </div>
           </div>
           <div className="content-drawer">
@@ -111,6 +122,7 @@ const AddGroupUser = (props) => {
                       placeholder={"Nhập mã nhóm"}
                       error={Boolean(errors.code)}
                       helperText={errors?.code?.message}
+                      disabled
                     />
                   </FormControlCustom>
                 </Grid>
@@ -180,7 +192,7 @@ const AddGroupUser = (props) => {
                   variant="contained"
                   style={{ width: "80%", marginRight: 50 }}
                 >
-                  {"Thêm mới "}
+                  {"Cập nhật"}
                 </LoadingButton>
               </Grid>
             </Grid>
@@ -191,4 +203,4 @@ const AddGroupUser = (props) => {
   );
 };
 
-export default AddGroupUser;
+export default EditGroupUser;

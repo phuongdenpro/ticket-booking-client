@@ -12,6 +12,7 @@
     "@mui/material": "^5.11.8",
     "@mui/styled-engine-sc": "^5.11.0",
     "@mui/x-data-grid": "^5.17.22",
+    "@mui/x-date-pickers": "^6.0.1",
     "@reduxjs/toolkit": "^1.9.2",
     "@tanstack/react-query": "^4.24.4",
     "@testing-library/jest-dom": "^5.16.5",

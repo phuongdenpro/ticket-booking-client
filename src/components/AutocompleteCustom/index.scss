@@ -1,30 +1,5 @@
-.order-flex {
-    display: 'flex' !important;
-    justify-content: 'space-between' !important;
-  }
-  .order-custom-title {
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    font-family: 'SourceSansPro' !important;
-  }
-  
-  .disabled-field {
-    .MuiInputBase-root {
-      background-color: #edf1f2 !important;
-      .Mui-disabled {
-        .MuiOutlinedInput-notchedOutline {
-          border: red !important;
-        }
-      }
-    }
-  }
-  .order-field-value {
-    font-size: 14px !important;
-    color: #4d4d4d;
-  }
-  .input-detail {
+.select-custom {
     display: flex !important;
-    color: #038edb !important;
   
     .MuiInputBase-root {
       box-sizing: border-box;
@@ -42,6 +17,13 @@
       font-weight: 400 !important;
       height: 2.1875 !important;
   
+      &:focus-within {
+        .MuiOutlinedInput-notchedOutline {
+          border: 1px solid !important;
+          border-color: #038edb !important;
+        }
+      }
+  
       &:hover {
         .MuiOutlinedInput-notchedOutline {
           border-color: #afafaf !important;
@@ -50,6 +32,7 @@
         input {
           &::placeholder {
             opacity: 1;
+            color: #373737 !important;
             font-size: 0.875rem;
           }
         }
@@ -62,32 +45,20 @@
           border-color: #afafaf !important;
         }
       }
-  
-      input {
-        padding: 0;
-  
-        &::placeholder {
-          opacity: 1;
-          color: #afafaf;
-          font-size: 0.875rem;
-        }
-      }
-  
-      &.Mui-error {
-        border-color: #d32f2f !important;
-      }
-      &:focus-within {
-        .MuiOutlinedInput-notchedOutline {
-          border: 1px solid !important;
-          border-color: #038edb !important;
-        }
-      }
     }
+  
     input {
       height: auto;
       padding: 0 !important;
       line-height: 1.52857;
       font-size: 0.875rem;
+      margin-left: -3px !important;
     }
   }
+  
+  // .MuiAutocomplete-popper {
+  //   width: 600px !important;
+  //   background-color: aquamarine !important;
+  //   justify-content: flex-end !important;
+  // }
   

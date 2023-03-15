@@ -5,6 +5,8 @@ import TableCustom from '../../../../components/TableCustom';
 import ClearIcon from "@mui/icons-material/Clear";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import moment from "moment";
+moment.locale("vi");
 
 const UserList = (props) => {
   const {
@@ -60,6 +62,19 @@ const UserList = (props) => {
         headerAlign: 'center',
         headerClassName: 'theme',
         sortable: false,
+        renderCell: (params) => {
+          return (
+            <div>
+              <span>
+                {params.row?.gender === "F"
+                  ? "Nữ"
+                  : params.row?.gender === "M"
+                  ? "Nam"
+                  : "Chưa xác định"}
+              </span>
+            </div>
+          );
+        },
       },
     {
         field: 'birthday',
@@ -68,6 +83,18 @@ const UserList = (props) => {
         headerAlign: 'center',
         headerClassName: 'theme',
         sortable: false,
+        renderCell: (params) => {
+          return (
+            <div>
+              <span>
+                {params.row?.birthday !== undefined &&
+                params.row?.birthday !== null
+                  ? moment(params.row.birthday).format("DD-MM-YYYY")
+                  : "chưa xác định"}
+              </span>
+            </div>
+          );
+        },
       },
       {
         field: 'customerGroup',

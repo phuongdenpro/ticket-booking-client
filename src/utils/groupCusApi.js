@@ -27,6 +27,14 @@ class GroupCusApi {
     });
     return res;
   }
+  update(id, params) {
+    const url = `customer-group/id/${id}`;
+    const res = axiosClient.patch(url, {
+      ...params,
+    });
+    return res;
+    
+  }
 
   deleteById(id, params) {
     const url = `customer-group/id/${id}`;

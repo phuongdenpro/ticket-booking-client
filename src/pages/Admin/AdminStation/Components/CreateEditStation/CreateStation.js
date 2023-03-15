@@ -253,7 +253,7 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
             </div>
             <div className="content" style={{ marginLeft: 40 }}>
               <Grid container spacing={2} style={{ marginTop: 10 }}>
-                <Grid item xs={5.6}>
+                <Grid item xs={6}>
                   <FormControlCustom label={"Mã bến xe"} fullWidth>
                     <InputField
                       name={"code"}
@@ -263,7 +263,7 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
                     />
                   </FormControlCustom>
                 </Grid>
-                <Grid item xs={5.6}>
+                <Grid item xs={6}>
                   <FormControlCustom label={"Tên bến xe"} fullWidth>
                     <InputField
                       name={"name"}
@@ -273,7 +273,7 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
                     />
                   </FormControlCustom>
                 </Grid>
-                <Grid item xs={3.8}>
+                <Grid item xs={4}>
                   <FormControlCustom label={"Chọn địa chỉ"} fullWidth>
                     <SelectCustom
                       name={"provinceId"}
@@ -297,7 +297,7 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
                     />
                   </FormControlCustom>
                 </Grid>
-                <Grid item xs={3.5} style={{ marginTop: 23 }}>
+                <Grid item xs={4} style={{ marginTop: 23 }}>
                   <FormControlCustom label={""} fullWidth>
                     <SelectCustom
                       name={"wardCode"}
@@ -309,7 +309,7 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
                     />
                   </FormControlCustom>
                 </Grid>
-                <Grid item xs={11.25}>
+                <Grid item xs={12}>
                   <FormControlCustom label={"Địa chỉ"} fullWidth>
                     <InputField
                       name={"address"}
