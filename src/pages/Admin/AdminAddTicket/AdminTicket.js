@@ -51,6 +51,9 @@ const AdminAddTicket = (props) => {
   const { formState, watch, setValue, handleSubmit, reset, getValues } = methods;
   return (
     <div className={"page-layout-blank"} style={{ width:'100%'}}>
+    <Helmet>
+        <title> PDBus - Đặt vé cho khách hàng</title>
+      </Helmet>
       <Grid container spacing={1}>
         <Grid md={8}>
           <div className={"page-layout"}>
