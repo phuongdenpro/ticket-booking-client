@@ -82,7 +82,7 @@ const AdminGroupUser = (props) => {
 
   useEffect(() => {
     getDetailGroupCustomer(idGroupCustomer);
-  }, [idGroupCustomer]);
+  }, [idGroupCustomer, showDrawerDetail]);
 
   return (
     <Box sx={{ height: "100%", width: "100%" }}>
@@ -186,6 +186,7 @@ const AdminGroupUser = (props) => {
         setShowDrawerDetail={setShowDrawerDetail}
         showDrawerDetail={showDrawerDetail}
         dataGroupCustomer={detailGroupCustomer}
+        handleGetData={handleGetData}
       ></InfoGroupUser>
     </Box>
   );

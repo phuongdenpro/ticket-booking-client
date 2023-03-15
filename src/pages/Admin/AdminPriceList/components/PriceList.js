@@ -83,7 +83,7 @@ const PriceList = (props) => {
           <div>
             <span>
               {params.row?.startDate !== undefined && params.row?.startDate !== null
-                ? moment(params.row.endDate).format("DD-MM-YYYY hh:mm A")
+                ? moment(params.row.startDate).format("DD-MM-YYYY hh:mm A")
                 : "chưa xác định"}
             </span>
           </div>
@@ -128,7 +128,7 @@ const PriceList = (props) => {
           <div>
             <Badge
               type={params?.row?.status == true ? "success" : "danger"}
-              content={params?.row?.status == true ? "Hoạt động" : "Ngưng hoạt động"}
+              content={params?.row?.status == true ? "Hoạt động" : "Tạm ngưng"}
             />
           </div>
         );

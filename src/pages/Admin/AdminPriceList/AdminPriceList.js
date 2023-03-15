@@ -1,6 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
-import { Box, Button, Divider, Grid } from "@mui/material";
+import { Box, Button, Divider, Grid, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { FormProvider, useForm } from "react-hook-form";
@@ -11,16 +11,61 @@ import customToast from "../../../components/ToastCustom";
 import { GroupCusApi } from "../../../utils/groupCusApi";
 import { PriceListApi } from "../../../utils/priceListApi";
 import PriceList from "./components/PriceList";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import dayjs, { Dayjs } from "dayjs";
+import "./AdminPriceList.scss";
+import moment from "moment";
 
 const AdminPriceList = (props) => {
   const [loadings, setLoadings] = useState([]);
-
+  const currentYear = new Date().getFullYear();
+  const firstDay = new Date(currentYear, 0, 1);
+  const lastDay = new Date(currentYear, 11, 31);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [searchValue, setSearchValue] = useState("");
   const [filterParams, setFilterParams] = useState(null);
   const [data, setData] = useState([]);
+  const [selected, setSelected] = useState([]);
+  const [selectedDate, setSelectedDate] = useState({
+    startDate: firstDay,
+    endDate: lastDay,
+  });
+  const filterDateTime = [
+    {
+      id: 1,
+      code: "ALL",
+      name: "Tất cả",
+    },
+    {
+      id: 2,
+      code: "option",
+      name: "Tùy chọn",
+    },
+  ];
 
+  const filterStatus = [
+    {
+      id: 1,
+      code: null,
+      name: "Tất cả",
+    },
+    {
+      id: 2,
+      code: "Tạm ngưng",
+      name: "Tạm ngưng",
+    },
+    {
+      id: 3,
+      code: "Kích hoạt",
+      name: "Hoạt động",
+    },
+  ];
+
+  const [disable, setDisable] = useState(true);
   const handleGetData = async () => {
     try {
       const priceListApi = new PriceListApi();
@@ -53,16 +98,70 @@ const AdminPriceList = (props) => {
     setPageSize(+event.target.value);
     setPage(0);
   };
-
+console.log(moment(selectedDate?.startDate).format("DD-MM-YYYY") );
   const defaultValues = {
-    typeSearch: null,
-    licensePlateSearch: null,
-    floorNumber: null,
+    startDate: null,
+    endDate: null,
+    status: null,
   };
   const methods = useForm({
     defaultValues,
   });
   const { handleSubmit, reset, watch } = methods;
+  const watchStatus = watch("status");
+  const watchTime = watch("time");
+  useEffect(() => {
+    const params = {
+      status: watchStatus?.code,
+      startDate: new Date(selectedDate?.startDate),
+      endDate: new Date(selectedDate?.endDate)
+    };
+    setFilterParams(params);
+  }, [watchStatus, watchTime, selectedDate?.startDate, selectedDate?.endDate]);
+  useEffect(() => {
+    const now = new Date();
+
+    if (watchTime?.code === "option") {
+      // setSelectedDate({ ...selectedDate, dateFrom: '', dateTo: '' });
+    } else {
+      const currentYear = new Date().getFullYear();
+      const firstDay = new Date(currentYear, 0, 1);
+      const lastDay = new Date(currentYear, 11, 31);
+
+      setSelectedDate({
+        ...selectedDate,
+        startDate: firstDay,
+        endDate: lastDay,
+      });
+    }
+  }, [watchTime]);
+  useEffect(() => {
+    if (watchTime?.code === "option") {
+      setDisable(false);
+    } else {
+      setDisable(true);
+    }
+  }, [watchTime]);
+  function getFirstDayOfWeek(d) {
+    const date = new Date(d);
+    const day = date.getDay(); // 👉️ get day of week
+
+    const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+
+    return new Date(date.setDate(diff));
+  }
+  const resetFilterParams = () => {
+    handleGetData();
+    setPage(0);
+    setPageSize(10);
+    setSearchValue("");
+    setSelectedDate({
+      ...selectedDate,
+      startDate: firstDay,
+      endDate: lastDay,
+    });
+    customToast.success("Làm mới dữ liệu thành công");
+  };
   return (
     <Box sx={{ height: "100%", width: "100%" }}>
       <Helmet>
@@ -85,6 +184,7 @@ const AdminPriceList = (props) => {
               variant="contained"
               color="info"
               startIcon={<RefreshOutlinedIcon />}
+              onClick={resetFilterParams}
             >
               <span className={"txt"}>Làm mới</span>
             </Button>
@@ -101,26 +201,71 @@ const AdminPriceList = (props) => {
         </Grid>
       </Grid>
       <Divider style={{ marginTop: 10 }} />
-      <Grid className="search" container style={{ marginTop: 10, marginBottom:20 }}>
+      <Grid
+        className="search"
+        container
+        style={{ marginTop: 10, marginBottom: 20 }}
+      >
         <FormProvider {...methods}>
           <Grid item md={7} style={{ marginRight: 30 }}>
             <Box
               style={{ display: "flex", justifyContent: "flex-start" }}
               flexDirection={{ xs: "column", md: "row" }}
             >
+              <FormControlCustom label="Thời gian" fullWidth>
+                <div className="view-input" style={{ marginRight: 10 }}>
+                  <SelectCustom
+                    options={filterDateTime}
+                    placeholder={"Tất cả"}
+                    name={"time"}
+                  />
+                </div>
+              </FormControlCustom>
               <FormControlCustom label="Ngày bắt đầu" fullWidth>
-                <div className="view-input" style={{ marginRight: 20 }}>
-                  <SelectCustom placeholder={"Tất cả"} name={"brand"} />
+                <div className="view-input" style={{ marginRight: 10 }}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      disabled={disable}
+                      value={dayjs(selectedDate?.startDate)}
+                      onChange={(e) => {
+                        setSelectedDate({
+                          ...selectedDate,
+                          startDate: new Date(e),
+                        });
+                      }}
+                      className={"date-picker"}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                  </LocalizationProvider>
                 </div>
               </FormControlCustom>
+
               <FormControlCustom label="Ngày kết thúc" fullWidth>
-                <div className="view-input" style={{ marginRight: 20 }}>
-                  <SelectCustom placeholder={"Tất cả"} name={"brand"} />
+                <div className="view-input" style={{ marginRight: 10 }}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      disabled={disable}
+                      value={dayjs(selectedDate?.endDate)}
+                      onChange={(e) => {
+                        setSelectedDate({
+                          ...selectedDate,
+                          endDate: new Date(e),
+                        });
+                      }}
+                      className={"date-picker"}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                  </LocalizationProvider>
                 </div>
               </FormControlCustom>
+
               <FormControlCustom label="Trạng thái" fullWidth>
-                <div className="view-input" style={{ marginRight: 20 }}>
-                  <SelectCustom placeholder={"Tất cả"} name={"outOfDate"} />
+                <div className="view-input">
+                  <SelectCustom
+                    placeholder={"Tất cả"}
+                    name={"status"}
+                    options={filterStatus}
+                  />
                 </div>
               </FormControlCustom>
             </Box>
