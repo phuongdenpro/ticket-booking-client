@@ -61,7 +61,7 @@ const Sidebar = (props) => {
       "subTicket",
       <IdcardOutlined />,
       [
-        getChildItem("Đặt vé", "create-ticket"),
+        
         getChildItem("Bảng giá", "ticket/price-list"),
         getChildItem("Danh sách vé", "ticket-list"),
       ],
@@ -72,9 +72,10 @@ const Sidebar = (props) => {
     getItem("Quản Lý Bến Xe", "station", <CarRentalIcon />),
     getItem("Quản lý Chuyến Xe", "trip", <DepartureBoardIcon />),
     getItem("Khuyến Mãi", "promotion", <DollarCircleOutlined />),
-    getItem("Hóa đơn", "subOrder", <OrderedListOutlined />, [
+    getItem("Đặt vé - Hóa đơn", "subOrder", <OrderedListOutlined />, [
+      getChildItem("Đặt vé", "create-ticket"),
       getChildItem("Hóa đơn đặt vé", "order-list"),
-      getChildItem("Hóa đơn hồi vé", "order-refund-list"),
+      getChildItem("Hóa đơn hoàn vé", "order-refund-list"),
     ]),
     getItem("Thống kê", "subDashboard", <BarChartOutlined />, [
       getChildItem("Thống kê vé", "dashboard-ticket"),
