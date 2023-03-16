@@ -22,6 +22,7 @@ import "./assets/boxicons-2.0.7/css/boxicons.min.css";
 import "./assets/scss/grid.scss";
 import "./assets/scss/theme.scss";
 import "./assets/scss/index.scss";
+import NotFound from "./components/NotFound/404NotFound";
 
 export const history = createBrowserHistory();
 
@@ -30,7 +31,7 @@ function App() {
     <BrowserRouter history={history}>
       <Routes>
         <Route path="admin" element={<AdminLayout />}>
-          <Route path="/admin" element={<AdminDashboard />} index/>
+          <Route path="/admin" element={<AdminDashboard />} index />
           <Route path="/admin/customer" element={<AdminUser />} />
           <Route path="/admin/group-customer" element={<AdminGroupUser />} />
           <Route path="/admin/station" element={<AdminStation />} />
@@ -62,6 +63,8 @@ function App() {
           />
         </Route>
         <Route path="/admin/login" element={<Login />} />
+        <Route path="/" element={<Home />} />
+        <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>
   );
