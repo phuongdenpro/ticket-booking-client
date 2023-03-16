@@ -8,11 +8,28 @@ import Sidebar from "../Common/Sidebar";
 import Topbar from "../Common/Topbar";
 import { Layout } from "antd";
 import "./index.scss";
+import { useNavigate } from "react-router-dom";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import { AdminApi } from "../../utils/adminApi";
+
 const { Header, Sider, Content, Footer } = Layout;
 
 const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [userInfo, setUserInfo] = useState({});
+  const navigate = useNavigate();
+  const adminApi = new AdminApi();
+  const handleAuthentication = async () => {
+    const token = adminApi.get_token();
+    if (token.access == null || token.refresh == null) {
+      navigate("login");
+      return;
+    }
+  };
+
+  useEffect(() => {
+    handleAuthentication();
+  }, []);
   return (
     <Layout>
       <Sider
@@ -48,7 +65,6 @@ const AdminLayout = () => {
         >
           <Outlet></Outlet>
         </Content>
-
       </Layout>
     </Layout>
   );
