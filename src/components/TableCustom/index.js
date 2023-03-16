@@ -82,7 +82,7 @@ const TableCustom = (props) => {
         <TableHead>
           <TableRow>
             {checkboxSelection && (
-              <TableCell align={headerCheckBoxAlignment} padding="checkbox">
+              <TableCell align={headerCheckBoxAlignment} padding="checkbox" style={{backgroundColor: "#f5f5f5"}}>
                 <Checkbox
                   color="primary"
                   indeterminate={
@@ -113,6 +113,7 @@ const TableCustom = (props) => {
                   fontWeight: "bold",
                   fontSize: "16px",
                   height: "70px",
+                  backgroundColor: "#f5f5f5",
                 }}
               >
                 {header.headerName}

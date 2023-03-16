@@ -59,7 +59,7 @@ const AdminLayout = () => {
           style={{
             margin: "24px 16px",
             minHeight: 280,
-            background: colorConfigs.mainBg,
+            background: "#fff",
             padding: "16px",
           }}
         >

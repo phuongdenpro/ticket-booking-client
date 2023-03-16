@@ -29,7 +29,7 @@ import { StationApi } from "../../../../../utils/stationApi";
 const EditStation = (props) => {
   const { setShowDrawer, showDrawer, dataStation, handleGetData } = props;
   const [images, setImages] = useState();
-  const [urlImage, setUrlImage] = useState();
+  const [loadingUpload, setLoadingUpload] = useState(false);
   const [optionsProvince, setOptionsProvince] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState({});
   const [optionsDistrict, setOptionsDistrict] = useState([]);
@@ -74,6 +74,20 @@ const EditStation = (props) => {
       setOptionsWard(options);
     } catch (error) {}
   };
+  useEffect(() => {
+    if (!selectedProvince) setOptionsDistrict([]);
+    else {
+      getDataDistrict();
+    }
+  }, [selectedProvince]);
+
+  useEffect(() => {
+    if (!selectedDistrict) {
+      setOptionsWard([]);
+    } else {
+      getDataWard();
+    }
+  }, [selectedDistrict]);
 
   const defaultValues = useMemo(
     () => ({
@@ -109,7 +123,6 @@ const EditStation = (props) => {
   useEffect(() => {
     reset({ ...defaultValues });
     setImages(dataStation?.images?.map((item) => item.url) || []);
-    setUrlImage(dataStation?.images?.map((item) => item.url) || []);
     setSelectedProvince(defaultValues?.provinceId);
     setSelectedDistrict(defaultValues?.districtId);
     setSelectedWard(defaultValues?.wardId);
@@ -117,82 +130,44 @@ const EditStation = (props) => {
   }, [dataStation]);
 
   console.log(images);
-
-  useEffect(() => {
-    if (!selectedProvince) setOptionsDistrict([]);
-    else {
-      getDataDistrict();
-    }
-  }, [selectedProvince]);
-
-  useEffect(() => {
-    if (!selectedDistrict) {
-      setOptionsWard([]);
-    } else {
-      getDataWard();
-    }
-  }, [selectedDistrict]);
-
   const methods = useForm({
     mode: "onSubmit",
     resolver: yupResolver(schema),
   });
 
-  const { handleSubmit, reset, formState, setValue } = methods;
+  const { handleSubmit, reset, formState, setValue, register, watch } = methods;
   const { errors } = formState;
   const toggleDrawer = (open) => (event) => {
     setShowDrawer(open);
   };
 
   const getUrlFromIMG = async (fromData) => {
-    const data = new FormData();
-    fromData.map((item) => data.append("images", item.file, item.name));
+    setLoadingUpload(true);
+    let data = new FormData();
+    data.append("images", fromData.file, fromData.file.name);
     const uploadApi = new UploadApi();
     const response = await uploadApi.uploadMutiFile(data);
-    setUrlImage(response?.data?.data?.images.map((item) => item.Location));
-  };
-  console.log(urlImage);
+    setLoadingUpload(false);
 
-  const onChange = (imageList) => {
-    // data for submit
-    console.log(imageList);
-    setImages(imageList);
-    funcUpload(imageList);
+    return response?.data?.data?.images[0]?.Location;
   };
 
-  const funcUpload = async (image) => {
-    function readFileAsync() {
-      return new Promise((resolve, reject) => {
-        const file = image;
-        getUrlFromIMG(file).then((response) => {
-          if (!response) {
-            return;
-          }
-          const reader = new FileReader();
-          reader.onload = () => {
-            resolve({
-              id: response?.data?.id,
-              url: response?.data?.url,
-              name: response?.data?.name,
-              type: "image",
-            });
-          };
-          reader.onerror = reject;
-          // reader.readAsBinaryString(file);
-        });
-      });
+  const onChange = async (imageList, addUpdateIndex) => {
+    if (addUpdateIndex) {
+      imageList[addUpdateIndex] = await getUrlFromIMG(
+        imageList[addUpdateIndex]
+      );
     }
-    await readFileAsync();
+    setImages(imageList);
   };
+
 
   const onSubmit = async (value) => {
     try {
       const imageParams = [];
-      console.log(urlImage);
-      urlImage.map((item) => {
+      images.map((item) => {
         imageParams.push({ url: item });
       });
-
       const params = {
         code: value.code,
         name: value.name,
@@ -200,10 +175,8 @@ const EditStation = (props) => {
         wardCode: selectedWard?.code,
         images: imageParams,
       };
-      console.log(params);
       const stationApi = new StationApi();
       const res = await stationApi.updateStation(defaultValues?.id, params);
-      console.log(res);
       customToast.success("Cập nhật thành công");
       handleGetData();
       setShowDrawer(false);
@@ -235,9 +208,7 @@ const EditStation = (props) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="title-drawer">
             <div className="btn-close" onClick={goBack}>
-              <ArrowBackIosIcon
-                className="icon-back"
-              />
+              <ArrowBackIosIcon className="icon-back" />
               <span style={{ fontSize: 30, fontWeight: "bolder" }}>
                 Cập nhật
               </span>
@@ -331,9 +302,7 @@ const EditStation = (props) => {
                 </Grid>
               </Grid>
             </div>
-            <div
-              style={{ marginLeft: 40, marginTop: 10 }}
-            >
+            <div style={{ marginLeft: 40, marginTop: 10 }}>
               <span>Hình ảnh bến xe</span>
             </div>
             <div className="view-image">

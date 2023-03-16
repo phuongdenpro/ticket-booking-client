@@ -1,9 +1,9 @@
 import axiosClient from "./axios";
 
 class UploadApi {
-    uploadMutiFile(params) {
+    uploadMutiFile = async (params) =>{
         const url = `upload/uploadMutiFile`;
-        const res = axiosClient.post(url,params);
+        const res =  await axiosClient.post(url,params);
         return res;
       }
   }
