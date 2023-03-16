@@ -28,6 +28,7 @@ import { UploadApi } from "../../../../../utils/uploadApi";
 import { StationApi } from "../../../../../utils/stationApi";
 const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
   const [images, setImages] = useState([]);
+  const [loadingUpload, setLoadingUpload] = useState(false);
   const [urlImage, setUrlImage] = useState([]);
   const [optionsProvince, setOptionsProvince] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState({});
@@ -136,20 +137,23 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
   };
 
   const getUrlFromIMG = async (fromData) => {
-    const data = new FormData();
-    fromData.map((item) => data.append("images", item.file, item.name));
+    setLoadingUpload(true);
+    let data = new FormData();
+    data.append("images", fromData.file, fromData.file.name);
     const uploadApi = new UploadApi();
     const response = await uploadApi.uploadMutiFile(data);
-    console.log(response);
+    setLoadingUpload(false);
 
-    setUrlImage(response?.data?.data?.images.map((item) => item.Location));
+    return response?.data?.data?.images[0]?.Location;
   };
 
-  const onChange = (imageList) => {
-    // data for submit
-    console.log(imageList);
+  const onChange = async (imageList, addUpdateIndex) => {
+    if (addUpdateIndex) {
+      imageList[addUpdateIndex] = await getUrlFromIMG(
+        imageList[addUpdateIndex]
+      );
+    }
     setImages(imageList);
-    funcUpload(imageList);
   };
 
   const funcUpload = async (image) => {
@@ -179,7 +183,7 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
 
   const onSubmit = async (value = defaultValues) => {
     const imageParams = [];
-    urlImage.map((item) => {
+    images.map((item) => {
       imageParams.push({ url: item });
     });
 

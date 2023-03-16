@@ -154,12 +154,12 @@ const AdminDashboard = (props) => {
     </tr>
   );
   return (
-    <div>
+    <div >
       <Helmet>
         <title> PDBus - Dashboard</title>
       </Helmet>
       <h2 className="page-header">Dashboard</h2>
-      <div className="row">
+      <div className="row" >
         <div className="col-6">
           <div className="row">
             {statusCards.map((item, index) => (
@@ -174,16 +174,17 @@ const AdminDashboard = (props) => {
           </div>
         </div>
         <div className="col-6">
-          <div className="card full-height">
+          <div className="card full-height" style={{backgroundColor:'#baf4f2'}}>
             <Chart
               options={chartOptions.options}
               series={chartOptions.series}
               type="bar"
               height="100%"
+              
             />
           </div>
         </div>
-        <div className="col-5">
+        <div className="col-5" >
           <div className="card">
             <div className="card__header">
               <h3>Top custom</h3>
