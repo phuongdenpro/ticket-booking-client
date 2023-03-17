@@ -307,7 +307,7 @@ const EditStation = (props) => {
             </div>
             <div className="view-image">
               <div className="image-product">
-                <UploadImage onChange={onChange} images={images} />
+                <UploadImage onChange={onChange} images={images} isLoading={loadingUpload}/>
               </div>
             </div>
 
