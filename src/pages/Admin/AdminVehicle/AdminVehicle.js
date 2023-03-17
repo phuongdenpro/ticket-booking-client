@@ -21,9 +21,40 @@ const AdminVehicle = (props) => {
 
   const [filterParams, setFilterParams] = useState(null);
   const [typeSearch, setTypeSearch] = useState(null);
-  const [licensePlateSearch, setLicensePlateSearch] = useState(null);
   const [floorNumber, setFloorNumber] = useState(null);
+  const [type, setType] = useState('');
 
+  const floorNumberFilter = [
+    {
+      id: 1,
+      code: "1",
+      name: "1 Tầng",
+    },
+    {
+      id: 2,
+      code: "2",
+      name: "2 Tầng",
+    },
+  ];
+
+  const handelGetType = async () => {
+    try{
+      const vehicleApi = new VehicleApi();
+      const response = await vehicleApi.getType();
+      const typeTmp = []
+       response?.data?.data.map((item) => {
+        typeTmp.push({
+          code: item.key,
+          name: item.value,
+        })
+      })
+      setType(typeTmp);
+      
+    } catch (error) {
+      customToast.error(error.response.data.message);
+    }
+  }
+  console.log(type);
   const handleGetData = async () => {
     try {
       const vehicleApi = new VehicleApi();
@@ -37,15 +68,17 @@ const AdminVehicle = (props) => {
       customToast.error(error.response.data.message);
     }
   };
+  useEffect(() => {
+    handelGetType();
+  }, []);
 
   useEffect(() => {
     setFilterParams({
       ...filterParams,
       typeSearch: typeSearch,
-      licensePlateSearch: licensePlateSearch,
       floorNumber: floorNumber,
     });
-  }, [typeSearch, licensePlateSearch, floorNumber]);
+  }, [typeSearch, floorNumber]);
 
   useEffect(() => {
     handleGetData();
@@ -60,7 +93,6 @@ const AdminVehicle = (props) => {
   };
   const defaultValues = {
     typeSearch: null,
-    licensePlateSearch: null,
     floorNumber: null,
   };
   const methods = useForm({
@@ -119,17 +151,12 @@ const AdminVehicle = (props) => {
             >
               <FormControlCustom label="Loại xe" fullWidth>
                 <div className="view-input" style={{ marginRight: 20 }}>
-                  <SelectCustom placeholder={"Tất cả"} name={"status"} />
+                  <SelectCustom placeholder={"Tất cả"} name={"typeSearch"} options={type} />
                 </div>
               </FormControlCustom>
               <FormControlCustom label="Số tầng" fullWidth>
                 <div className="view-input" style={{ marginRight: 20 }}>
-                  <SelectCustom placeholder={"Tất cả"} name={"outOfDate"} />
-                </div>
-              </FormControlCustom>
-              <FormControlCustom label="Biển số" fullWidth>
-                <div className="view-input">
-                  <SelectCustom placeholder={"Tất cả"} name={"brand"} />
+                  <SelectCustom placeholder={"Tất cả"} name={"floorNumber"} options={floorNumberFilter} />
                 </div>
               </FormControlCustom>
             </Box>

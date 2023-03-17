@@ -11,5 +11,11 @@ class VehicleApi {
     });
     return res;
   }
+
+  getType() {
+    const url = "vehicle/vehicle-type";
+    const res = axiosClient.get(url);
+    return res;
+  } 
 }
 export { VehicleApi };
