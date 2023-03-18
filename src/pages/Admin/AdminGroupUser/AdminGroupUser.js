@@ -78,7 +78,7 @@ const AdminGroupUser = (props) => {
     if (!id) return;
     const customerGroupApi = new GroupCusApi();
     const response = await customerGroupApi.getGroupCusById(id);
-    setDetailGroupCustomer(response.data.data[0]);
+    setDetailGroupCustomer(response.data.data);
   };
   useEffect(() => {
     getDetailGroupCustomer(idGroupCustomer);
