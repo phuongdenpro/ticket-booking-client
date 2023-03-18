@@ -1,13 +1,418 @@
-import React from "react";
+import { Autocomplete, Button, Grid, TextField } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
+import ImageNen from "../../assets/nenBen.jpg";
+import { ProvinceApi } from "../../utils/provinceApi";
+import SearchIcon from "@mui/icons-material/Search";
+import AdjustIcon from "@mui/icons-material/Adjust";
+import DirectionsBusIcon from "@mui/icons-material/DirectionsBus";
+import LoyaltyIcon from "@mui/icons-material/Loyalty";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import LocalActivityIcon from "@mui/icons-material/LocalActivity";
+import "./Home.scss";
+import customToast from "../../components/ToastCustom";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const Home = (props) => {
+  const [optionsProvince, setOptionsProvince] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const getDataProvince = async () => {
+    try {
+      setLoading(true);
+      const provinceApi = new ProvinceApi();
+      const res = await provinceApi.getAllProvince();
+
+      setOptionsProvince(res?.data?.data);
+      setLoading(false);
+    } catch (error) {}
+  };
+  useEffect(() => {
+    getDataProvince();
+  }, []);
+
+  const onClickSearch = async () => {
+    customToast.warning("Comming soon...");
+  };
+
+  const settings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 3,
+    className: "center",
+    slidesToScroll: 1,
+    arrows: true,
+  };
+  const dataTestTrip = [
+    {
+      id: "1",
+      title: "Hà Nội - Sài Gòn",
+      price: "330.000",
+      image: require("../../assets/trip1.jpg"),
+    },
+    {
+      id: "2",
+      title: "Sài Gòn - Đà Lạt",
+      price: "500.000",
+      image: require("../../assets/trip2.jpg"),
+    },
+    {
+      id: "3",
+      title: "Sài Gòn - Bình Định",
+      price: "700.000",
+      image: require("../../assets/trip3.jpg"),
+    },
+    {
+      id: "4",
+      title: "Vũng Tàu - Phú Quốc",
+      price: "800.000",
+      image: require("../../assets/trip4.jpg"),
+    },
+    {
+      id: "5",
+      title: "Bình Định - Phú Yên",
+      price: "100.000",
+      image: require("../../assets/trip5.jpg"),
+    },
+  ];
+
+  const dataTestPromotion = [
+    {
+      id: "1",
+      title: "Giảm 50% vé cho khách hàng mới tạo tài khoản",
+      image: require("../../assets/promotion1.png"),
+    },
+    {
+      id: "2",
+      title: "Giảm 25% vé cho tuyến đường từ Sài Gòn ra Hà Nội",
+      image: require("../../assets/promotion2.jpg"),
+    },
+    {
+      id: "3",
+      title: "Giảm 30% vé cho tuyến đường từ Sài Gòn ra Hà Nội",
+      image: require("../../assets/trip3.jpg"),
+    },
+    {
+      id: "4",
+      title: "Giam giá bất ngờ cho khách hàng đặt vé trong dịp lễ",
+      image: require("../../assets/trip4.jpg"),
+    },
+    {
+      id: "5",
+      title: "Giam giá bất ngờ cho khách hàng đặt vé trong dịp lễ",
+      image: require("../../assets/trip5.jpg"),
+    },
+  ];
   return (
-    <div>
+    <div
+      style={{
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "column",
+      }}
+    >
       <Helmet>
-        <title> PDBus - Home</title>
+        <title> PDBus - Đặt vé xe nhanh chóng, tiện lợi, đảm bảo có vé</title>
       </Helmet>
-      Home
+      <div
+        style={{
+          height: "600px",
+          width: "100%",
+          backgroundImage: `url(${ImageNen})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          alignItems: "center",
+          justifyContent: "center",
+          display: "flex",
+        }}
+      >
+        <div
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <div>
+            <h2 style={{ color: "#ffffff", fontSize: 35 }}>
+              PDBus - Đặt vé xe nhanh chóng, tiện lợi, đảm bảo có vé
+            </h2>
+          </div>
+
+          <div
+            style={{
+              width: "60vw",
+              height: "150px",
+              backgroundColor: "#ffffff",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: "20px",
+            }}
+          >
+            <div
+              style={{
+                width: "56vw",
+                height: "100px",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "10px",
+                border: "1px dotted black",
+                borderBottomStyle: "dotted",
+                padding: "10px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginRight: 20,
+
+                }}
+              >
+                <AdjustIcon
+                  style={{
+                    backgroundColor: "white",
+                    fill: "#4671f2",
+                    marginTop: 20,
+                    marginRight: 5,
+                  }}
+                ></AdjustIcon>
+                <Autocomplete
+                  loading={loading}
+                  noOptionsText={"Không có dữ liệu"}
+                  id="country-select-demo"
+                  options={optionsProvince}
+                  sx={{ width: 300 }}
+                  autoHighlight
+                  isOptionEqualToValue={(option, value) =>
+                    option.name === value.name
+                  }
+                  getOptionLabel={(option) => option?.name}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="standard"
+                      label="Nơi xuất phát"
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: "new-password", // disable autocomplete and autofill
+                      }}
+                    />
+                  )}
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginRight: 15,
+                }}
+              >
+                <AdjustIcon
+                  style={{
+                    backgroundColor: "white",
+                    fill: "#c61334",
+                    marginTop: 20,
+                    marginRight: 5,
+                  }}
+                ></AdjustIcon>
+                <Autocomplete
+                  noOptionsText={"Không có dữ liệu"}
+                  id="country-select-demo"
+                  options={optionsProvince}
+                  sx={{ width: 300 }}
+                  autoHighlight
+                  getOptionLabel={(option) => option?.name}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="standard"
+                      label="Nơi đến"
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: "new-password", // disable autocomplete and autofill
+                      }}
+                    />
+                  )}
+                />
+              </div>
+              <Button
+                variant="contained"
+                size="large"
+                color="warning"
+                onClick={() => onClickSearch()}
+              >
+                Tìm chuyến
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="content" style={{ width: "75vw" }}>
+        <div>
+          <h2 className="home_slide_title">Tuyến đường phổ biến</h2>
+          <div style={{ padding: 20 }}>
+            <Slider {...settings}>
+              {dataTestTrip.map((item) => (
+                <div className="card-trip">
+                  <div className="card-top">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      style={{ width: "100%" }}
+                    />
+                    <h1>{item.title}</h1>
+                  </div>
+                  <div className="card-bottom">
+                    <h3>{item.price} VND</h3>
+                    <span className="category">{item.category}</span>
+                  </div>
+                </div>
+              ))}
+            </Slider>
+          </div>
+        </div>
+        <div className="home_slide_content3">
+          <h2 className="home_slide_title">Ưu đãi nổi bật</h2>
+          <div className="card-promotion" style={{ padding: 20 }}>
+            <Slider {...settings}>
+              {dataTestPromotion.map((item) => (
+                <div className="card-trip">
+                  <div className="card-top">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      style={{ width: "100%" }}
+                    />
+                  </div>
+                  <div className="card-bottom">
+                    <h3>{item.title}</h3>
+                    <span className="category">{item.category}</span>
+                  </div>
+                </div>
+              ))}
+            </Slider>
+          </div>
+        </div>
+
+        <div className="home_slide_content3">
+          <h2 className="home_slide_title">
+            Nền tảng kết nối người dùng và nhà xe
+          </h2>
+
+          <div className="seo-content">
+            <Grid container spacing={2} style={{ marginTop: 10 }}>
+              <Grid item xs={3}>
+                <div className="card">
+                  <div className="icon-container">
+                    <DirectionsBusIcon
+                      tyle={{
+                        backgroundColor: "white",
+                        fill: "#2121c6",
+                        width: 30,
+                        height: 30,
+                      }}
+                    />
+                  </div>
+                  <div className="card-content">
+                    <p className="base__Headline-sc-1tvbuqk-7 OkeDq color--light-dark">
+                      2000+ nhà xe chất lượng cao
+                    </p>
+                    <p className="base__Body02-sc-1tvbuqk-14 VqdXU color--medium-sub">
+                      5000+ tuyến đường trên toàn quốc, chủ động và đa dạng lựa
+                      chọn.
+                    </p>
+                  </div>
+                </div>
+              </Grid>
+              <Grid item xs={3}>
+                <div className="card">
+                  <div className="icon-container">
+                    <LocalActivityIcon
+                      style={{
+                        backgroundColor: "white",
+                        fill: "#d37e23",
+                        width: 30,
+                        height: 30,
+                      }}
+                    />
+                  </div>
+                  <div className="card-content">
+                    <p className="base__Headline-sc-1tvbuqk-7 OkeDq color--light-dark">
+                      Đặt vé dễ dàng
+                    </p>
+                    <p className="base__Body02-sc-1tvbuqk-14 VqdXU color--medium-sub">
+                      Đặt vé chỉ với 60s. Chọn xe yêu thích cực nhanh và thuận
+                      tiện.
+                    </p>
+                  </div>
+                </div>
+              </Grid>
+
+              <Grid item xs={3}>
+                <div className="card">
+                  <div className="icon-container">
+                    <ReceiptLongIcon
+                      style={{
+                        backgroundColor: "white",
+                        fill: "#15c421",
+                        width: 30,
+                        height: 30,
+                      }}
+                    />
+                  </div>
+                  <div className="card-content">
+                    <p className="base__Headline-sc-1tvbuqk-7 OkeDq color--light-dark">
+                      Đảm bảo có vé
+                    </p>
+                    <p className="base__Body02-sc-1tvbuqk-14 VqdXU color--medium-sub">
+                      Hoàn ngay 150% nếu không có vé, mang đến hành trình trọn
+                      vẹn cho khách hàng. vẹn.
+                    </p>
+                  </div>
+                </div>
+              </Grid>
+              <Grid item xs={3}>
+                <div className="card">
+                  <div className="icon-container">
+                    <LoyaltyIcon
+                      style={{
+                        backgroundColor: "white",
+                        fill: "#c61334",
+                        width: 30,
+                        height: 30,
+                      }}
+                    />
+                  </div>
+                  <div className="card-content">
+                    <p className="base__Headline-sc-1tvbuqk-7 OkeDq color--light-dark">
+                      Nhiều ưu đãi
+                    </p>
+                    <p className="base__Body02-sc-1tvbuqk-14 VqdXU color--medium-sub">
+                      Hàng ngàn ưu đãi cực độc quyền tại PDBus.
+                    </p>
+                  </div>
+                </div>
+              </Grid>
+              <Grid item xs={6}></Grid>
+            </Grid>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
