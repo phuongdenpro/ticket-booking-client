@@ -351,6 +351,9 @@
         .title-group {
           background: rgba(245, 245, 245, 0.5) !important;
           padding: 0.4rem 1.75rem;
+          display: flex;
+          flex-direction: row !important;
+          justify-content: space-between;
   
           span {
             margin: 0;
@@ -359,6 +362,7 @@
             line-height: 24px;
             color: #000 !important;
           }
+          
         }
   
         .content {

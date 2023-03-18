@@ -5,11 +5,15 @@ import TableCustom from "../../../../components/TableCustom";
 import ClearIcon from "@mui/icons-material/Clear";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import moment from "moment";
+import ModalAlert from "../../../../components/Modal";
+import { useState } from "react";
 moment.locale("vi");
 
 const CustomerList = (props) => {
   const {
+    idGroup,
     data,
     selectionModel,
     handleSelectionModeChange,
@@ -21,6 +25,22 @@ const CustomerList = (props) => {
     page,
     pageSize,
   } = props;
+
+  const [openModal, setOpenModal] = useState(false);
+  const [idCustomer, setIdCustomer] = useState("");
+  const [nameCustomer, setNameCustomer] = useState("");
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+  const handleOpenModal = (id, name) => {
+    setIdCustomer(id)
+    setNameCustomer(name);
+    setOpenModal(true);
+  };
+
+  const handleConfirm = async () => {
+    
+  };
 
   const columns = [
     {
@@ -88,25 +108,73 @@ const CustomerList = (props) => {
         );
       },
     },
+    {
+      field: "action",
+      headerName: "",
+      flex: 30,
+      headerAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <div>
+            {" "}
+            <Tooltip title="Xóa">
+              <IconButton>
+                <RemoveCircleIcon
+                  onClick={() => handleOpenModal(params.row.id, params.row.fullName)}
+                  style={{
+                    backgroundColor: "white",
+                    borderRadius: 5,
+                    fill: "#fb0b12",
+                    width: 17,
+                    height: 17,
+                  }}
+                />
+              </IconButton>
+            </Tooltip>
+          </div>
+        );
+      },
+    },
   ];
 
   return (
-    <TableCustom
-      rows={data}
-      columns={columns}
-      {...props}
-      // checkboxSelection
-      handleSelectAllClick={handleSelectionModeChange}
-      handleClick={handleClick}
-      selected={selectionModel}
-      handleShowDetail={handleShowDetail}
-      handleChangePage={handleChangePage}
-      onChangeRowsPerPage={onChangeRowsPerPage}
-      pagination={false}
-      total={total}
-      page={page}
-      pageSize={pageSize}
-    />
+    <div>
+      <TableCustom
+        rows={data}
+        columns={columns}
+        {...props}
+        // checkboxSelection
+        handleSelectAllClick={handleSelectionModeChange}
+        handleClick={handleClick}
+        selected={selectionModel}
+        handleShowDetail={handleShowDetail}
+        handleChangePage={handleChangePage}
+        onChangeRowsPerPage={onChangeRowsPerPage}
+        pagination={false}
+        total={total}
+        page={page}
+        pageSize={pageSize}
+      />
+      <ModalAlert
+        open={openModal}
+        handleClose={() => handleCloseModal()}
+        handleCancel={() => handleCloseModal()}
+        handleConfirm={() => handleConfirm()}
+        title={"Xác nhận xóa khách hàng khỏi nhóm"}
+        description={
+          "Thao tác sẽ không thể hoàn tác, bạn có chắc chắn muốn tiếp tục không?"
+        }
+        type={"error"}
+        icon={true}
+        renderContentModal={
+          <div className="view-input-discount">
+            <span>Tên khách hàng: {nameCustomer}</span>
+          </div>
+        }
+      />
+    </div>
   );
 };
 

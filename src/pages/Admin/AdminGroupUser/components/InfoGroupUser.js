@@ -19,7 +19,12 @@ import CustomerList from "./ListCustomer";
 import EditGroupUser from "./EditGroupUser";
 
 const InfoGroupUser = (props) => {
-  const { setShowDrawerDetail, showDrawerDetail, dataGroupCustomer,handleGetData } = props;
+  const {
+    setShowDrawerDetail,
+    showDrawerDetail,
+    dataGroupCustomer,
+    handleGetData,
+  } = props;
   const [showDrawerEdit, setShowDrawerEdit] = useState(false);
   return (
     <Drawer
@@ -42,10 +47,10 @@ const InfoGroupUser = (props) => {
       <div className="content-drawer">
         <div className="title-group">
           <span>Thông tin nhóm khách hàng</span>
+
           <Button
             variant="outlined"
             size="small"
-            style={{ marginLeft: 300 }}
             color="secondary"
             onClick={() => setShowDrawerEdit(true)}
           >
@@ -98,9 +103,20 @@ const InfoGroupUser = (props) => {
       <div className="content-drawer" style={{ marginTop: 50 }}>
         <div className="title-group">
           <span>Danh sách khách hàng</span>
+          <Button
+            variant="outlined"
+            size="small"
+            color="secondary"
+           
+          >
+            Thêm khách hàng
+          </Button>
         </div>
       </div>
-      <CustomerList data={dataGroupCustomer.customers}></CustomerList>
+      <div>
+        <CustomerList idGroup={dataGroupCustomer.id}  data={dataGroupCustomer.customers}></CustomerList>
+      </div>
+
       <EditGroupUser
         setShowDrawer={setShowDrawerEdit}
         showDrawer={showDrawerEdit}

@@ -11,6 +11,8 @@ import { GroupCusApi } from "../../../../utils/groupCusApi";
 import customToast from "../../../../components/ToastCustom";
 import Badge from "../../../../components/Badge";
 import moment from "moment";
+import { useNavigate } from 'react-router';
+import { PriceListApi } from "../../../../utils/priceListApi";
 
 const PriceList = (props) => {
   const {
@@ -27,29 +29,29 @@ const PriceList = (props) => {
     pageSize,
   } = props;
   const [openModal, setOpenModal] = useState(false);
-  const [idGroup, setIdGroup] = useState(null);
-  const [nameGroup, setNameGroup] = useState("");
-  const [codeGroup, setCodeGroup] = useState("");
+  const [idPriceList, setIdPriceList] = useState(null);
+  const [namePriceList, setNamePriceList] = useState("");
+  const [codePriceList, setCodePriceList] = useState("");
 
   const handleCloseModal = () => {
     setOpenModal(false);
   };
   const handleOpenModal = (id, name, code) => {
-    setIdGroup(id);
-    setNameGroup(name);
-    setCodeGroup(code);
+    setIdPriceList(id);
+    setNamePriceList(name);
+    setCodePriceList(code);
     setOpenModal(true);
   };
 
   const handleConfirm = async () => {
     try {
-      const groupCusApi = new GroupCusApi();
-      const response = await groupCusApi.deleteById(idGroup);
+      const priceListApi = new PriceListApi();
+      const response = await priceListApi.deleteById(idPriceList);
       customToast.success("Xóa thành công");
 
       handleGetData();
       setOpenModal(false);
-      setIdGroup(null);
+      setIdPriceList(null);
     } catch (error) {
       customToast.error(error.response.data.message);
     }
@@ -62,6 +64,28 @@ const PriceList = (props) => {
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
+      renderCell: (params) => {
+        return (
+          <Button
+          onClick={() => handleShowDetail(params?.row?.code)}
+            style={{ backgroundColor: 'transparent' }}
+            disabled={false}
+            color="primary"
+          >
+            <span
+              style={{
+                textDecorationLine: 'underline',
+                color: '#1A89AC',
+                fontSize: '0.8rem',
+                display: 'inline-block',
+                textTransform: 'none',
+              }}
+            >
+              {params?.row?.code}
+            </span>
+          </Button>
+        );
+      },
     },
     {
       field: "name",
@@ -137,7 +161,7 @@ const PriceList = (props) => {
     {
       field: "action",
       headerName: "",
-      flex: 70,
+      flex: 30,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
@@ -145,32 +169,6 @@ const PriceList = (props) => {
         return (
           <div>
             {" "}
-            <Tooltip title="Xem chi tiết">
-              <IconButton>
-                <VisibilityIcon
-                  style={{
-                    backgroundColor: "white",
-                    borderRadius: 5,
-                    fill: "#1a89ac",
-                    width: 17,
-                    height: 17,
-                  }}
-                />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Cập nhật">
-              <IconButton>
-                <BorderColorIcon
-                  style={{
-                    backgroundColor: "white",
-                    borderRadius: 5,
-                    fill: "#fca11a",
-                    width: 17,
-                    height: 17,
-                  }}
-                />
-              </IconButton>
-            </Tooltip>
             <Tooltip title="Xóa">
               <IconButton>
                 <ClearIcon
@@ -227,7 +225,7 @@ const PriceList = (props) => {
         icon={true}
         renderContentModal={
           <div className="view-input-discount">
-            <span>Mã nhóm: {codeGroup} </span>
+            <span>Mã bảng giá: {codePriceList} </span>
           </div>
         }
       />

@@ -29,6 +29,7 @@ const AdminGroupUser = (props) => {
   const [idGroupCustomer, setIdGroupCustomer] = useState(null);
   const [detailGroupCustomer, setDetailGroupCustomer] = useState("");
 
+
   const handleGetData = async () => {
     try {
       const groupCusApi = new GroupCusApi();
@@ -77,9 +78,8 @@ const AdminGroupUser = (props) => {
     if (!id) return;
     const customerGroupApi = new GroupCusApi();
     const response = await customerGroupApi.getGroupCusById(id);
-    setDetailGroupCustomer(response.data.data);
+    setDetailGroupCustomer(response.data.data[0]);
   };
-
   useEffect(() => {
     getDetailGroupCustomer(idGroupCustomer);
   }, [idGroupCustomer, showDrawerDetail]);

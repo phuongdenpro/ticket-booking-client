@@ -1,5 +1,5 @@
-import { Divider, Grid } from "@mui/material";
-import { Button } from "antd";
+import {Button, Divider, Grid } from "@mui/material";
+
 import React, { useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
 import { FormProvider, useForm } from "react-hook-form";
@@ -12,6 +12,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import moment from "moment";
 import SelectCustom from "../../../components/SelectCustom";
 import './AdminTicket.scss'
+import '../../../assets/scss/default.scss'
 import PriceList from "../AdminPriceList/components/PriceList";
 
 const AdminAddTicket = (props) => {
@@ -227,22 +228,100 @@ const AdminAddTicket = (props) => {
             </FormProvider>
           </div>
 
-          <div className={'page-layout'}>
-            <Grid className={'align-items-center header_title'}>
+          <div className={"page-layout"} style={{ marginTop: 50 }}>
+            <Grid className={"align-items-center header_title"}>
               <Grid md={7}>
-                <h2 className={'txt-title'}>Danh sách vé đặt</h2>
+                <h2 className={"txt-title"}>DANH SÁCH VÉ</h2>
               </Grid>
-              <div className="item-btn-right">
-                <Button className={'btn-create'}>
-                  <span className={'txt'}>Thêm vé</span>
+              <div className="item-btn-right" style={{ float: "right", marginBottom:20 }}>
+                <Button
+                  className={"btn-create"}
+                  variant="outlined"
+                  size="medium"
+                  style={{ height: "2rem" }}
+                >
+                  <span className={"txt"}>Thêm vé</span>
                 </Button>
               </div>
             </Grid>
-            <PriceList  />
+            <PriceList />
           </div>
         </Grid>
         <Grid md={4}>
-          <span>Thông tin chi tiết</span>
+          <div className={"page-layout"} style={{ marginLeft: "20px" }}>
+            <Grid className={"align-items-center header_title"}>
+              <Grid md={7}>
+                <h2 className={"txt-title"}>CHI TIẾT HÓA ĐƠN</h2>
+              </Grid>
+            </Grid>
+            <Divider />
+            <FormProvider {...methods}>
+              <form>
+                <div className="content mt-2">
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <FormControlCustom
+                        classNameLabel={
+                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
+                        }
+                        className={"flex-direction-row"}
+                        label={"Ngày tạo"}
+                        fullWidth
+                      >
+                        <InputField
+                        disabled
+                          style={{ width: "100%" }}
+                          name={"createdDate"}
+                          placeholder={"Nhập ngày tạo bảng giá"}
+                          helperText={""}
+                        />
+                      </FormControlCustom>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <FormControlCustom
+                        classNameLabel={
+                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
+                        }
+                        className={"flex-direction-row"}
+                        label={"Ghi chú"}
+                        fullWidth
+                      >
+                        <InputField
+                          style={{ width: "100%" }}
+                          multiline
+                          rows={3}
+                          name={"note"}
+                          placeholder={"Nhập ghi chú"}
+                          helperText={""}
+                        />
+                      </FormControlCustom>
+                    </Grid>
+                  </Grid>
+                </div>
+                <Grid
+                  container
+                  spacing={2}
+                  className={`mt-1`}
+                  justifyContent="space-between"
+                >
+                  <Grid item xs={7}></Grid>
+                  <Grid item xs={5}>
+                    <Button
+                      variant="contained"
+                      size="medium"
+                      className={`btn-tertiary-normal`}
+                      style={{ height: "2rem" }}
+                      type="submit"
+                    >
+                      Tạo hóa đơn
+                    </Button>
+                  </Grid>
+                </Grid>
+              </form>
+            </FormProvider>
+            <Divider className={`mt-3`} />
+          </div>
         </Grid>
       </Grid>
 
