@@ -11,5 +11,10 @@ class PriceListApi {
     });
     return res;
   }
+  deleteById(id, params) {
+    const url = `price-list/id/${id}`;
+    const res = axiosClient.delete(url, params);
+    return res;
+  }
 }
 export { PriceListApi };

@@ -18,6 +18,7 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import dayjs, { Dayjs } from "dayjs";
 import "./AdminPriceList.scss";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 const AdminPriceList = (props) => {
   const [loadings, setLoadings] = useState([]);
@@ -30,10 +31,15 @@ const AdminPriceList = (props) => {
   const [filterParams, setFilterParams] = useState(null);
   const [data, setData] = useState([]);
   const [selected, setSelected] = useState([]);
+  const navigate = useNavigate();
+
   const [selectedDate, setSelectedDate] = useState({
     startDate: firstDay,
     endDate: lastDay,
   });
+  const onDetailPriceList = (id) => {
+    navigate(`/admin/ticket/price-list/detail/${id}`);
+  };
   const filterDateTime = [
     {
       id: 1,
@@ -98,7 +104,7 @@ const AdminPriceList = (props) => {
     setPageSize(+event.target.value);
     setPage(0);
   };
-console.log(moment(selectedDate?.startDate).format("DD-MM-YYYY") );
+  console.log(moment(selectedDate?.startDate).format("DD-MM-YYYY"));
   const defaultValues = {
     startDate: null,
     endDate: null,
@@ -114,7 +120,7 @@ console.log(moment(selectedDate?.startDate).format("DD-MM-YYYY") );
     const params = {
       status: watchStatus?.code,
       startDate: new Date(selectedDate?.startDate),
-      endDate: new Date(selectedDate?.endDate)
+      endDate: new Date(selectedDate?.endDate),
     };
     setFilterParams(params);
   }, [watchStatus, watchTime, selectedDate?.startDate, selectedDate?.endDate]);
@@ -311,6 +317,7 @@ console.log(moment(selectedDate?.startDate).format("DD-MM-YYYY") );
         <div style={{ flexGrow: 1 }}>
           <PriceList
             data={data?.data?.data || []}
+            handleShowDetail={onDetailPriceList}
             handleChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
             total={data?.data?.pagination?.total}

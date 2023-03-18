@@ -9,7 +9,7 @@ import { Avatar, Dropdown, Typography, notification } from "antd";
 import { Header } from "antd/es/layout/layout";
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import colorConfigs from "../../config/colorConfigs";
 import sizeConfigs from "../../config/sizeConfigs";
 import { AdminApi } from "../../utils/adminApi";
@@ -17,10 +17,13 @@ import Cookies from "js-cookie";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import customToast from "../ToastCustom";
 import ArticleIcon from "@mui/icons-material/Article";
+import { menu } from "../../data/menuData";
 
 const Topbar = (props) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [time, setTime] = useState();
+  const [routeName, setRouteName] = useState();
   useEffect(() => {
     setInterval(() => {
       var today = new Date();
@@ -52,6 +55,10 @@ const Topbar = (props) => {
       customToast.error(error.response.data.message);
     }
   };
+  useEffect(() => {
+    const name = menu().find((route) => route.path === location?.pathname);
+    setRouteName(name);
+  }, [location?.pathname]);
 
   const items = [
     {
@@ -93,7 +100,7 @@ const Topbar = (props) => {
           justifyContent: "space-between",
         }}
       >
-        <div tyle={{ display: "flex", flexDirection: "row" }}>
+        <div style={{ display: "flex", flexDirection: "row", alignItems:'center' }}>
           <Button
             variant="text"
             onClick={() => {
@@ -104,19 +111,22 @@ const Topbar = (props) => {
             {" "}
             {props.collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </Button>
-          <span>
-            <a
-              href="/admin"
-              className="home-title"
-              style={{
-                textDecoration: "none",
-                color: "#000",
-                fontWeight: "bold",
-              }}
-            >
-              Home
-            </a>
-          </span>
+
+          <a
+            href="/admin"
+            className="home-title"
+            style={{
+              textDecoration: "none",
+              color: "#000",
+              fontWeight: "bold",
+            }}
+          >
+            Home
+          </a>
+          <ChevronRightIcon className="icon-right-header" />
+          <a className="home-title" style={{ color: "#4D4D4D" }}>
+            {routeName?.text || "Cài đặt"}
+          </a>
         </div>
         <div
           style={{

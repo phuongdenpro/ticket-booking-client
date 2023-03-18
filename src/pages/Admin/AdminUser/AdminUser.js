@@ -69,7 +69,7 @@ const AdminUser = (props) => {
   });
   const { handleSubmit, reset, watch } = methods;
   return (
-    <Box sx={{ height: 480, width: "100%" }}>
+    <Box sx={{ height: '100%', width: "100%" }}>
       <Helmet>
         <title> PDBus - Quản lý khách hàng</title>
       </Helmet>
@@ -131,9 +131,9 @@ const AdminUser = (props) => {
             <SearchInput
               className="txt-search"
               placeholder={"Tìm kiếm khách hàng"}
-              // value={searchValue}
-              // setSearchValue={setSearchValue}
-              // handleSearch={handleSearch}
+              value={searchValue}
+              setSearchValue={setSearchValue}
+              handleSearch={handleSearch}
             />
           </Grid>
         </FormProvider>
@@ -145,13 +145,14 @@ const AdminUser = (props) => {
           justifyContent: "flex-end",
           marginBottom: 20,
           marginRight: 30,
+          fontWeight:'bold'
         }}
         md={6}
       >
         <span className="title-price">Tổng số khách hàng: </span>
-        <span className="txt-price"> 0</span>
+        <span className="txt-price" style={{marginLeft:20}}>{data?.data?.pagination?.total}</span>
       </Grid>
-      <div style={{ display: "flex", height: "100%" }}>
+      <div style={{ display: "flex" }}>
         <div style={{ flexGrow: 1 }}>
           <UserList
             data={data?.data?.data || []}
