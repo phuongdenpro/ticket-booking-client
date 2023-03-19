@@ -70,7 +70,7 @@ const Sidebar = (props) => {
 
     getItem("Quản Lý Xe", "vehicle", <CarOutlined />),
     getItem("Quản Lý Bến Xe", "station", <CarRentalIcon />),
-    getItem("Quản lý Chuyến Xe", "trip", <DepartureBoardIcon />),
+    getItem("Quản lý Tuyến Xe", "trip", <DepartureBoardIcon />),
     getItem("Khuyến Mãi", "promotion", <DollarCircleOutlined />),
     getItem("Đặt vé - Hóa đơn", "subOrder", <OrderedListOutlined />, [
       getChildItem("Đặt vé", "create-ticket"),
