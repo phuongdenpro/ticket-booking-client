@@ -6,6 +6,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import moment from "moment";
+import Badge from "../../../../components/Badge";
 moment.locale("vi");
 
 const UserList = (props) => {
@@ -14,6 +15,7 @@ const UserList = (props) => {
     selectionModel,
     handleSelectionModeChange,
     handleShowDetail,
+    handelDetail,
     handleClick,
     onChangeRowsPerPage,
     handleChangePage,
@@ -58,7 +60,7 @@ const UserList = (props) => {
     {
       field: "gender",
       headerName: "Giới tính",
-      flex: 100,
+      flex: 70,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
@@ -66,19 +68,19 @@ const UserList = (props) => {
         return (
           <div>
             <span>
-              {params.row?.gender === "0"
+              {params.row?.gender === "F"
                 ? "Nữ"
-                : params.row?.gender === "1"
+                : params.row?.gender === "M"
                 ? "Nam"
-                : "Chưa xác định"}
+                : "Khác"}
             </span>
           </div>
         );
       },
     },
     {
-      field: "birthday",
-      headerName: "Ngày sinh",
+      field: "status",
+      headerName: "Trạng thái",
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
@@ -86,12 +88,16 @@ const UserList = (props) => {
       renderCell: (params) => {
         return (
           <div>
-            <span>
-              {params.row?.birthday !== undefined &&
-              params.row?.birthday !== null
-                ? moment(params.row.birthday).format("DD-MM-YYYY")
-                : "chưa xác định"}
-            </span>
+            <Badge
+              type={
+                params?.row?.status == "Chưa kích hoạt"
+                  ? "warning"
+                  : params?.row?.status == "Tạm khóa"
+                  ? "error"
+                  : "success"
+              }
+              content={params?.row?.status}
+            />
           </div>
         );
       },
@@ -99,7 +105,7 @@ const UserList = (props) => {
     {
       field: "customerGroup",
       headerName: "Nhóm khách hàng",
-      flex: 100,
+      flex: 150,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
@@ -119,7 +125,7 @@ const UserList = (props) => {
     {
       field: "action",
       headerName: "",
-      flex: 50,
+      flex: 30,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
@@ -127,27 +133,20 @@ const UserList = (props) => {
         return (
           <div>
             {" "}
-            <Tooltip title="Cập nhật">
+            <Tooltip title="Xem chi tiết">
               <IconButton>
-                <BorderColorIcon
-                  onClick={() => handleShowDetail(params.id)}
-                  style={{ backgroundColor: "white", borderRadius: 5,fill: "#fca11a", width:17,height:17}}
-                />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Xóa">
-              <IconButton>
-                <ClearIcon
+                <VisibilityIcon
                   style={{
                     backgroundColor: "white",
                     borderRadius: 5,
-                    fill: "#fb0b12",
                     width: 17,
                     height: 17,
                   }}
+                  onClick={() => handelDetail(params.id)}
                 />
               </IconButton>
             </Tooltip>
+            
           </div>
         );
       },

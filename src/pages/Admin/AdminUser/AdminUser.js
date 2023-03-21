@@ -13,6 +13,8 @@ import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import { Helmet } from "react-helmet";
 import { CustomerApi } from "../../../utils/customerApi";
 import customToast from "../../../components/ToastCustom";
+import AddUser from "./components/AddUser";
+import InfoUser from "./components/InfoUser";
 
 const AdminUser = (props) => {
   const [loadings, setLoadings] = useState([]);
@@ -22,6 +24,24 @@ const AdminUser = (props) => {
   const [searchValue, setSearchValue] = useState("");
   const [filterParams, setFilterParams] = useState(null);
   const [data, setData] = useState([]);
+  const [showDrawerCreate, setShowDrawerCreate] = useState(false);
+  const [showDrawerDetail, setShowDrawerDetail] = useState(false);
+  const [idCustomer, setIdCustomer] = useState(null);
+  const [detailCustomer, setDetailCustomer] = useState("");
+  const handelDetail = (id) => {
+    setShowDrawerDetail(true);
+    setIdCustomer(id);
+  };
+
+  const getDetailCustomer = async (id) => {
+    if (!id) return;
+    const customerApi = new CustomerApi();
+    const response = await customerApi.getById(id);
+    setDetailCustomer(response.data.data);
+  };
+  useEffect(() => {
+    getDetailCustomer(idCustomer);
+  }, [idCustomer, showDrawerDetail]);
 
   const handleGetData = async () => {
     try {
@@ -68,15 +88,22 @@ const AdminUser = (props) => {
     defaultValues,
   });
   const { handleSubmit, reset, watch } = methods;
+  const resetFilterParams = () => {
+    handleGetData();
+    setPage(0);
+    setPageSize(10);
+    setSearchValue("");
+    customToast.success("Làm mới dữ liệu thành công");
+  };
   return (
-    <Box sx={{ height: '100%', width: "100%" }}>
+    <Box sx={{ height: "100%", width: "100%" }}>
       <Helmet>
         <title> PDBus - Quản lý khách hàng</title>
       </Helmet>
       <Grid container className={"align-items-center header_title"}>
         <Grid item md={7}>
           <h2 className={"txt-title"} style={{ marginTop: 20 }}>
-            DANH SÁCH NGƯỜI DÙNG
+            DANH SÁCH KHÁCH HÀNG
           </h2>
         </Grid>
         <Grid item md={5}>
@@ -90,6 +117,7 @@ const AdminUser = (props) => {
               variant="contained"
               color="info"
               startIcon={<RefreshOutlinedIcon />}
+              onClick={resetFilterParams}
             >
               <span className={"txt"}>Làm mới</span>
             </Button>
@@ -108,6 +136,9 @@ const AdminUser = (props) => {
               className={"btn-create"}
               startIcon={<AddIcon />}
               style={{ marginTop: 20, marginRight: 20 }}
+              onClick={() => {
+                setShowDrawerCreate(true);
+              }}
             >
               <span className={"txt"}>Thêm mới</span>
             </Button>
@@ -145,12 +176,14 @@ const AdminUser = (props) => {
           justifyContent: "flex-end",
           marginBottom: 20,
           marginRight: 30,
-          fontWeight:'bold'
+          fontWeight: "bold",
         }}
         md={6}
       >
         <span className="title-price">Tổng số khách hàng: </span>
-        <span className="txt-price" style={{marginLeft:20}}>{data?.data?.pagination?.total}</span>
+        <span className="txt-price" style={{ marginLeft: 20 }}>
+          {data?.data?.pagination?.total}
+        </span>
       </Grid>
       <div style={{ display: "flex" }}>
         <div style={{ flexGrow: 1 }}>
@@ -160,11 +193,23 @@ const AdminUser = (props) => {
             onChangeRowsPerPage={handleChangeRowsPerPage}
             total={data?.data?.pagination?.total}
             handleGetData={handleGetData}
+            handelDetail={handelDetail}
             page={page}
             pageSize={pageSize}
           ></UserList>
         </div>
       </div>
+      <AddUser
+        setShowDrawer={setShowDrawerCreate}
+        showDrawer={showDrawerCreate}
+        handleGetData={handleGetData}
+      ></AddUser>
+      <InfoUser
+        setShowDrawerDetail={setShowDrawerDetail}
+        showDrawerDetail={showDrawerDetail}
+        dataCustomer={detailCustomer}
+        handleGetData={handleGetData}
+      ></InfoUser>
     </Box>
   );
 };
