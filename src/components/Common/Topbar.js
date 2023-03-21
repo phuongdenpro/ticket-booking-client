@@ -92,6 +92,7 @@ const Topbar = (props) => {
         color: colorConfigs.topbar.color,
         marginLeft: 0,
         zIndex: 3,
+        boxShadow: "unset",
       }}
     >
       <Toolbar

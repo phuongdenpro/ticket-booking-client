@@ -108,35 +108,7 @@ const CustomerList = (props) => {
         );
       },
     },
-    {
-      field: "action",
-      headerName: "",
-      flex: 30,
-      headerAlign: "center",
-      headerClassName: "theme",
-      sortable: false,
-      renderCell: (params) => {
-        return (
-          <div>
-            {" "}
-            <Tooltip title="Xóa">
-              <IconButton>
-                <RemoveCircleIcon
-                  onClick={() => handleOpenModal(params.row.id, params.row.fullName)}
-                  style={{
-                    backgroundColor: "white",
-                    borderRadius: 5,
-                    fill: "#fb0b12",
-                    width: 17,
-                    height: 17,
-                  }}
-                />
-              </IconButton>
-            </Tooltip>
-          </div>
-        );
-      },
-    },
+    
   ];
 
   return (

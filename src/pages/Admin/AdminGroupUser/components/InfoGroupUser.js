@@ -103,14 +103,6 @@ const InfoGroupUser = (props) => {
       <div className="content-drawer" style={{ marginTop: 50 }}>
         <div className="title-group">
           <span>Danh sách khách hàng</span>
-          <Button
-            variant="outlined"
-            size="small"
-            color="secondary"
-           
-          >
-            Thêm khách hàng
-          </Button>
         </div>
       </div>
       <div>
