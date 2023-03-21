@@ -83,7 +83,7 @@ const StationList = (props) => {
               <IconButton>
                 <VisibilityIcon
                 onClick={() => handelDetail(params.id)}
-                style={{ backgroundColor: "white", borderRadius: 5,fill: "#1a89ac",width:17,height:17 }}/>
+                style={{ backgroundColor: "white", borderRadius: 5,width:17,height:17 }}/>
               </IconButton>
             </Tooltip>
             
@@ -91,7 +91,7 @@ const StationList = (props) => {
               <IconButton>
                 <BorderColorIcon
                   onClick={() => handleShowDetail(params.id)}
-                  style={{ backgroundColor: "white", borderRadius: 5,fill: "#fca11a", width:17,height:17}}
+                  style={{ backgroundColor: "white", borderRadius: 5, width:17,height:17}}
                 />
               </IconButton>
             </Tooltip>

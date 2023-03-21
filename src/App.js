@@ -24,6 +24,7 @@ import "./assets/scss/theme.scss";
 import "./assets/scss/index.scss";
 import NotFound from "./components/NotFound/404NotFound";
 import EditPriceList from "./pages/Admin/AdminPriceList/components/EditPriceList";
+import AdminGroupTicket from "./pages/Admin/AdminGroupTicket/AdminGroupTicket";
 
 export const history = createBrowserHistory();
 
@@ -44,6 +45,7 @@ function App() {
               element={<EditPriceList />}
             ></Route>
           </Route>
+          <Route path="/admin/ticket/ticket-group" element={<AdminGroupTicket />} />
           <Route path="/admin/create-ticket" element={<AdminAddTicket />} />
           <Route path="/admin/trip" element={<AdminTrip />} />
           <Route path="/admin/promotion" element={<AdminPromotion />} />
