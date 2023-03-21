@@ -246,8 +246,6 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
               <span
                 style={{
                   fontSize: 25,
-                  marginTop: 20,
-                  marginLeft: 230,
                   fontWeight: "bold",
                   textTransform: "uppercase",
                 }}

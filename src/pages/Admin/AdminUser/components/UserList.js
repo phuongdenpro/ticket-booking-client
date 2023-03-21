@@ -1,12 +1,9 @@
-import { Button, IconButton, Tooltip } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 
-import DataTable from "../../../../components/DataTable";
-import TableCustom from "../../../../components/TableCustom";
-import ClearIcon from "@mui/icons-material/Clear";
-import BorderColorIcon from "@mui/icons-material/BorderColor";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import moment from "moment";
 import Badge from "../../../../components/Badge";
+import TableCustom from "../../../../components/TableCustom";
 moment.locale("vi");
 
 const UserList = (props) => {

@@ -2,13 +2,13 @@ import { Button, IconButton, Tooltip } from "@mui/material";
 
 import DataTable from "../../../../components/DataTable";
 import TableCustom from "../../../../components/TableCustom";
-import ClearIcon from "@mui/icons-material/Clear";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useState } from "react";
 import ModalAlert from "../../../../components/Modal";
 import { GroupCusApi } from "../../../../utils/groupCusApi";
 import customToast from "../../../../components/ToastCustom";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const UserGroupList = (props) => {
   const {
@@ -103,7 +103,6 @@ const UserGroupList = (props) => {
                   style={{
                     backgroundColor: "white",
                     borderRadius: 5,
-                    fill: "#1a89ac",
                     width: 17,
                     height: 17,
                   }}
@@ -113,7 +112,7 @@ const UserGroupList = (props) => {
             </Tooltip>
             <Tooltip title="Xóa">
               <IconButton>
-                <ClearIcon
+                <DeleteIcon
                   onClick={() =>
                     handleOpenModal(
                       params?.row?.id,
@@ -124,7 +123,6 @@ const UserGroupList = (props) => {
                   style={{
                     backgroundColor: "white",
                     borderRadius: 5,
-                    fill: "#fb0b12",
                     width: 17,
                     height: 17,
                   }}

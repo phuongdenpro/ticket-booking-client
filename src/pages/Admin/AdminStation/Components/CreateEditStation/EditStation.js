@@ -222,8 +222,6 @@ const EditStation = (props) => {
               <span
                 style={{
                   fontSize: 25,
-                  marginTop: 20,
-                  marginLeft: 280,
                   fontWeight: "bold",
                   textTransform: "uppercase",
                 }}

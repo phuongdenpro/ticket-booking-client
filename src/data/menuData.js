@@ -18,6 +18,10 @@ export const menu = () => {
       path: "/admin/ticket/price-list/create",
     },
     {
+      text: "Nhóm vé",
+      path: "/admin/ticket/ticket-group",
+    },
+    {
       text: "Danh sách vé",
       path: "/admin/ticket-list",
     },

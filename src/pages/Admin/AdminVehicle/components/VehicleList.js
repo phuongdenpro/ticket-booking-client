@@ -95,15 +95,6 @@ const VehicleList = (props) => {
       sortable: false,
     },
     {
-      field: 'totalSeat',
-      headerName: 'Tổng số ghế',
-      flex: 100,
-      headerAlign: 'center',
-      headerClassName: 'theme',
-      sortable: false,
-    },
-    
-    {
       field: 'action',
       headerName: 'Thao tác',
       flex: 70,

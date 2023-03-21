@@ -61,7 +61,7 @@ const EditPriceList = (props) => {
         <title> PDBus - Đặt vé cho khách hàng</title>
       </Helmet>
       <Grid container spacing={1}>
-        <Grid md={8}>
+        <Grid md={12}>
           <div className={"page-layout"}>
             <Grid className={"align-items-center header_title"}>
               <Grid md={7}>
@@ -160,7 +160,65 @@ const EditPriceList = (props) => {
                         />
                       </FormControlCustom>
                     </Grid>
+                    <Grid item xs={6}>
+                      <FormControlCustom
+                        classNameLabel={
+                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
+                        }
+                        className={"flex-direction-row"}
+                        label={"Ngày tạo"}
+                        fullWidth
+                      >
+                        <InputField
+                        disabled
+                          style={{ width: "100%" }}
+                          name={"createdDate"}
+                          placeholder={"Nhập ngày tạo bảng giá"}
+                          helperText={""}
+                        />
+                      </FormControlCustom>
+                    </Grid>
+
+                    <Grid item xs={6}>
+                      <FormControlCustom
+                        classNameLabel={
+                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
+                        }
+                        className={"flex-direction-row"}
+                        label={"Ghi chú"}
+                        fullWidth
+                      >
+                        <InputField
+                          style={{ width: "100%" }}
+                          multiline
+                          rows={3}
+                          name={"note"}
+                          placeholder={"Nhập ghi chú"}
+                          helperText={""}
+                        />
+                      </FormControlCustom>
+                    </Grid>
                   </Grid>
+                  <Grid
+                  container
+                  spacing={2}
+                  className={`mt-1`}
+                  justifyContent="space-between"
+                >
+                  <Grid item xs={12}>
+                  <div className="item-btn-right" style={{ float: "right", marginBottom:20 }}>
+                    <Button
+                      variant="contained"
+                      size="medium"
+                      className={`btn-tertiary-normal`}
+                      style={{ height: "2rem" }}
+                      type="submit"
+                    >
+                      Cập nhật
+                    </Button>
+                    </div>
+                  </Grid>
+                </Grid>
                 </div>
               </form>
             </FormProvider>
@@ -185,82 +243,7 @@ const EditPriceList = (props) => {
             <PriceList />
           </div>
         </Grid>
-        <Grid md={4}>
-          <div className={"page-layout"} style={{ marginLeft: "20px" }}>
-            <Grid className={"align-items-center header_title"}>
-              <Grid md={7}>
-                <h2 className={"txt-title"}>CHI TIẾT BẢNG GIÁ</h2>
-              </Grid>
-            </Grid>
-            <Divider />
-            <FormProvider {...methods}>
-              <form>
-                <div className="content mt-2">
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <FormControlCustom
-                        classNameLabel={
-                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
-                        }
-                        className={"flex-direction-row"}
-                        label={"Ngày tạo"}
-                        fullWidth
-                      >
-                        <InputField
-                        disabled
-                          style={{ width: "100%" }}
-                          name={"createdDate"}
-                          placeholder={"Nhập ngày tạo bảng giá"}
-                          helperText={""}
-                        />
-                      </FormControlCustom>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <FormControlCustom
-                        classNameLabel={
-                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
-                        }
-                        className={"flex-direction-row"}
-                        label={"Ghi chú"}
-                        fullWidth
-                      >
-                        <InputField
-                          style={{ width: "100%" }}
-                          multiline
-                          rows={3}
-                          name={"note"}
-                          placeholder={"Nhập ghi chú"}
-                          helperText={""}
-                        />
-                      </FormControlCustom>
-                    </Grid>
-                  </Grid>
-                </div>
-                <Grid
-                  container
-                  spacing={2}
-                  className={`mt-1`}
-                  justifyContent="space-between"
-                >
-                  <Grid item xs={7}></Grid>
-                  <Grid item xs={5}>
-                    <Button
-                      variant="contained"
-                      size="medium"
-                      className={`btn-tertiary-normal`}
-                      style={{ height: "2rem" }}
-                      type="submit"
-                    >
-                      Cập nhật
-                    </Button>
-                  </Grid>
-                </Grid>
-              </form>
-            </FormProvider>
-            <Divider className={`mt-3`} />
-          </div>
-        </Grid>
+        
       </Grid>
 
       <div></div>

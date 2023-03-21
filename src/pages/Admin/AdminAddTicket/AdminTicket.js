@@ -56,7 +56,7 @@ const AdminAddTicket = (props) => {
         <title> PDBus - Đặt vé cho khách hàng</title>
       </Helmet>
       <Grid container spacing={1}>
-        <Grid md={8}>
+        <Grid md={12}>
           <div className={"page-layout"}>
             <Grid className={"align-items-center header_title"}>
               <Grid md={7}>
@@ -189,39 +189,42 @@ const AdminAddTicket = (props) => {
                     <Grid item xs={6}>
                       <FormControlCustom
                         classNameLabel={
-                          'flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title'
+                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
                         }
-                        className={'flex-direction-row'}
-                        label={'Nơi chốt đơn'}
+                        className={"flex-direction-row"}
+                        label={"Ghi chú"}
                         fullWidth
                       >
-                        <SelectCustom
-                          style={{ width: '100%' }}
-                          name={'placeCreateOrder'}
-                          placeholder={'Chọn nơi chốt đơn'}
-                         
+                        <InputField
+                          style={{ width: "100%" }}
+                          multiline
+                          rows={3}
+                          name={"note"}
+                          placeholder={"Nhập ghi chú"}
+                          helperText={""}
+                        />
+                      </FormControlCustom>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <FormControlCustom
+                        classNameLabel={
+                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
+                        }
+                        className={"flex-direction-row"}
+                        label={"Ngày tạo"}
+                        fullWidth
+                      >
+                        <InputField
+                        disabled
+                          style={{ width: "100%" }}
+                          name={"createdDate"}
+                          placeholder={"Nhập ngày tạo bảng giá"}
+                          helperText={""}
                         />
                       </FormControlCustom>
                     </Grid>
 
-                    <Grid item xs={6}>
-                      <FormControlCustom
-                        classNameLabel={
-                          'flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title'
-                        }
-                        className={'flex-direction-row'}
-                        label={'Chi nhánh'}
-                        fullWidth
-                      >
-                        <SelectCustom
-                          style={{ width: '100%' }}
-                          name={'branch'}
-                          placeholder={'Chọn chi nhánh'}
-                         
-                          // helperText={errors?.branch?.message as string}
-                        />
-                      </FormControlCustom>
-                    </Grid>
+                    
                   </Grid>
                 </div>
               </form>
@@ -245,61 +248,7 @@ const AdminAddTicket = (props) => {
               </div>
             </Grid>
             <PriceList />
-          </div>
-        </Grid>
-        <Grid md={4}>
-          <div className={"page-layout"} style={{ marginLeft: "20px" }}>
-            <Grid className={"align-items-center header_title"}>
-              <Grid md={7}>
-                <h2 className={"txt-title"}>CHI TIẾT HÓA ĐƠN</h2>
-              </Grid>
-            </Grid>
-            <Divider />
-            <FormProvider {...methods}>
-              <form>
-                <div className="content mt-2">
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <FormControlCustom
-                        classNameLabel={
-                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
-                        }
-                        className={"flex-direction-row"}
-                        label={"Ngày tạo"}
-                        fullWidth
-                      >
-                        <InputField
-                        disabled
-                          style={{ width: "100%" }}
-                          name={"createdDate"}
-                          placeholder={"Nhập ngày tạo bảng giá"}
-                          helperText={""}
-                        />
-                      </FormControlCustom>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <FormControlCustom
-                        classNameLabel={
-                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
-                        }
-                        className={"flex-direction-row"}
-                        label={"Ghi chú"}
-                        fullWidth
-                      >
-                        <InputField
-                          style={{ width: "100%" }}
-                          multiline
-                          rows={3}
-                          name={"note"}
-                          placeholder={"Nhập ghi chú"}
-                          helperText={""}
-                        />
-                      </FormControlCustom>
-                    </Grid>
-                  </Grid>
-                </div>
-                <Grid
+            <Grid
                   container
                   spacing={2}
                   className={`mt-1`}
@@ -307,6 +256,7 @@ const AdminAddTicket = (props) => {
                 >
                   <Grid item xs={7}></Grid>
                   <Grid item xs={5}>
+                  <div className="item-btn-right" style={{ float: "right", marginBottom:20 }}>
                     <Button
                       variant="contained"
                       size="medium"
@@ -316,13 +266,12 @@ const AdminAddTicket = (props) => {
                     >
                       Tạo hóa đơn
                     </Button>
+                    </div>
                   </Grid>
                 </Grid>
-              </form>
-            </FormProvider>
-            <Divider className={`mt-3`} />
           </div>
         </Grid>
+        
       </Grid>
 
       <div></div>

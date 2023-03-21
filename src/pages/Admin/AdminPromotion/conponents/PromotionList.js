@@ -1,15 +1,13 @@
-import { Button, IconButton, Tooltip } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 
-import DataTable from "../../../../components/DataTable";
-import TableCustom from "../../../../components/TableCustom";
-import ClearIcon from "@mui/icons-material/Clear";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { useState } from "react";
-import ModalAlert from "../../../../components/Modal";
-import customToast from "../../../../components/ToastCustom";
-import Badge from "../../../../components/Badge";
 import moment from "moment";
+import { useState } from "react";
+import Badge from "../../../../components/Badge";
+import TableCustom from "../../../../components/TableCustom";
+
 
 const PromotionList = (props) => {
   const {
@@ -189,7 +187,6 @@ const PromotionList = (props) => {
                   style={{
                     backgroundColor: "white",
                     borderRadius: 5,
-                    fill: "#fca11a",
                     width: 17,
                     height: 17,
                   }}
@@ -198,12 +195,11 @@ const PromotionList = (props) => {
             </Tooltip>
             <Tooltip title="Xóa">
               <IconButton>
-                <ClearIcon
+                <DeleteIcon
                 
                   style={{
                     backgroundColor: "white",
                     borderRadius: 5,
-                    fill: "#fb0b12",
                     width: 17,
                     height: 17,
                   }}

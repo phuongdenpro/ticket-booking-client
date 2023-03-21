@@ -63,6 +63,7 @@ const Sidebar = (props) => {
       [
         
         getChildItem("Bảng giá", "ticket/price-list"),
+        getChildItem("Nhóm vé", "ticket/ticket-group"),
         getChildItem("Danh sách vé", "ticket-list"),
       ],
       true

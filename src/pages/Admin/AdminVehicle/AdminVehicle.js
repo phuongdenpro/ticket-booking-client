@@ -12,6 +12,7 @@ import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import { VehicleApi } from "../../../utils/vehicleApi";
 import customToast from "../../../components/ToastCustom";
 import { Helmet } from "react-helmet";
+import AddVehicle from "./components/AddVehicle";
 
 const AdminVehicle = (props) => {
   const [data, setData] = useState([]);
@@ -20,41 +21,42 @@ const AdminVehicle = (props) => {
   const [pageSize, setPageSize] = useState(10);
 
   const [filterParams, setFilterParams] = useState(null);
+  const [searchValue, setSearchValue] = useState("");
   const [typeSearch, setTypeSearch] = useState(null);
   const [floorNumber, setFloorNumber] = useState(null);
-  const [type, setType] = useState('');
+  const [type, setType] = useState("");
+
+  const [showDrawerCreate, setShowDrawerCreate] = useState(false);
 
   const floorNumberFilter = [
     {
       id: 1,
       code: "1",
-      name: "1 Tầng",
+      name: "Một tầng",
     },
     {
       id: 2,
       code: "2",
-      name: "2 Tầng",
+      name: "Hai tầng",
     },
   ];
 
   const handelGetType = async () => {
-    try{
+    try {
       const vehicleApi = new VehicleApi();
       const response = await vehicleApi.getType();
-      const typeTmp = []
-       response?.data?.data.map((item) => {
+      const typeTmp = [];
+      response?.data?.data.map((item) => {
         typeTmp.push({
           code: item.key,
           name: item.value,
-        })
-      })
+        });
+      });
       setType(typeTmp);
-      
     } catch (error) {
       customToast.error(error.response.data.message);
     }
-  }
-  console.log(type);
+  };
   const handleGetData = async () => {
     try {
       const vehicleApi = new VehicleApi();
@@ -68,6 +70,15 @@ const AdminVehicle = (props) => {
       customToast.error(error.response.data.message);
     }
   };
+
+  useEffect(() => {
+    setFilterParams({ ...filterParams, keywords: searchValue });
+  }, [searchValue]);
+
+  const handleSearch = (e) => {
+    setFilterParams({ keywords: searchValue || undefined });
+  };
+
   useEffect(() => {
     handelGetType();
   }, []);
@@ -100,6 +111,18 @@ const AdminVehicle = (props) => {
   });
 
   const { handleSubmit, reset, watch } = methods;
+
+  const watchType = watch("typeSearch");
+  const watchFloorNumber = watch("floorNumber");
+
+  useEffect(() => {
+    const params = {
+      type: watchType?.name,
+      floorNumber: watchFloorNumber?.code,
+    };
+    setFilterParams(params);
+  }, [watchType, watchFloorNumber]);
+  console.log(filterParams);
   return (
     <Box sx={{ height: "100%", width: "100%" }}>
       <Helmet>
@@ -131,6 +154,9 @@ const AdminVehicle = (props) => {
               className={"btn-create"}
               startIcon={<AddIcon />}
               style={{ marginTop: 20, marginRight: 20 }}
+              onClick={() => {
+                setShowDrawerCreate(true);
+              }}
             >
               <span className={"txt"}>Thêm mới</span>
             </Button>
@@ -151,12 +177,20 @@ const AdminVehicle = (props) => {
             >
               <FormControlCustom label="Loại xe" fullWidth>
                 <div className="view-input" style={{ marginRight: 20 }}>
-                  <SelectCustom placeholder={"Tất cả"} name={"typeSearch"} options={type} />
+                  <SelectCustom
+                    placeholder={"Tất cả"}
+                    name={"typeSearch"}
+                    options={type}
+                  />
                 </div>
               </FormControlCustom>
               <FormControlCustom label="Số tầng" fullWidth>
                 <div className="view-input" style={{ marginRight: 20 }}>
-                  <SelectCustom placeholder={"Tất cả"} name={"floorNumber"} options={floorNumberFilter} />
+                  <SelectCustom
+                    placeholder={"Tất cả"}
+                    name={"floorNumber"}
+                    options={floorNumberFilter}
+                  />
                 </div>
               </FormControlCustom>
             </Box>
@@ -171,9 +205,9 @@ const AdminVehicle = (props) => {
             <SearchInput
               className="txt-search"
               placeholder={"Tìm kiếm theo tên, mô tả xe"}
-              // value={searchValue}
-              // setSearchValue={setSearchValue}
-              // handleSearch={handleSearch}
+              value={searchValue}
+              setSearchValue={setSearchValue}
+              handleSearch={handleSearch}
             />
           </Grid>
         </FormProvider>
@@ -204,6 +238,11 @@ const AdminVehicle = (props) => {
           ></VehicleList>
         </div>
       </div>
+      <AddVehicle
+        setShowDrawer={setShowDrawerCreate}
+        showDrawer={showDrawerCreate}
+        handleGetData={handleGetData}
+      ></AddVehicle>
     </Box>
   );
 };
