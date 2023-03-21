@@ -32,7 +32,7 @@ class CustomerApi {
   }
 
   deleteById(id, params) {
-    const url = `customer/id/${id}`;
+    const url = `customer/${id}`;
     const res = axiosClient.delete(url, params);
     return res;
   }

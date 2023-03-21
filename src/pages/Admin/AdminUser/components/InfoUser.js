@@ -5,11 +5,41 @@ import moment from "moment";
 import { useState } from "react";
 import "../../../../assets/scss/default.scss";
 import Badge from "../../../../components/Badge";
+import ModalAlert from "../../../../components/Modal";
+import customToast from "../../../../components/ToastCustom";
+import { CustomerApi } from "../../../../utils/customerApi";
+import EditUser from "./EditUser";
 
 const InfoUser = (props) => {
   const { setShowDrawerDetail, showDrawerDetail, dataCustomer, handleGetData } =
     props;
   const [showDrawerEdit, setShowDrawerEdit] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [idCustomer, setIdCustomer] = useState(null);
+  const [nameCustomer, setNameCustomer] = useState("");
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+  const handleOpenModal = (id, name) => {
+    setIdCustomer(id);
+    setNameCustomer(name);
+    setOpenModal(true);
+  };
+
+  const handleConfirm = async () => {
+    try {
+      const customerApi = new CustomerApi();
+      const response = await customerApi.deleteById(idCustomer);
+      customToast.success("Xóa thành công");
+      handleGetData();
+      setOpenModal(false);
+      setIdCustomer(null);
+      setShowDrawerDetail(false)
+    } catch (error) {
+      customToast.error(error.response.data.message);
+    }
+  };
   return (
     <Drawer
       PaperProps={{
@@ -37,7 +67,7 @@ const InfoUser = (props) => {
               size="small"
               color="secondary"
               onClick={() => setShowDrawerEdit(true)}
-              style={{marginRight:10}}
+              style={{ marginRight: 10 }}
             >
               sửa thông tin
             </Button>
@@ -45,7 +75,9 @@ const InfoUser = (props) => {
               variant="outlined"
               size="small"
               color="error"
-              onClick={() => setShowDrawerEdit(true)}
+              onClick={() =>
+                handleOpenModal(dataCustomer?.id, dataCustomer?.fullName)
+              }
             >
               xóa
             </Button>
@@ -73,7 +105,11 @@ const InfoUser = (props) => {
         </div>
         <div className="col-8" style={{ marginTop: 10 }}>
           <Typography style={{ fontSize: 16 }}>
-            {dataCustomer?.gender === 'M'? "Nam": dataCustomer?.gender === 'F'? 'Nữ': 'Khác'}
+            {dataCustomer?.gender === "M"
+              ? "Nam"
+              : dataCustomer?.gender === "F"
+              ? "Nữ"
+              : "Khác"}
           </Typography>
         </div>
         <div className="col-12"></div>
@@ -98,7 +134,7 @@ const InfoUser = (props) => {
         </div>
         <div className="col-8" style={{ marginTop: 10 }}>
           <Typography style={{ fontSize: 16 }}>
-            {dataCustomer?.customerGroup.name}
+            {dataCustomer?.customerGroup?.name}
           </Typography>
         </div>
         <div className="col-12"></div>
@@ -115,27 +151,23 @@ const InfoUser = (props) => {
           <span style={{ color: "#000", fontSize: 16 }}>Ghi chú:</span>{" "}
         </div>
         <div className="col-8" style={{ marginTop: 10 }}>
-          <Typography style={{ fontSize: 16 }}>
-            {dataCustomer?.note}
-          </Typography>
+          <Typography style={{ fontSize: 16 }}>{dataCustomer?.note}</Typography>
         </div>
         <div className="col-12"></div>
         <div className="col-3" style={{ marginTop: 10 }}>
           <span style={{ color: "#000", fontSize: 16 }}>Trạng thái:</span>{" "}
         </div>
         <div className="col-8" style={{ marginTop: 10 }}>
-
-        <Badge
-          type={
-            dataCustomer?.status == "Chưa kích hoạt"
-              ? "warning"
-              : dataCustomer?.status == "Tạm khóa"
-              ? "error"
-              : "success"
-          }
-          content={dataCustomer?.status}
-        />
-
+          <Badge
+            type={
+              dataCustomer?.status == "Chưa kích hoạt"
+                ? "warning"
+                : dataCustomer?.status == "Tạm khóa"
+                ? "error"
+                : "success"
+            }
+            content={dataCustomer?.status}
+          />
         </div>
         <div className="col-12"></div>
         <div className="col-3" style={{ marginTop: 10 }}>
@@ -143,11 +175,34 @@ const InfoUser = (props) => {
         </div>
         <div className="col-8" style={{ marginTop: 10 }}>
           <Typography style={{ fontSize: 16 }}>
-            {moment(dataCustomer?.createdAt).format('YYYY-MM-DD')}
+            {moment(dataCustomer?.createdAt).format("YYYY-MM-DD")}
           </Typography>
         </div>
-        
       </div>
+      <ModalAlert
+        open={openModal}
+        handleClose={() => handleCloseModal()}
+        handleCancel={() => handleCloseModal()}
+        handleConfirm={() => handleConfirm()}
+        title={"Xác nhận xóa"}
+        description={
+          "Thao tác sẽ không thể hoàn tác, bạn có chắc chắn muốn tiếp tục không?"
+        }
+        type={"error"}
+        icon={true}
+        renderContentModal={
+          <div className="view-input-discount">
+            <span>Khách hàng: {nameCustomer} </span>
+          </div>
+        }
+      />
+      <EditUser
+        setShowDrawer={setShowDrawerEdit}
+        showDrawer={showDrawerEdit}
+        dataCustomer={dataCustomer}
+        setShowDrawerDetail={setShowDrawerDetail}
+        handleGetData={handleGetData}
+      ></EditUser>
     </Drawer>
   );
 };
