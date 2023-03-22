@@ -1,24 +1,22 @@
 import AddIcon from "@mui/icons-material/Add";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import { Box, Button, Divider, Grid, TextField } from "@mui/material";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { FormProvider, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import FormControlCustom from "../../../components/FormControl";
 import SearchInput from "../../../components/InputSearch";
 import SelectCustom from "../../../components/SelectCustom";
 import customToast from "../../../components/ToastCustom";
-import { GroupCusApi } from "../../../utils/groupCusApi";
 import { PriceListApi } from "../../../utils/priceListApi";
-import PriceList from "./components/PriceList";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import dayjs, { Dayjs } from "dayjs";
 import "./AdminPriceList.scss";
-import moment from "moment";
-import { useNavigate } from "react-router-dom";
+import AddPriceList from "./components/AddPriceList";
+import PriceList from "./components/PriceList";
 
 const AdminPriceList = (props) => {
   const [loadings, setLoadings] = useState([]);
@@ -31,6 +29,7 @@ const AdminPriceList = (props) => {
   const [filterParams, setFilterParams] = useState(null);
   const [data, setData] = useState([]);
   const [selected, setSelected] = useState([]);
+  const [showDrawerCreate, setShowDrawerCreate] = useState(false);
   const navigate = useNavigate();
 
   const [selectedDate, setSelectedDate] = useState({
@@ -200,6 +199,9 @@ const AdminPriceList = (props) => {
               className={"btn-create"}
               startIcon={<AddIcon />}
               style={{ marginTop: 10, marginRight: 20 }}
+              onClick={() => {
+                setShowDrawerCreate(true);
+              }}
             >
               <span className={"txt"}>Thêm mới</span>
             </Button>
@@ -327,6 +329,11 @@ const AdminPriceList = (props) => {
           ></PriceList>
         </div>
       </div>
+      <AddPriceList
+      setShowDrawer={setShowDrawerCreate}
+      showDrawer={showDrawerCreate}
+      handleGetData={handleGetData}
+    ></AddPriceList>
     </Box>
   );
 };

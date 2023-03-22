@@ -1,11 +1,14 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import { Button, Divider, Drawer, Grid } from "@mui/material";
+import { Button, Divider, Drawer, Grid, TextField } from "@mui/material";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { isEmpty } from "lodash";
 import { FormProvider, useForm } from "react-hook-form";
-
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dayjs from "dayjs";
 import * as yup from "yup";
 
 import { useEffect, useState } from "react";
@@ -15,26 +18,41 @@ import "../../../../assets/scss/default.scss";
 import { LoadingButton } from "@mui/lab";
 import customToast from "../../../../components/ToastCustom";
 import { GroupCusApi } from "../../../../utils/groupCusApi";
+import "./EditPriceList.scss";
+import SelectCustom from "../../../../components/SelectCustom";
+import { PriceListApi } from "../../../../utils/priceListApi";
 
-const AddGroupUser = (props) => {
+const AddPriceList = (props) => {
   const { setShowDrawer, showDrawer, handleGetData } = props;
+  const currentYear = new Date().getFullYear();
+  const firstDay = new Date(currentYear, 0, 1);
+  const lastDay = new Date(currentYear, 11, 31);
+  const [selectedDate, setSelectedDate] = useState({
+    startDate: firstDay,
+    endDate: lastDay,
+  });
+  const optionStatus = ["Kích hoạt", "Tạm ngưng"];
 
   const schema = yup.object().shape({
     code: yup
       .string()
-      .typeError("Mã nhóm khách hàng không được phép bỏ trống")
-      .required("Mã nhóm khách hàng không được phép bỏ trống"),
+      .typeError("Mã bảng giá không được phép bỏ trống")
+      .required("Mã bảng giá hàng không được phép bỏ trống"),
     name: yup
       .string()
-      .typeError("Tên nhóm không được phép bỏ trống")
-      .required("Tên nhóm không được phép bỏ trống"),
+      .typeError("Tên bảng giá không được phép bỏ trống")
+      .required("Tên bảng giá không được phép bỏ trống"),
+    status: yup
+      .string()
+      .typeError("Trạng thái không được phép bỏ trống")
+      .required("Trạng thái hàng không được phép bỏ trống"),
   });
 
   const defaultValues = {
     code: "",
     name: "",
     note: "",
-    description: "",
+    status: "",
   };
 
   const methods = useForm({
@@ -47,6 +65,11 @@ const AddGroupUser = (props) => {
   const { errors } = formState;
 
   const goBack = () => {
+    setSelectedDate({
+      ...selectedDate,
+      startDate: firstDay,
+      endDate: lastDay,
+    });
     reset();
     setShowDrawer(false);
   };
@@ -56,18 +79,26 @@ const AddGroupUser = (props) => {
   };
   useEffect(() => {
     reset();
+    setSelectedDate({
+      ...selectedDate,
+      startDate: firstDay,
+      endDate: lastDay,
+    });
   }, [showDrawer]);
 
   const onSubmit = async (value) => {
+    console.log(value);
     const params = {
       code: value.code,
       name: value.name,
-      description: value?.description,
+      status: value.status,
       note: value?.note,
+      startDate: new Date(selectedDate?.startDate),
+      endDate: new Date(selectedDate?.endDate),
     };
     try {
-      const groupCusApi = new GroupCusApi();
-      const res = await groupCusApi.create(params);
+      const priceListApi = new PriceListApi();
+      const res = await priceListApi.create(params);
       customToast.success("Thêm mới thành công");
       handleGetData();
       setShowDrawer(false);
@@ -95,52 +126,96 @@ const AddGroupUser = (props) => {
               <ArrowBackIosIcon className="icon-back" />
             </div>
             <div>
-              <span>Thêm nhóm khách hàng</span>
+              <span>Tạo mới bảng giá</span>
             </div>
           </div>
           <div className="content-drawer">
             <div className="title-group">
-              <span>Thông tin nhóm khách hàng</span>
+              <span>Thông tin bảng giá</span>
             </div>
             <div className="content">
               <Grid container spacing={1.5}>
                 <Grid item xs={6} className="auto-complete">
-                  <FormControlCustom label={"Mã nhóm"} fullWidth isMarked>
+                  <FormControlCustom label={"Mã bảng giá"} fullWidth isMarked>
                     <InputField
                       name={"code"}
-                      placeholder={"Nhập mã nhóm"}
+                      placeholder={"Nhập mã bảng giá"}
                       error={Boolean(errors.code)}
                       helperText={errors?.code?.message}
                     />
                   </FormControlCustom>
                 </Grid>
                 <Grid item xs={6}>
-                  <FormControlCustom label={"Tên nhóm"} fullWidth isMarked>
+                  <FormControlCustom label={"Tên bảng giá"} fullWidth isMarked>
                     <InputField
                       name={"name"}
-                      placeholder={"Nhập tên nhóm"}
+                      placeholder={"Nhập tên bảng giá"}
                       helperText={errors?.name?.message}
                       error={Boolean(errors.name)}
                     />
                   </FormControlCustom>
                 </Grid>
+                <Grid item xs={6}>
+                  <FormControlCustom label="Ngày bắt đầu" fullWidth isMarked>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        value={dayjs(selectedDate?.startDate)}
+                        onChange={(e) => {
+                          setSelectedDate({
+                            ...selectedDate,
+                            startDate: new Date(e),
+                          });
+                        }}
+                        className={"date-picker"}
+                        renderInput={(params) => (
+                          <InputField
+                            name={"startDate"}
+                            placeholder={"Nhập tên bảng giá"}
+                            helperText={errors?.name?.message}
+                            error={Boolean(errors.name)}
+                          />
+                        )}
+                      />
+                    </LocalizationProvider>
+                  </FormControlCustom>
+                </Grid>
+                <Grid item xs={6}>
+                  <FormControlCustom label="Ngày kết thúc" fullWidth isMarked>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        value={dayjs(selectedDate?.endDate)}
+                        onChange={(e) => {
+                          setSelectedDate({
+                            ...selectedDate,
+                            endDate: new Date(e),
+                          });
+                        }}
+                        className={"date-picker"}
+                        renderInput={(params) => <TextField {...params} />}
+                      />
+                    </LocalizationProvider>
+                  </FormControlCustom>
+                </Grid>
+
                 <Grid item xs={12}>
-                  <FormControlCustom label={"Ghi chú"} fullWidth>
-                    <InputField
-                      name={"note"}
-                      helperText={""}
-                      placeholder={"Nhập ghi chú"}
-                      multiline
+                  <FormControlCustom label={"Trạng thái"} fullWidth isMarked>
+                    <SelectCustom
+                      name={"status"}
+                      placeholder={"Chọn trạng thái"}
+                      error={Boolean(errors?.status)}
+                      helperText={errors?.status?.message}
+                      options={optionStatus || []}
                     />
                   </FormControlCustom>
                 </Grid>
+
                 <Grid item xs={12}>
-                  <FormControlCustom label={"Mô tả"} fullWidth>
+                  <FormControlCustom label={"Ghi chú"} fullWidth>
                     <InputField
                       className="input-note"
-                      name={"description"}
+                      name={"note"}
                       helperText={""}
-                      placeholder={"Nhập mô tả"}
+                      placeholder={"Nhập ghi chú"}
                       rows={3}
                       multiline
                     />
@@ -191,4 +266,4 @@ const AddGroupUser = (props) => {
   );
 };
 
-export default AddGroupUser;
+export default AddPriceList;

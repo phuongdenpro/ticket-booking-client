@@ -12,6 +12,8 @@ import moment from "moment";
 import SelectCustom from "../../../../components/SelectCustom";
 import "../../../../assets/scss/default.scss";
 import PriceList from "./PriceList";
+import GroupTicketList from "./GroupTicketList";
+
 
 const EditPriceList = (props) => {
   const [dataCustomer, setData] = useState();
@@ -236,11 +238,11 @@ const EditPriceList = (props) => {
                   size="medium"
                   style={{ height: "2rem" }}
                 >
-                  <span className={"txt"}>Thêm vé</span>
+                  <span className={"txt"}>Thêm nhóm</span>
                 </Button>
               </div>
             </Grid>
-            <PriceList />
+            <GroupTicketList />
           </div>
         </Grid>
         

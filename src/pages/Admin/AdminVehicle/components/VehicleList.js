@@ -19,9 +19,9 @@ const VehicleList = (props) => {
 
   const columns = [
     {
-      field: 'stt',
-      headerName: 'STT',
-      flex: 40,
+      field: 'code',
+      headerName: 'Mã',
+      flex: 50,
       headerAlign: 'center',
       headerClassName: 'theme',
       sortable: false,
