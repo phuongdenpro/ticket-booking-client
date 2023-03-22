@@ -11,6 +11,16 @@ class CustomerApi {
     });
     return res;
   }
+
+  getStatus(params){
+    const url = "customer/status";
+    const res = axiosClient.get(url, {
+      params: {
+        ...params,
+      },
+    });
+    return res;
+  }
   
 
   create(params){
@@ -34,6 +44,12 @@ class CustomerApi {
   deleteById(id, params) {
     const url = `customer/${id}`;
     const res = axiosClient.delete(url, params);
+    return res;
+  }
+
+  editById(id, params) {
+    const url = `customer/${id}`
+    const res = axiosClient.patch(url, params);
     return res;
   }
 }

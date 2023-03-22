@@ -19,6 +19,7 @@ import { DistrictApi } from "../../../../utils/districtApi";
 import { WardApi } from "../../../../utils/wardApi";
 import { ProvinceApi } from "../../../../utils/provinceApi";
 import SelectCustom from "../../../../components/SelectCustom";
+import { CustomerApi } from "../../../../utils/customerApi";
 
 const EditUser = (props) => {
   const {
@@ -29,13 +30,20 @@ const EditUser = (props) => {
     handleGetData,
   } = props;
   const [optionsProvince, setOptionsProvince] = useState([]);
-  const [selectedProvince, setSelectedProvince] = useState({});
   const [optionsDistrict, setOptionsDistrict] = useState([]);
-  const [selectedDistrict, setSelectedDistrict] = useState({});
   const [optionsWard, setOptionsWard] = useState([]);
-  const [selectedWard, setSelectedWard] = useState({});
 
   const [optionCustomerGroup, setOptionCustomerGroup] = useState([]);
+  const [optionStatus, setOptionStatus] = useState([]);
+
+  const getOptionStatus = async () => {
+    try {
+      const customerApi = new CustomerApi();
+      const res = await customerApi.getStatus();
+
+      setOptionStatus(res?.data?.data);
+    } catch (error) {}
+  };
 
   const getDataProvince = async () => {
     try {
@@ -51,12 +59,10 @@ const EditUser = (props) => {
     } catch (error) {}
   };
 
-  const getDataDistrict = async () => {
+  const getDataDistrict = async (provinceCode) => {
     try {
       const districtApi = new DistrictApi();
-      const res = await districtApi.getDistrictByProvinceId(
-        selectedProvince.code
-      );
+      const res = await districtApi.getDistrictByProvinceId(provinceCode);
       const options = [];
       res.data.data.map((item) =>
         options.push({ name: item.name, code: item.code })
@@ -65,10 +71,10 @@ const EditUser = (props) => {
     } catch (error) {}
   };
 
-  const getDataWard = async () => {
+  const getDataWard = async (districtCode) => {
     try {
       const wardApi = new WardApi();
-      const res = await wardApi.getWardByDistrictId(selectedDistrict.code);
+      const res = await wardApi.getWardByDistrictId(districtCode);
       const options = [];
       res.data.data.map((item) =>
         options.push({ name: item.name, code: item.code })
@@ -79,22 +85,8 @@ const EditUser = (props) => {
   useEffect(() => {
     getDataProvince();
     getDataCustomerGroup();
+    getOptionStatus();
   }, []);
-
-  useEffect(() => {
-    if (!selectedProvince) setOptionsDistrict([]);
-    else {
-      getDataDistrict();
-    }
-  }, [selectedProvince]);
-
-  useEffect(() => {
-    if (!selectedDistrict) {
-      setOptionsWard([]);
-    } else {
-      getDataWard();
-    }
-  }, [selectedDistrict]);
 
   const getDataCustomerGroup = async () => {
     try {
@@ -112,41 +104,93 @@ const EditUser = (props) => {
 
   const optionGender = [
     {
-      id: 1,
       code: "M",
       name: "Nam",
     },
     {
-      id: 2,
       code: "F",
       name: "Nữ",
     },
     {
-      id: 3,
       code: "O",
       name: "Khác",
     },
   ];
 
   const schema = yup.object().shape({
-    code: yup
+    fullName: yup
       .string()
-      .typeError("Mã nhóm khách hàng không được phép bỏ trống")
-      .required("Mã nhóm khách hàng không được phép bỏ trống"),
-    name: yup
+      .typeError("Tên không được phép bỏ trống")
+      .required("Tên không được phép bỏ trống"),
+    phone: yup
       .string()
-      .typeError("Tên nhóm không được phép bỏ trống")
-      .required("Tên nhóm không được phép bỏ trống"),
+      .typeError("Số điện thoại không được phép bỏ trống")
+      .required("Số điện thoại không được phép bỏ trống"),
+    address: yup.string().required("Địa chỉ không được phép bỏ trống"),
+    gender: yup
+      .object()
+      .typeError("Giới tính không được phép bỏ trống")
+      .required("Giới tính hàng không được phép bỏ trống"),
+
+    customerGroupId: yup
+      .object()
+      .typeError("Nhóm khách hàng không được phép bỏ trống")
+      .required("Nhóm khách hàng không được phép bỏ trống"),
+    status: yup
+      .string()
+      .typeError("Trạng thái không được phép bỏ trống")
+      .required("Trạng thái hàng không được phép bỏ trống"),
+    wardId: yup
+      .object()
+      .typeError("Phường/thị xã không được bỏ trống")
+      .required("Phường/thị xã không được bỏ trống"),
+    provinceId: yup
+      .object()
+      .typeError("Tỉnh/thành phố không được bỏ trống")
+      .required("Tỉnh/thành phố không được phép bỏ trống"),
+    districtId: yup
+      .object()
+      .typeError("Quận/huyện không được bỏ trống")
+      .required("Quận/huyện không được phép bỏ trống"),
   });
 
   const defaultValues = useMemo(
     () => ({
-
       fullName: dataCustomer?.fullName,
       phone: dataCustomer?.phone,
       email: dataCustomer?.email,
       address: dataCustomer?.address,
-      note: dataCustomer?.note
+      note: dataCustomer?.note,
+      gender: {
+        code: dataCustomer?.gender,
+        name:
+          dataCustomer?.gender == "M"
+            ? "Nam"
+            : dataCustomer?.gender == "F"
+            ? "Nữ"
+            : "Khác",
+      },
+      status: dataCustomer?.status,
+      provinceId:
+        {
+          code: dataCustomer?.province?.code,
+          name: dataCustomer?.province?.name,
+        } || "",
+      districtId:
+        {
+          code: dataCustomer?.district?.code,
+          name: dataCustomer?.district?.name,
+        } || "",
+      wardId:
+        {
+          code: dataCustomer?.ward?.code,
+          name: dataCustomer?.ward?.name,
+        } || "",
+      customerGroupId: {
+        code: dataCustomer?.customerGroup?.code,
+        name: dataCustomer?.customerGroup?.name,
+        id: dataCustomer?.customerGroup?.id,
+      },
     }),
     [dataCustomer]
   );
@@ -158,13 +202,33 @@ const EditUser = (props) => {
 
   const { handleSubmit, reset, formState, setValue, watch } = methods;
   const { errors } = formState;
+
+  const provinceWatch = watch("provinceId");
+  const districtWatch = watch("districtId");
+
+  useEffect(() => {
+    const province = provinceWatch;
+    if (!province) setOptionsDistrict([]);
+    else {
+      getDataDistrict(province.code);
+    }
+  }, [provinceWatch]);
+
+  useEffect(() => {
+    const district = districtWatch;
+    if (!district) setOptionsWard([]);
+    else {
+      getDataWard(district.code);
+    }
+  }, [districtWatch]);
   useEffect(() => {
     reset({ ...defaultValues });
+    getDataProvince();
   }, [dataCustomer]);
 
   const goBack = () => {
-    reset();
     setShowDrawer(false);
+    reset();
   };
 
   const toggleDrawer = (open) => (event) => {
@@ -175,23 +239,27 @@ const EditUser = (props) => {
   }, [showDrawer]);
 
   const onSubmit = async (value) => {
-    // const params = {
-    //   code: value.code,
-    //   name: value.name,
-    //   description: value?.description,
-    //   note: value?.note,
-    // };
-    // try {
-    //   const groupCusApi = new GroupCusApi();
-    //   const res = await groupCusApi.update(dataGroupCustomer.id, params);
-    //   customToast.success("Cập nhật thành công");
-    //   setShowDrawer(false);
-    //   setShowDrawerDetail(false);
-    //   handleGetData();
-    //   reset();
-    // } catch (error) {
-    //   customToast.error(error.response.data.message);
-    // }
+    const params = {
+      fullName: value?.fullName,
+      wardCode: value?.wardId.code,
+      address: value?.address,
+      gender: value?.gender.code,
+      note: value?.note,
+      customerGroupId: value?.customerGroupId.id,
+      status: value?.status
+    };
+    console.log(params);
+    try {
+      const customerApi = new CustomerApi();
+      const res = await customerApi.editById(dataCustomer.id, params);
+      customToast.success("Cập nhật thành công");
+      setShowDrawer(false);
+      setShowDrawerDetail(false);
+      handleGetData();
+      reset();
+    } catch (error) {
+      customToast.error(error.response.data.message);
+    }
   };
 
   return (
@@ -205,188 +273,192 @@ const EditUser = (props) => {
       onClose={toggleDrawer(false)}
     >
       <FormProvider {...methods}>
-        <form>
-        <div className="title-drawer">
-        <div className="btn-close" onClick={goBack}>
-          <ArrowBackIosIcon className="icon-back" />
-        </div>
-        <div>
-          <span>Cập nhật thông tin</span>
-        </div>
-      </div>
-      <div className="content-drawer">
-        <div className="title-group">
-          <span>Thông tin khách hàng</span>
-        </div>
-        <div className="content">
-          <Grid container spacing={1.5}>
-            <Grid item xs={6} className="auto-complete">
-              <FormControlCustom
-                label={"Tên khách hàng"}
-                fullWidth
-                isMarked
-              >
-                <InputField
-                  name={"fullName"}
-                  placeholder={"Nhập tên khách hàng"}
-                  error={Boolean(errors.fullName)}
-                  helperText={errors?.fullName?.message}
-                />
-              </FormControlCustom>
-            </Grid>
-            <Grid item xs={6}>
-              <FormControlCustom label={"Số điện thoại"} fullWidth isMarked>
-                <InputField
-                  name={"phone"}
-                  placeholder={"Nhập số điện thoại"}
-                  helperText={errors?.phone?.message}
-                  error={Boolean(errors.phone)}
-                />
-              </FormControlCustom>
-            </Grid>
-            <Grid item xs={6}>
-              <FormControlCustom label={"Email"} fullWidth>
-                <InputField
-                  name={"email"}
-                  placeholder={"Nhập email"}
-                  helperText={errors?.email?.message}
-                  error={Boolean(errors.email)}
-                />
-              </FormControlCustom>
-            </Grid>
-            <Grid item xs={6}>
-              <FormControlCustom label={"Giới tính"} fullWidth>
-                <SelectCustom
-                  name={"gender"}
-                  placeholder={"Chọn giới tính"}
-                  error={Boolean(errors?.gender)}
-                  helperText={errors?.gender?.message}
-                  options={optionGender}
-                />
-              </FormControlCustom>
-            </Grid>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="title-drawer">
+            <div className="btn-close" onClick={goBack}>
+              <ArrowBackIosIcon className="icon-back" />
+            </div>
+            <div>
+              <span>Cập nhật thông tin</span>
+            </div>
+          </div>
+          <div className="content-drawer">
+            <div className="title-group">
+              <span>Thông tin khách hàng</span>
+            </div>
+            <div className="content">
+              <Grid container spacing={1.5}>
+                <Grid item xs={6} className="auto-complete">
+                  <FormControlCustom
+                    label={"Tên khách hàng"}
+                    fullWidth
+                    isMarked
+                  >
+                    <InputField
+                      name={"fullName"}
+                      placeholder={"Nhập tên khách hàng"}
+                      error={Boolean(errors.fullName)}
+                      helperText={errors?.fullName?.message}
+                    />
+                  </FormControlCustom>
+                </Grid>
+                <Grid item xs={6}>
+                  <FormControlCustom label={"Số điện thoại"} fullWidth isMarked>
+                    <InputField
+                      name={"phone"}
+                      placeholder={"Nhập số điện thoại"}
+                      helperText={errors?.phone?.message}
+                      error={Boolean(errors.phone)}
+                    />
+                  </FormControlCustom>
+                </Grid>
+                <Grid item xs={6}>
+                  <FormControlCustom label={"Email"} fullWidth>
+                    <InputField
+                      name={"email"}
+                      placeholder={"Nhập email"}
+                      helperText={errors?.email?.message}
+                      error={Boolean(errors.email)}
+                    />
+                  </FormControlCustom>
+                </Grid>
+                <Grid item xs={6}>
+                  <FormControlCustom label={"Giới tính"} fullWidth isMarked>
+                    <SelectCustom
+                      name={"gender"}
+                      placeholder={"Chọn giới tính"}
+                      error={Boolean(errors?.gender)}
+                      helperText={errors?.gender?.message}
+                      options={optionGender}
+                    />
+                  </FormControlCustom>
+                </Grid>
 
-            <Grid item xs={12}>
-              <FormControlCustom
-                label={"Nhóm khách hàng"}
-                fullWidth
-                isMarked
-              >
-                <SelectCustom
-                  name={"customerGroupId"}
-                  placeholder={"Chọn nhóm khách hàng"}
-                  error={Boolean(errors?.customerGroupId)}
-                  helperText={errors?.customerGroupId?.message}
-                  options={optionCustomerGroup}
-                />
-              </FormControlCustom>
-            </Grid>
-            <Grid item xs={4}>
-              <FormControlCustom label={"Chọn địa chỉ"} fullWidth isMarked>
-                <SelectCustom
-                  name={"provinceId"}
-                  placeholder={"Chọn tỉnh/thành phố"}
-                  error={Boolean(errors?.provinceId)}
-                  helperText={errors?.provinceId?.message}
-                  onChange={setSelectedProvince}
-                  options={optionsProvince}
-                />
-              </FormControlCustom>
-            </Grid>
-            <Grid item xs={4} style={{ marginTop: 23 }}>
-              <FormControlCustom label={""} fullWidth>
-                <SelectCustom
-                  name={"districtId"}
-                  placeholder={"Chọn quận/huyện"}
-                  error={Boolean(errors?.districtId)}
-                  helperText={errors?.districtId?.message}
-                  onChange={setSelectedDistrict}
-                  options={optionsDistrict}
-                />
-              </FormControlCustom>
-            </Grid>
-            <Grid item xs={4} style={{ marginTop: 23 }}>
-              <FormControlCustom label={""} fullWidth>
-                <SelectCustom
-                  name={"wardCode"}
-                  placeholder={"Chọn phường/thị xã"}
-                  error={Boolean(errors?.wardCode)}
-                  defaultValue={defaultValues?.wardCode}
-                  helperText={errors?.wardCode?.message}
-                  options={optionsWard}
-                />
-              </FormControlCustom>
-            </Grid>
-            <Grid item xs={12}>
-              <FormControlCustom
-                label={"Số nhà, tên đường"}
-                fullWidth
-                isMarked
-              >
-                <InputField
-                  name={"address"}
-                  placeholder={"Nhập số nhà, tên đường"}
-                  error={Boolean(errors.address)}
-                  helperText={errors?.address?.message}
-                />
-              </FormControlCustom>
-            </Grid>
-            <Grid item xs={12}>
-              <FormControlCustom
-                label={"Ghi chú"}
-                fullWidth
-                
-              >
-                <InputField
-                  name={"note"}
-                  className="input-note"
-                  placeholder={""}
-                  error={Boolean(errors.note)}
-                  helperText={errors?.note?.message}
-                  rows={3}
-                  multiline
-                />
-              </FormControlCustom>
-            </Grid>
-          </Grid>
-        </div>
-      </div>
+                <Grid item xs={6}>
+                  <FormControlCustom
+                    label={"Nhóm khách hàng"}
+                    fullWidth
+                    isMarked
+                  >
+                    <SelectCustom
+                      name={"customerGroupId"}
+                      placeholder={"Chọn nhóm khách hàng"}
+                      error={Boolean(errors?.customerGroupId)}
+                      helperText={errors?.customerGroupId?.message}
+                      options={optionCustomerGroup || []}
+                    />
+                  </FormControlCustom>
+                </Grid>
+                <Grid item xs={6}>
+                  <FormControlCustom label={"Trạng thái"} fullWidth isMarked>
+                    <SelectCustom
+                      name={"status"}
+                      placeholder={"Chọn trạng thái"}
+                      error={Boolean(errors?.status)}
+                      helperText={errors?.status?.message}
+                      options={optionStatus || []}
+                    />
+                  </FormControlCustom>
+                </Grid>
+                <Grid item xs={4}>
+                  <FormControlCustom label={"Chọn địa chỉ"} fullWidth isMarked>
+                    <SelectCustom
+                      name={"provinceId"}
+                      placeholder={"Chọn tỉnh/thành phố"}
+                      error={Boolean(errors?.provinceId)}
+                      helperText={errors?.provinceId?.message}
+                      options={optionsProvince}
+                    />
+                  </FormControlCustom>
+                </Grid>
+                <Grid item xs={4} style={{ marginTop: 23 }}>
+                  <FormControlCustom label={""} fullWidth>
+                    <SelectCustom
+                      name={"districtId"}
+                      placeholder={"Chọn quận/huyện"}
+                      error={Boolean(errors?.districtId)}
+                      helperText={errors?.districtId?.message}
+                      options={optionsDistrict}
+                    />
+                  </FormControlCustom>
+                </Grid>
+                <Grid item xs={4} style={{ marginTop: 23 }}>
+                  <FormControlCustom label={""} fullWidth>
+                    <SelectCustom
+                      name={"wardId"}
+                      placeholder={"Chọn phường/thị xã"}
+                      error={Boolean(errors?.wardId)}
+                      helperText={errors?.wardId?.message}
+                      options={optionsWard}
+                    />
+                  </FormControlCustom>
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControlCustom
+                    label={"Số nhà, tên đường"}
+                    fullWidth
+                    isMarked
+                  >
+                    <InputField
+                      name={"address"}
+                      placeholder={"Nhập số nhà, tên đường"}
+                      error={Boolean(errors.address)}
+                      helperText={errors?.address?.message}
+                    />
+                  </FormControlCustom>
+                </Grid>
 
-      <div className="footer-drawer" style={{ marginTop: 50 }}>
-        <Grid
-          container
-          spacing={3}
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <Grid item xs={6} display="flex" justifyContent="end">
-            <Button
-              className="btn-secondary-disable"
-              onClick={goBack}
-              variant="outlined"
-              style={{ width: "80%" }}
+                <Grid item xs={12}>
+                  <FormControlCustom label={"Ghi chú"} fullWidth>
+                    <InputField
+                      name={"note"}
+                      className="input-note"
+                      placeholder={""}
+                      error={Boolean(errors.note)}
+                      helperText={errors?.note?.message}
+                      rows={3}
+                      multiline
+                    />
+                  </FormControlCustom>
+                </Grid>
+              </Grid>
+            </div>
+          </div>
+
+          <div className="footer-drawer" style={{ marginTop: 50 }}>
+            <Grid
+              container
+              spacing={3}
+              justifyContent="space-between"
+              alignItems="center"
             >
-              Quay lại
-            </Button>
-          </Grid>
-          <Grid item xs={6} display="flex" justifyContent="end">
-            <LoadingButton
-              className={
-                !isEmpty(errors)
-                  ? "btn-primary-disable"
-                  : "btn-tertiary-normal"
-              }
-            //   onClick={onSubmit}
-              type="submit"
-              color="primary"
-              variant="contained"
-              style={{ width: "80%", marginRight: 50 }}
-            >
-              {"Thêm mới "}
-            </LoadingButton>
-          </Grid>
-        </Grid>
-      </div>
+              <Grid item xs={6} display="flex" justifyContent="end">
+                <Button
+                  className="btn-secondary-disable"
+                  onClick={goBack}
+                  variant="outlined"
+                  style={{ width: "80%" }}
+                >
+                  Quay lại
+                </Button>
+              </Grid>
+              <Grid item xs={6} display="flex" justifyContent="end">
+                <LoadingButton
+                  className={
+                    !isEmpty(errors)
+                      ? "btn-primary-disable"
+                      : "btn-tertiary-normal"
+                  }
+                  type="submit"
+                  color="primary"
+                  variant="contained"
+                  style={{ width: "80%", marginRight: 50 }}
+                >
+                  {"Cập nhật"}
+                </LoadingButton>
+              </Grid>
+            </Grid>
+          </div>
         </form>
       </FormProvider>
     </Drawer>

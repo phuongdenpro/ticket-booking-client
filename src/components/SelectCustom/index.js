@@ -1,6 +1,6 @@
-import { Autocomplete, TextField } from '@mui/material';
-import { Controller, useFormContext } from 'react-hook-form';
-import './index.scss';
+import { Autocomplete, TextField } from "@mui/material";
+import { Controller, useFormContext } from "react-hook-form";
+import "./index.scss";
 
 const SelectCustom = (props) => {
   const {
@@ -9,63 +9,67 @@ const SelectCustom = (props) => {
     limitTags = 1,
     error = false,
     helperText = '',
-    defaultValue=undefined,
+    defaultValue = undefined,
     placeholder = '',
     multiple = false,
     onChange,
     optionLabelKey,
     freeSolo = false,
     style,
+    renderOption,
+    disabled = false,
+    isAutoSelected = false,
+    className = '',
   } = props;
-
-  // const defaultOption = options.find((option) => option?.code === defaultValue);
-  // const defaultLabel = defaultOption ? defaultOption.label : '';
-  // const getOptionLabel = (option) => option.name;
 
   const { control } = useFormContext();
   return (
     <Controller
       control={control}
       name={name}
-      render={({ field: { onChange: onChangeDefault, value } }) => (
-        <Autocomplete
-        autoComplete
-          noOptionsText={'Không có dữ liệu'}
-          isOptionEqualToValue={(option, value) => option?.code === value?.code}
-          options={options}
-          value={value || undefined}
-          limitTags={limitTags}
-          multiple={multiple}
-          // disableCloseOnSelect={multiple}
-          className={'select-custom'}
-          getOptionLabel={(option) => {
-            return option[optionLabelKey || 'name'] || option;
-          }}
-          onChange={(event, newValue) => {
-            if (onChange) {
-              return onChange(newValue);
-            }
-            return onChangeDefault(newValue);
-          }}
-          onInputChange={(event, newValue) => {
-            return onChangeDefault(newValue);
-          }}
-
-          defaultValue={defaultValue}
-          freeSolo={freeSolo}
-          style={style}
-          renderInput={params => (
-            <TextField
-              className={'font-size-1'}
-              placeholder={placeholder}
-              error={error}
-              helperText={helperText}
-              value={value?.value}
-              {...params}
-            />
-          )}
-        />
-      )}
+      render={({ field: { onChange: onChangeDefault, value } }) => {
+        return (
+          <Autocomplete
+            noOptionsText={'Không có dữ liệu'}
+            options={options}
+            autoSelect={isAutoSelected}
+            value={value || ''}
+            // inputValue={valueRender}
+            limitTags={limitTags}
+            multiple={multiple}
+            disableCloseOnSelect={multiple}
+            className={`${className} select-custom`}
+            getOptionLabel={(option) => {
+              return option[optionLabelKey || 'name'] || option;
+            }}
+            onChange={(event, newValue) => {
+              if (onChange) {
+                return onChange(event, newValue);
+              }
+              return onChangeDefault(newValue);
+            }}
+            // renderOption={(props: any, option: any) => renderOption(option)}
+            defaultValue={defaultValue}
+            freeSolo={freeSolo}
+            style={style}
+            disabled={disabled}
+            renderInput={params => {
+              if (params) {
+                return (
+                  <TextField
+                    className={'font-size-1'}
+                    placeholder={placeholder}
+                    error={error}
+                    helperText={helperText}
+                    value={value}
+                    {...params}
+                  />
+                );
+              }
+            }}
+          />
+        );
+      }}
     />
   );
 };

@@ -31,11 +31,8 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
   const [loadingUpload, setLoadingUpload] = useState(false);
   const [urlImage, setUrlImage] = useState([]);
   const [optionsProvince, setOptionsProvince] = useState([]);
-  const [selectedProvince, setSelectedProvince] = useState({});
   const [optionsDistrict, setOptionsDistrict] = useState([]);
-  const [selectedDistrict, setSelectedDistrict] = useState({});
   const [optionsWard, setOptionsWard] = useState([]);
-  const [selectedWard, setSelectedWard] = useState({});
 
   const getDataProvince = async () => {
     try {
@@ -51,12 +48,10 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
     } catch (error) {}
   };
 
-  const getDataDistrict = async () => {
+  const getDataDistrict = async (provinceCode) => {
     try {
       const districtApi = new DistrictApi();
-      const res = await districtApi.getDistrictByProvinceId(
-        selectedProvince.code
-      );
+      const res = await districtApi.getDistrictByProvinceId(provinceCode);
       const options = [];
       res.data.data.map((item) =>
         options.push({ name: item.name, code: item.code })
@@ -65,10 +60,10 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
     } catch (error) {}
   };
 
-  const getDataWard = async () => {
+  const getDataWard = async (districtCode) => {
     try {
       const wardApi = new WardApi();
-      const res = await wardApi.getWardByDistrictId(selectedDistrict.code);
+      const res = await wardApi.getWardByDistrictId(districtCode);
       const options = [];
       res.data.data.map((item) =>
         options.push({ name: item.name, code: item.code })
@@ -81,7 +76,9 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
     code: "",
     name: "",
     address: "",
-    wardCode: "",
+    wardCode: null,
+    provinceId: null,
+    districtId: null,
   }));
 
   const schema = yup.object().shape({
@@ -94,9 +91,13 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
       .typeError("Phường/thị xã không được bỏ trống")
       .required("Phường/thị xã không được bỏ trống"),
     provinceId: yup
-      .string()
-      .required("Tỉnh/thành phố xã không được phép bỏ trống"),
-    districtId: yup.string().required("Quận/huyện không được phép bỏ trống"),
+      .object()
+      .typeError("Tỉnh/thành phố không được bỏ trống")
+      .required("Tỉnh/thành phố không được bỏ trống"),
+    districtId: yup
+      .object()
+      .typeError("Quận/huyện không được bỏ trống")
+      .required("Quận/huyện không được phép bỏ trống"),
   });
 
   useEffect(() => {
@@ -109,29 +110,33 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
     getDataProvince();
   }, []);
 
-  useEffect(() => {
-    if (!selectedProvince) setOptionsDistrict([]);
-    else {
-      getDataDistrict();
-    }
-  }, [selectedProvince]);
-
-  useEffect(() => {
-    if (!selectedDistrict) {
-      setOptionsWard([]);
-    } else {
-      getDataWard();
-    }
-  }, [selectedDistrict]);
-
   const methods = useForm({
     mode: "onSubmit",
     defaultValues,
     resolver: yupResolver(schema),
   });
 
-  const { handleSubmit, reset, formState, setValue } = methods;
+  const { handleSubmit, reset, formState, setValue, watch } = methods;
   const { errors } = formState;
+  const provinceWatch = watch("provinceId");
+  const districtWatch = watch("districtId");
+
+  useEffect(() => {
+    const province = provinceWatch;
+    if (!province) setOptionsDistrict([]);
+    else {
+      getDataDistrict(province.code);
+    }
+  }, [provinceWatch]);
+
+  useEffect(() => {
+    const district = districtWatch;
+    if (!district) setOptionsWard([]);
+    else {
+      getDataWard(district.code);
+    }
+  }, [districtWatch]);
+
   const toggleDrawer = (open) => (event) => {
     setShowDrawer(open);
   };
@@ -154,31 +159,6 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
       );
     }
     setImages(imageList);
-  };
-
-  const funcUpload = async (image) => {
-    function readFileAsync() {
-      return new Promise((resolve, reject) => {
-        const file = image;
-        getUrlFromIMG(file).then((response) => {
-          if (!response) {
-            return;
-          }
-          const reader = new FileReader();
-          reader.onload = () => {
-            resolve({
-              id: response?.data?.id,
-              url: response?.data?.url,
-              name: response?.data?.name,
-              type: "image",
-            });
-          };
-          reader.onerror = reject;
-          // reader.readAsBinaryString(file);
-        });
-      });
-    }
-    await readFileAsync();
   };
 
   const onSubmit = async (value = defaultValues) => {
@@ -282,7 +262,6 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
                       placeholder={"Chọn tỉnh/thành phố"}
                       error={Boolean(errors?.provinceId)}
                       helperText={errors?.provinceId?.message}
-                      onChange={setSelectedProvince}
                       options={optionsProvince}
                     />
                   </FormControlCustom>
@@ -294,7 +273,6 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
                       placeholder={"Chọn quận/huyện"}
                       error={Boolean(errors?.districtId)}
                       helperText={errors?.districtId?.message}
-                      onChange={setSelectedDistrict}
                       options={optionsDistrict}
                     />
                   </FormControlCustom>
@@ -305,7 +283,6 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
                       name={"wardCode"}
                       placeholder={"Chọn phường/thị xã"}
                       error={Boolean(errors?.wardCode)}
-                      defaultValue={defaultValues?.wardCode}
                       helperText={errors?.wardCode?.message}
                       options={optionsWard}
                     />
@@ -328,7 +305,11 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
             </div>
             <div className="view-image">
               <div className="image-product">
-                <UploadImage onChange={onChange} images={images} isLoading={loadingUpload}/>
+                <UploadImage
+                  onChange={onChange}
+                  images={images}
+                  isLoading={loadingUpload}
+                />
               </div>
             </div>
 
