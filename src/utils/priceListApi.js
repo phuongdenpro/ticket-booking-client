@@ -20,6 +20,15 @@ class PriceListApi {
     return res;
   }
 
+  getPriceListById(id, params) {
+    const url = `price-list/id/${id}`;
+    const res = axiosClient.get(url, {
+      ...params,
+    });
+    return res;
+  }
+
+
   deleteById(id, params) {
     const url = `price-list/id/${id}`;
     const res = axiosClient.delete(url, params);

@@ -1,5 +1,5 @@
 import { Button, Divider, Grid } from "@mui/material";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
 import { FormProvider, useForm } from "react-hook-form";
 import AutocompleteCustom from "../../../../components/AutocompleteCustom";
@@ -13,11 +13,33 @@ import SelectCustom from "../../../../components/SelectCustom";
 import "../../../../assets/scss/default.scss";
 import PriceList from "./PriceList";
 import GroupTicketList from "./GroupTicketList";
-
+import BorderColorIcon from "@mui/icons-material/BorderColor";
+import { useNavigate, useParams } from "react-router-dom";
+import customToast from "../../../../components/ToastCustom";
+import { PriceListApi } from "../../../../utils/priceListApi";
 
 const EditPriceList = (props) => {
   const [dataCustomer, setData] = useState();
   const dateNow = moment(new Date()).format("DD-MM-YYYY hh:mm");
+  const navigate = useNavigate();
+  const codePriceList = useParams();
+  const [detailPriceList, setDetailPriceList] = useState({});
+
+  const getDetailPriceList = async () => {
+    try {
+      console.log(codePriceList);
+      const priceListApi = new PriceListApi();
+      const res = await priceListApi.getPriceListById(codePriceList.id);
+      console.log(res);
+      setDetailPriceList(res?.data.data);
+    } catch (error) {
+      customToast.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getDetailPriceList();
+  }, [codePriceList]);
   const defaultValues = useMemo(
     () => ({
       province: dataCustomer?.citiesId || "",
@@ -65,10 +87,70 @@ const EditPriceList = (props) => {
       <Grid container spacing={1}>
         <Grid md={12}>
           <div className={"page-layout"}>
-            <Grid className={"align-items-center header_title"}>
-              <Grid md={7}>
-                <h2 className={"txt-title"}>THÔNG TIN BẢNG GIÁ</h2>
-              </Grid>
+            <Grid
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <div>
+                  <h2 className={"txt-title"}>
+                    Bảng giá #{detailPriceList?.code}
+                  </h2>
+                </div>
+                <div style={{ padding: "2px 5px" }}>
+                  <div
+                    style={{
+                      backgroundColor:
+                        detailPriceList?.status == "Tạm ngưng"
+                          ? "red"
+                          : "green",
+                      borderRadius: "15px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        color: "white",
+                        fontSize: "0.73rem",
+                        fontWeight: "600",
+                        padding: "2px 5px",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      {detailPriceList?.status == "Tạm ngưng"
+                        ? "Tạm ngưng"
+                        : "Hoạt động"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <Button
+                  style={{
+                    padding: "1px 4px",
+                    textTransform: "none",
+                  }}
+                  // onClick={() => setShowAddCustomer(true)}
+                >
+                  <BorderColorIcon color="primary" fontSize="small" />
+                  <span
+                    style={{
+                      color: "#00354e ",
+                      fontSize: "0.875rem",
+                      fontWeight: "500",
+                      padding: "2px 5px",
+                      display: "flex",
+                      alignItems: "center",
+                      marginRight: "5px",
+                    }}
+                  >
+                    Thay đổi
+                  </span>
+                </Button>
+              </div>
             </Grid>
             <Divider />
             <FormProvider {...methods}>
@@ -150,43 +232,6 @@ const EditPriceList = (props) => {
                           "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
                         }
                         className={"flex-direction-row"}
-                        label={"Trạng thái"}
-                        fullWidth
-                      >
-                        <SelectCustom
-                          style={{ width: "100%" }}
-                          name={"branch"}
-                          placeholder={"Chọn trạng thái"}
-
-                          // helperText={errors?.branch?.message as string}
-                        />
-                      </FormControlCustom>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <FormControlCustom
-                        classNameLabel={
-                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
-                        }
-                        className={"flex-direction-row"}
-                        label={"Ngày tạo"}
-                        fullWidth
-                      >
-                        <InputField
-                        disabled
-                          style={{ width: "100%" }}
-                          name={"createdDate"}
-                          placeholder={"Nhập ngày tạo bảng giá"}
-                          helperText={""}
-                        />
-                      </FormControlCustom>
-                    </Grid>
-
-                    <Grid item xs={6}>
-                      <FormControlCustom
-                        classNameLabel={
-                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
-                        }
-                        className={"flex-direction-row"}
                         label={"Ghi chú"}
                         fullWidth
                       >
@@ -200,27 +245,25 @@ const EditPriceList = (props) => {
                         />
                       </FormControlCustom>
                     </Grid>
+                    <Grid item xs={6}>
+                      <FormControlCustom
+                        classNameLabel={
+                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
+                        }
+                        className={"flex-direction-row"}
+                        label={"Ngày tạo"}
+                        fullWidth
+                      >
+                        <InputField
+                          disabled
+                          style={{ width: "100%" }}
+                          name={"createdDate"}
+                          placeholder={"Nhập ngày tạo bảng giá"}
+                          helperText={""}
+                        />
+                      </FormControlCustom>
+                    </Grid>
                   </Grid>
-                  <Grid
-                  container
-                  spacing={2}
-                  className={`mt-1`}
-                  justifyContent="space-between"
-                >
-                  <Grid item xs={12}>
-                  <div className="item-btn-right" style={{ float: "right", marginBottom:20 }}>
-                    <Button
-                      variant="contained"
-                      size="medium"
-                      className={`btn-tertiary-normal`}
-                      style={{ height: "2rem" }}
-                      type="submit"
-                    >
-                      Cập nhật
-                    </Button>
-                    </div>
-                  </Grid>
-                </Grid>
                 </div>
               </form>
             </FormProvider>
@@ -229,9 +272,12 @@ const EditPriceList = (props) => {
           <div className={"page-layout"} style={{ marginTop: 50 }}>
             <Grid className={"align-items-center header_title"}>
               <Grid md={7}>
-                <h2 className={"txt-title"}>DANH SÁCH NHÓM VÉ ÁP DỤNG</h2>
+                <h2 className={"txt-title"}>DANH SÁCH ÁP DỤNG</h2>
               </Grid>
-              <div className="item-btn-right" style={{ float: "right", marginBottom:20 }}>
+              <div
+                className="item-btn-right"
+                style={{ float: "right", marginBottom: 20 }}
+              >
                 <Button
                   className={"btn-create"}
                   variant="outlined"
@@ -245,7 +291,6 @@ const EditPriceList = (props) => {
             <GroupTicketList />
           </div>
         </Grid>
-        
       </Grid>
 
       <div></div>
