@@ -236,7 +236,7 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
             <div className="content" style={{ marginLeft: 40 }}>
               <Grid container spacing={2} style={{ marginTop: 10 }}>
                 <Grid item xs={6}>
-                  <FormControlCustom label={"Mã bến xe"} fullWidth>
+                  <FormControlCustom label={"Mã bến xe"} fullWidth isMarked>
                     <InputField
                       name={"code"}
                       placeholder={"Nhập mã bến xe"}
@@ -246,7 +246,7 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
                   </FormControlCustom>
                 </Grid>
                 <Grid item xs={6}>
-                  <FormControlCustom label={"Tên bến xe"} fullWidth>
+                  <FormControlCustom label={"Tên bến xe"} fullWidth isMarked>
                     <InputField
                       name={"name"}
                       placeholder={"Nhập tên bến xe"}
@@ -256,7 +256,7 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
                   </FormControlCustom>
                 </Grid>
                 <Grid item xs={4}>
-                  <FormControlCustom label={"Chọn địa chỉ"} fullWidth>
+                  <FormControlCustom label={"Chọn địa chỉ"} fullWidth isMarked>
                     <SelectCustom
                       name={"provinceId"}
                       placeholder={"Chọn tỉnh/thành phố"}
@@ -289,7 +289,7 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
                   </FormControlCustom>
                 </Grid>
                 <Grid item xs={12}>
-                  <FormControlCustom label={"Địa chỉ"} fullWidth>
+                  <FormControlCustom label={"Địa chỉ"} fullWidth isMarked>
                     <InputField
                       name={"address"}
                       placeholder={"Nhập địa chỉ"}
