@@ -31,11 +31,8 @@ const EditStation = (props) => {
   const [images, setImages] = useState();
   const [loadingUpload, setLoadingUpload] = useState(false);
   const [optionsProvince, setOptionsProvince] = useState([]);
-  const [selectedProvince, setSelectedProvince] = useState({});
   const [optionsDistrict, setOptionsDistrict] = useState([]);
-  const [selectedDistrict, setSelectedDistrict] = useState({});
   const [optionsWard, setOptionsWard] = useState([]);
-  const [selectedWard, setSelectedWard] = useState({});
 
   const getDataProvince = async () => {
     const provinceApi = new ProvinceApi();
@@ -49,12 +46,10 @@ const EditStation = (props) => {
     setOptionsProvince(options);
   };
 
-  const getDataDistrict = async () => {
+  const getDataDistrict = async (provinceCode) => {
     try {
       const districtApi = new DistrictApi();
-      const res = await districtApi.getDistrictByProvinceId(
-        selectedProvince.code
-      );
+      const res = await districtApi.getDistrictByProvinceId(provinceCode);
       const options = [];
       res.data.data.map((item) =>
         options.push({ name: item.name, code: item.code })
@@ -63,10 +58,10 @@ const EditStation = (props) => {
     } catch (error) {}
   };
 
-  const getDataWard = async () => {
+  const getDataWard = async (districtCode) => {
     try {
       const wardApi = new WardApi();
-      const res = await wardApi.getWardByDistrictId(selectedDistrict.code);
+      const res = await wardApi.getWardByDistrictId(districtCode);
       const options = [];
       res.data.data.map((item) =>
         options.push({ name: item.name, code: item.code })
@@ -74,20 +69,7 @@ const EditStation = (props) => {
       setOptionsWard(options);
     } catch (error) {}
   };
-  useEffect(() => {
-    if (!selectedProvince) setOptionsDistrict([]);
-    else {
-      getDataDistrict();
-    }
-  }, [selectedProvince]);
-
-  useEffect(() => {
-    if (!selectedDistrict) {
-      setOptionsWard([]);
-    } else {
-      getDataWard();
-    }
-  }, [selectedDistrict]);
+  console.log(dataStation);
 
   const defaultValues = useMemo(
     () => ({
@@ -118,25 +100,54 @@ const EditStation = (props) => {
   const schema = yup.object().shape({
     name: yup.string().required("Tên bến xe không được phép bỏ trống"),
     address: yup.string().required("Địa chỉ không được phép bỏ trống"),
+    wardId: yup
+      .object()
+      .typeError("Phường/thị xã không được bỏ trống")
+      .required("Phường/thị xã không được bỏ trống"),
+    provinceId: yup
+      .object()
+      .typeError("Tỉnh/thành phố không được bỏ trống")
+      .required("Tỉnh/thành phố không được phép bỏ trống"),
+    districtId: yup
+      .object()
+      .typeError("Quận/huyện không được bỏ trống")
+      .required("Quận/huyện không được phép bỏ trống"),
   });
 
   useEffect(() => {
     reset({ ...defaultValues });
     setImages(dataStation?.images?.map((item) => item.url) || []);
-    setSelectedProvince(defaultValues?.provinceId);
-    setSelectedDistrict(defaultValues?.districtId);
-    setSelectedWard(defaultValues?.wardId);
     getDataProvince();
+    getDataDistrict(dataStation?.province?.code);
   }, [dataStation]);
 
-  console.log(images);
   const methods = useForm({
     mode: "onSubmit",
+    defaultValues,
     resolver: yupResolver(schema),
   });
 
   const { handleSubmit, reset, formState, setValue, register, watch } = methods;
   const { errors } = formState;
+
+  const provinceWatch = watch("provinceId");
+  const districtWatch = watch("districtId");
+  const wardWatch = watch("wardId");
+  useEffect(() => {
+    const province = provinceWatch;
+    if (!province) setOptionsDistrict([]);
+    else {
+      getDataDistrict(province.code);
+    }
+  }, [provinceWatch]);
+
+  useEffect(() => {
+    const district = districtWatch;
+    if (!district) setOptionsWard([]);
+    else {
+      getDataWard(district.code);
+    }
+  }, [districtWatch]);
   const toggleDrawer = (open) => (event) => {
     setShowDrawer(open);
   };
@@ -161,7 +172,6 @@ const EditStation = (props) => {
     setImages(imageList);
   };
 
-
   const onSubmit = async (value) => {
     try {
       const imageParams = [];
@@ -169,10 +179,10 @@ const EditStation = (props) => {
         imageParams.push({ url: item });
       });
       const params = {
-        code: value.code,
-        name: value.name,
-        address: value.address,
-        wardCode: selectedWard?.code,
+        code: value?.code,
+        name: value?.name,
+        address: value?.address,
+        wardCode: value?.wardId.code,
         images: imageParams,
       };
       const stationApi = new StationApi();
@@ -259,7 +269,6 @@ const EditStation = (props) => {
                       placeholder={"Chọn tỉnh/thành phố"}
                       error={Boolean(errors?.provinceId)}
                       helperText={errors?.provinceId?.message}
-                      onChange={setSelectedProvince}
                       options={optionsProvince}
                     />
                   </FormControlCustom>
@@ -271,7 +280,6 @@ const EditStation = (props) => {
                       placeholder={"Chọn quận/huyện"}
                       error={Boolean(errors?.districtId)}
                       helperText={errors?.districtId?.message}
-                      onChange={setSelectedDistrict}
                       options={optionsDistrict}
                     />
                   </FormControlCustom>
@@ -282,7 +290,6 @@ const EditStation = (props) => {
                       name={"wardId"}
                       placeholder={"Chọn phường/thị xã"}
                       error={Boolean(errors?.wardId)}
-                      onChange={setSelectedWard}
                       helperText={errors?.wardId?.message}
                       options={optionsWard}
                     />
@@ -305,7 +312,11 @@ const EditStation = (props) => {
             </div>
             <div className="view-image">
               <div className="image-product">
-                <UploadImage onChange={onChange} images={images} isLoading={loadingUpload}/>
+                <UploadImage
+                  onChange={onChange}
+                  images={images}
+                  isLoading={loadingUpload}
+                />
               </div>
             </div>
 

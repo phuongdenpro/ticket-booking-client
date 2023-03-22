@@ -90,7 +90,7 @@ const UserList = (props) => {
                 params?.row?.status == "Chưa kích hoạt"
                   ? "warning"
                   : params?.row?.status == "Tạm khóa"
-                  ? "error"
+                  ? "danger"
                   : "success"
               }
               content={params?.row?.status}
