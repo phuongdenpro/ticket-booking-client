@@ -12,6 +12,16 @@ class GroupTicketApi {
     });
     return res;
   }
+
+  getById(id,params) {
+    const url = `ticket-group/id/${id}`;
+    const res = axiosClient.get(url, {
+      params: {
+        ...params,
+      },
+    });
+    return res;
+  }
   create(params) {
     const url = `ticket-group`;
     const res = axiosClient.post(url, {

@@ -1,36 +1,46 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import { LoadingButton } from "@mui/lab";
-import { Button, Drawer, Grid } from "@mui/material";
-import { disabled } from "glamor";
+import { Button, Divider, Drawer, Grid } from "@mui/material";
+
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { isEmpty } from "lodash";
-import React, { useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+
 import * as yup from "yup";
-import FormControlCustom from "../../../../components/FormControl";
+
+import { useEffect, useMemo, useState } from "react";
 import InputField from "../../../../components/InputField";
-import SelectCustom from "../../../../components/SelectCustom";
+import FormControlCustom from "../../../../components/FormControl";
+import "../../../../assets/scss/default.scss";
+import { LoadingButton } from "@mui/lab";
 import customToast from "../../../../components/ToastCustom";
-import UploadImage from "../../../../components/UploadImage";
+import { GroupCusApi } from "../../../../utils/groupCusApi";
+import SelectCustom from "../../../../components/SelectCustom";
 import UploadSingle from "../../../../components/UploadImage/uploadSingle";
-import { UploadApi } from "../../../../utils/uploadApi";
 import { VehicleApi } from "../../../../utils/vehicleApi";
-import "./index.scss";
-const AddVehicle = ({ setShowDrawer, showDrawer, handleGetData }) => {
+import { UploadApi } from "../../../../utils/uploadApi";
+
+const EditVehicle = (props) => {
+  const {
+    setShowDrawer,
+    showDrawer,
+    dataVehicle,
+    setShowDrawerDetail,
+    handleGetData,
+  } = props;
+
+  const [type, setType] = useState("");
+  const [disabled, setDisabled] = useState(true);
   const [images, setImages] = useState([]);
   const [loadingUpload, setLoadingUpload] = useState(false);
   const [urlImage, setUrlImage] = useState([]);
-  const [type, setType] = useState("");
-  const [disabled, setDisabled] = useState(true);
   const floorNumberFilter = [
     {
-      id: 1,
-      code: "1",
+      code: 1,
       name: "Một tầng",
     },
     {
-      id: 2,
-      code: "2",
+      code: 2,
       name: "Hai tầng",
     },
   ];
@@ -54,16 +64,6 @@ const AddVehicle = ({ setShowDrawer, showDrawer, handleGetData }) => {
     handelGetType();
   }, []);
 
-  const defaultValues = useMemo(() => ({
-    code: "",
-    name: "",
-    type: "",
-    floorNumber: "",
-    totalSeat: "0",
-    licensePlate: "",
-    description: "",
-  }));
-
   const schema = yup.object().shape({
     code: yup
       .string()
@@ -86,6 +86,33 @@ const AddVehicle = ({ setShowDrawer, showDrawer, handleGetData }) => {
     licensePlate: yup.string().required("Biển số xe không được phép bỏ trống"),
   });
 
+  const defaultValues = useMemo(
+    () => ({
+      code: dataVehicle?.code,
+      name: dataVehicle?.name,
+      note: dataVehicle?.note,
+      description: dataVehicle?.description,
+      type: {
+        code:
+          dataVehicle?.type == "xe limousine"
+            ? "LIMOUSINE"
+            : dataVehicle?.type == "xe giường nằm"
+            ? "SLEEPER_BUS"
+            : dataVehicle?.type == "xe ghế ngồi"
+            ? "SEAT_BUS"
+            : "OTHER",
+        name: dataVehicle?.type,
+      },
+      floorNumber: {
+        code: dataVehicle?.floorNumber,
+        name: dataVehicle?.floorNumber == 1 ? "Một tầng" : "Hai tầng",
+      },
+      totalSeat: dataVehicle?.totalSeat,
+      licensePlate: dataVehicle?.licensePlate,
+      image: dataVehicle?.images?.[0]?.url || "",
+    }),
+    [dataVehicle]
+  );
   const methods = useForm({
     mode: "onSubmit",
     defaultValues,
@@ -98,7 +125,7 @@ const AddVehicle = ({ setShowDrawer, showDrawer, handleGetData }) => {
 
   useEffect(() => {
     if (watchType?.code === "OTHER") {
-      setValue("totalSeat", "");
+      setValue("totalSeat", defaultValues.totalSeat);
       setDisabled(false);
     } else if (watchType?.code === "LIMOUSINE") {
       setValue("totalSeat", 34);
@@ -114,15 +141,9 @@ const AddVehicle = ({ setShowDrawer, showDrawer, handleGetData }) => {
 
   useEffect(() => {
     reset({ ...defaultValues });
-    setImages([]);
-    setUrlImage([]);
-    handleGetData();
-  }, [showDrawer]);
-
-  const toggleDrawer = (open) => (event) => {
-    setShowDrawer(open);
-    reset();
-  };
+    setImages([dataVehicle?.images?.[0]?.url] || []);
+    setUrlImage(dataVehicle?.images?.[0]?.url || []);
+  }, [dataVehicle]);
 
   const onChange = (imageList) => {
     // data for submit
@@ -170,35 +191,6 @@ const AddVehicle = ({ setShowDrawer, showDrawer, handleGetData }) => {
     setUrlImage("");
   };
 
-  const onSubmit = async (value = defaultValues) => {
-    const params = {
-      code: value.code,
-      name: value.name,
-      description: value?.description,
-      type: value.type?.name,
-      licensePlate: value.licensePlate,
-      floorNumber: value.floorNumber.id,
-      totalSeat: value.totalSeat,
-      images: [
-        {
-          url: urlImage,
-        },
-      ],
-    };
-    console.log(params);
-
-    try {
-      const vehicleApi = new VehicleApi();
-      const res = await vehicleApi.createVehicle(params);
-      customToast.success("Thêm mới thành công");
-      handleGetData();
-      setShowDrawer(false);
-    } catch (error) {
-      customToast.error(error.response.data.message);
-    }
-    handleGetData();
-  };
-
   const goBack = () => {
     reset();
     setShowDrawer(false);
@@ -206,10 +198,46 @@ const AddVehicle = ({ setShowDrawer, showDrawer, handleGetData }) => {
     setUrlImage([]);
   };
 
+  const toggleDrawer = (open) => (event) => {
+    setShowDrawer(open);
+  };
+  useEffect(() => {
+    reset();
+  }, [showDrawer]);
+
+  const onSubmit = async (value) => {
+    const params = {
+        code: value.code,
+        name: value.name,
+        description: value?.description,
+        type: value.type?.name,
+        licensePlate: value.licensePlate,
+        floorNumber: value.floorNumber.code,
+        totalSeat: value.totalSeat,
+        images: [
+          {
+            url: urlImage,
+          },
+        ],
+      };
+    
+    try {
+      const vehicleApi = new VehicleApi();
+      const res = await vehicleApi.updateVehicle(dataVehicle.id, params);
+      customToast.success("Cập nhật thành công");
+      setShowDrawer(false);
+      setShowDrawerDetail(false);
+      handleGetData();
+      reset();
+    } catch (error) {
+      customToast.error(error.response.data.message);
+    }
+  };
+
   return (
     <Drawer
       PaperProps={{
-        sx: { width: "45%" },
+        sx: { width: "45%", minWidth: "39rem" },
       }}
       anchor={"right"}
       open={showDrawer}
@@ -221,27 +249,15 @@ const AddVehicle = ({ setShowDrawer, showDrawer, handleGetData }) => {
           <div className="title-drawer">
             <div className="btn-close" onClick={goBack}>
               <ArrowBackIosIcon className="icon-back" />
-              <span style={{ fontSize: 30, fontWeight: "bolder" }}>
-                Tạo mới
-              </span>
+            </div>
+            <div>
+              <span>Cập nhật thông tin</span>
             </div>
           </div>
           <div className="content-drawer">
-            <div
-              className="title-group"
-              style={{ alignItems: "center", justifyContent: "center" }}
-            >
-              <span
-                style={{
-                  fontSize: 25,
-                  fontWeight: "bold",
-                  textTransform: "uppercase",
-                }}
-              >
-                Tạo mới xe
-              </span>
+            <div className="title-group">
+              <span>Thông tin xe</span>
             </div>
-
             <div className="content" style={{ marginLeft: 40 }}>
               <Grid container spacing={2} style={{ marginTop: 10 }}>
                 <Grid item xs={6}>
@@ -331,7 +347,6 @@ const AddVehicle = ({ setShowDrawer, showDrawer, handleGetData }) => {
                   onChange={onChange}
                   images={!isEmpty(urlImage) ? images : ""}
                   onRemove={onRemove}
-                  isLoading={loadingUpload}
                 />
               </div>
               {errors.image && (
@@ -342,7 +357,7 @@ const AddVehicle = ({ setShowDrawer, showDrawer, handleGetData }) => {
             </div>
           </div>
 
-          <div className="footer-drawer">
+          <div className="footer-drawer" style={{ marginTop: 50 }}>
             <Grid
               container
               spacing={3}
@@ -372,7 +387,7 @@ const AddVehicle = ({ setShowDrawer, showDrawer, handleGetData }) => {
                   variant="contained"
                   style={{ width: "80%", marginRight: 50 }}
                 >
-                  {"Thêm mới"}
+                  {"Cập nhật"}
                 </LoadingButton>
               </Grid>
             </Grid>
@@ -383,4 +398,4 @@ const AddVehicle = ({ setShowDrawer, showDrawer, handleGetData }) => {
   );
 };
 
-export default AddVehicle;
+export default EditVehicle;
