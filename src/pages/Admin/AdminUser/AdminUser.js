@@ -181,7 +181,7 @@ const AdminUser = (props) => {
         md={6}
       >
         <span className="title-price">Tổng số khách hàng: </span>
-        <span className="txt-price" style={{ marginLeft: 20 }}>
+        <span className="txt-price" style={{ marginLeft: 5 }}>
           {data?.data?.pagination?.total}
         </span>
       </Grid>

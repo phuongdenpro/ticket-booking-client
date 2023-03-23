@@ -159,9 +159,9 @@ const AdminGroupUser = (props) => {
             fontWeight: "bold",
           }}
         >
-          Tổng số nhóm khách hàng:{" "}
+          Tổng số nhóm khách hàng:  {data?.data?.pagination?.total}
         </span>
-        <span className="txt-price"> {data?.data?.pagination?.total}</span>
+       
       </Grid>
       <div style={{ display: "flex" }}>
         <div style={{ flexGrow: 1 }}>

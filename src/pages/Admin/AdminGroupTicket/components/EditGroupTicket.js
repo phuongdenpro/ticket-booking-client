@@ -8,36 +8,43 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import * as yup from "yup";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import InputField from "../../../../components/InputField";
 import FormControlCustom from "../../../../components/FormControl";
 import "../../../../assets/scss/default.scss";
 import { LoadingButton } from "@mui/lab";
 import customToast from "../../../../components/ToastCustom";
+import { GroupCusApi } from "../../../../utils/groupCusApi";
 import { GroupTicketApi } from "../../../../utils/groupTicketApi";
 
-const AddGroupTicket = (props) => {
-  const { setShowDrawer, showDrawer, handleGetData } = props;
+const EditGroupTicket = (props) => {
+  const {
+    setShowDrawer,
+    showDrawer,
+    dataGroupTicket,
+    handleGetData,
+  } = props;
 
   const schema = yup.object().shape({
     code: yup
-    .string()
-    .matches(/^\S*$/, "Mã không chứa khoảng trắng")
-    .matches(/^[A-Za-z0-9]*$/, "Không chứa kí tự đặc biệt")
-    .required("Mã không được phép bỏ trống"),
+      .string()
+      .typeError("Mã nhóm khách hàng không được phép bỏ trống")
+      .required("Mã nhóm khách hàng không được phép bỏ trống"),
     name: yup
       .string()
       .typeError("Tên nhóm không được phép bỏ trống")
       .required("Tên nhóm không được phép bỏ trống"),
   });
 
-  const defaultValues = {
-    code: "",
-    name: "",
-    note: "",
-    description: "",
-  };
-
+  const defaultValues = useMemo(
+    () => ({
+      code: dataGroupTicket?.code,
+      name: dataGroupTicket?.name,
+      note: dataGroupTicket?.note,
+      description: dataGroupTicket?.description,
+    }),
+    [dataGroupTicket]
+  );
   const methods = useForm({
     mode: "onSubmit",
     defaultValues,
@@ -46,6 +53,9 @@ const AddGroupTicket = (props) => {
 
   const { handleSubmit, reset, formState, setValue, watch } = methods;
   const { errors } = formState;
+  useEffect(() => {
+    reset({ ...defaultValues });
+  }, [dataGroupTicket]);
 
   const goBack = () => {
     reset();
@@ -67,16 +77,15 @@ const AddGroupTicket = (props) => {
       note: value?.note,
     };
     try {
-      const groupTicketApi = new GroupTicketApi();
-      const res = await groupTicketApi.create(params);
-      customToast.success("Thêm mới thành công");
-      handleGetData();
+      const ticketGroupApi = new GroupTicketApi();
+      const res = await ticketGroupApi.update(dataGroupTicket.id, params);
+      customToast.success("Cập nhật thành công");
       setShowDrawer(false);
+      handleGetData();
       reset();
     } catch (error) {
       customToast.error(error.response.data.message);
     }
-    handleGetData();
   };
 
   return (
@@ -96,12 +105,12 @@ const AddGroupTicket = (props) => {
               <ArrowBackIosIcon className="icon-back" />
             </div>
             <div>
-              <span>Thêm nhóm vé</span>
+              <span>Cập nhật thông tin</span>
             </div>
           </div>
           <div className="content-drawer">
             <div className="title-group">
-              <span>Thông tin nhóm vé</span>
+              <span>Thông tin nhóm khách vé</span>
             </div>
             <div className="content">
               <Grid container spacing={1.5}>
@@ -109,14 +118,15 @@ const AddGroupTicket = (props) => {
                   <FormControlCustom label={"Mã nhóm"} fullWidth isMarked>
                     <InputField
                       name={"code"}
-                      placeholder={"Nhập mã nhóm"}
+                      placeholder={"Nhập mã nhóm vé"}
                       error={Boolean(errors.code)}
                       helperText={errors?.code?.message}
+                      disabled
                     />
                   </FormControlCustom>
                 </Grid>
                 <Grid item xs={6}>
-                  <FormControlCustom label={"Tên nhóm"} fullWidth isMarked>
+                  <FormControlCustom label={"Tên nhóm vé"} fullWidth isMarked>
                     <InputField
                       name={"name"}
                       placeholder={"Nhập tên nhóm"}
@@ -175,13 +185,12 @@ const AddGroupTicket = (props) => {
                       ? "btn-primary-disable"
                       : "btn-tertiary-normal"
                   }
-                  // onClick={onSubmit}
                   type="submit"
                   color="primary"
                   variant="contained"
                   style={{ width: "80%", marginRight: 50 }}
                 >
-                  {"Thêm mới "}
+                  {"Cập nhật"}
                 </LoadingButton>
               </Grid>
             </Grid>
@@ -192,4 +201,4 @@ const AddGroupTicket = (props) => {
   );
 };
 
-export default AddGroupTicket;
+export default EditGroupTicket;

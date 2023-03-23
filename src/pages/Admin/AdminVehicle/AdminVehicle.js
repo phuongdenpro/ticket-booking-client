@@ -13,6 +13,7 @@ import { VehicleApi } from "../../../utils/vehicleApi";
 import customToast from "../../../components/ToastCustom";
 import { Helmet } from "react-helmet";
 import AddVehicle from "./components/AddVehicle";
+import DetailVehicle from "./components/DetailVehicle";
 
 const AdminVehicle = (props) => {
   const [data, setData] = useState([]);
@@ -25,6 +26,9 @@ const AdminVehicle = (props) => {
   const [typeSearch, setTypeSearch] = useState(null);
   const [floorNumber, setFloorNumber] = useState(null);
   const [type, setType] = useState("");
+  const [showDrawerDetail, setShowDrawerDetail] = useState(false);
+  const [idVehicle, setIdVehicle] = useState(null);
+  const [detailVehicle, setDetailVehicle] = useState("");
 
   const [showDrawerCreate, setShowDrawerCreate] = useState(false);
 
@@ -122,7 +126,20 @@ const AdminVehicle = (props) => {
     };
     setFilterParams(params);
   }, [watchType, watchFloorNumber]);
-  console.log(filterParams);
+
+  const handelDetail = (id) => {
+    setShowDrawerDetail(true);
+    setIdVehicle(id);
+  };
+  const getDetailVehicle = async (id) => {
+    if (!id) return;
+    const vehicleApi = new VehicleApi();
+    const response = await vehicleApi.getById(id);
+    setDetailVehicle(response.data.data);
+  };
+  useEffect(() => {
+    getDetailVehicle(idVehicle);
+  }, [idVehicle, showDrawerDetail]);
   return (
     <Box sx={{ height: "100%", width: "100%" }}>
       <Helmet>
@@ -218,12 +235,15 @@ const AdminVehicle = (props) => {
           display: "flex",
           justifyContent: "flex-end",
           marginBottom: 20,
-          marginRight: 30,
+          marginRight: 10,
+          color: "#000",
+          fontSize: 15,
+          fontWeight: "bold",
         }}
         md={6}
       >
         <span className="title-price">Tổng số xe: </span>
-        <span className="txt-price">0</span>
+        <span className="txt-price">{data?.data?.pagination?.total}</span>
       </Grid>
       <div style={{ display: "flex" }}>
         <div style={{ flexGrow: 1 }}>
@@ -233,6 +253,7 @@ const AdminVehicle = (props) => {
             onChangeRowsPerPage={handleChangeRowsPerPage}
             total={data?.data?.pagination?.total}
             handleGetData={handleGetData}
+            handelDetail={handelDetail}
             page={page}
             pageSize={pageSize}
           ></VehicleList>
@@ -243,6 +264,12 @@ const AdminVehicle = (props) => {
         showDrawer={showDrawerCreate}
         handleGetData={handleGetData}
       ></AddVehicle>
+      <DetailVehicle
+        setShowDrawerDetail={setShowDrawerDetail}
+        showDrawerDetail={showDrawerDetail}
+        dataVehicle={detailVehicle}
+        handleGetData={handleGetData}
+      ></DetailVehicle>
     </Box>
   );
 };

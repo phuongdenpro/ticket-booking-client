@@ -7,6 +7,7 @@ import SearchInput from "../../../components/InputSearch";
 import customToast from "../../../components/ToastCustom";
 import { GroupTicketApi } from "../../../utils/groupTicketApi";
 import AddGroupTicket from "./components/AddGroupTicket";
+import EditGroupTicket from "./components/EditGroupTicket";
 import GroupTicketList from "./components/GroupTicketList";
 
 const AdminGroupTicket = (props) => {
@@ -19,9 +20,8 @@ const AdminGroupTicket = (props) => {
   const [data, setData] = useState([]);
   const [showDrawerCreate, setShowDrawerCreate] = useState(false);
   const [showDrawerDetail, setShowDrawerDetail] = useState(false);
-  const [idGroupCustomer, setIdGroupCustomer] = useState(null);
-  const [detailGroupCustomer, setDetailGroupCustomer] = useState("");
-
+  const [idGroupTicket, setIdGroupTicket] = useState(null);
+  const [detailGroupTicket, setDetailGroupTicket] = useState("");
 
   const handleGetData = async () => {
     try {
@@ -65,17 +65,18 @@ const AdminGroupTicket = (props) => {
   };
   const handelDetail = (id) => {
     setShowDrawerDetail(true);
-    setIdGroupCustomer(id);
+    setIdGroupTicket(id);
   };
-  const getDetailGroupCustomer = async (id) => {
-    // if (!id) return;
-    // const customerGroupApi = new GroupCusApi();
-    // const response = await customerGroupApi.getGroupCusById(id);
-    // setDetailGroupCustomer(response.data.data);
+
+  const getDetailGroupTicket = async (id) => {
+    if (!id) return;
+    const ticketGroupApi = new GroupTicketApi();
+    const response = await ticketGroupApi.getById(id);
+    setDetailGroupTicket(response.data.data);
   };
   useEffect(() => {
-    getDetailGroupCustomer(idGroupCustomer);
-  }, [idGroupCustomer, showDrawerDetail]);
+    getDetailGroupTicket(idGroupTicket);
+  }, [idGroupTicket, showDrawerDetail]);
 
   return (
     <Box sx={{ height: "100%", width: "100%" }}>
@@ -152,7 +153,7 @@ const AdminGroupTicket = (props) => {
             fontWeight: "bold",
           }}
         >
-          Tổng số nhóm khách hàng:{" "}
+          Tổng số nhóm vé:{" "}
         </span>
         <span className="txt-price"> {data?.data?.pagination?.total}</span>
       </Grid>
@@ -176,7 +177,12 @@ const AdminGroupTicket = (props) => {
         showDrawer={showDrawerCreate}
         handleGetData={handleGetData}
       ></AddGroupTicket>
-      
+      <EditGroupTicket
+        setShowDrawer={setShowDrawerDetail}
+        showDrawer={showDrawerDetail}
+        dataGroupTicket={detailGroupTicket}
+        handleGetData={handleGetData}
+      ></EditGroupTicket>
     </Box>
   );
 };
