@@ -20,9 +20,36 @@ class PriceListApi {
     return res;
   }
 
+  getPriceListById(id, params) {
+    const url = `price-list/id/${id}`;
+    const res = axiosClient.get(url, {
+      ...params,
+    });
+    return res;
+  }
+
+  updateByCode(code, params) {
+    const url = `price-list/code/${code}`;
+    const res = axiosClient.patch(url, {
+      ...params,
+    });
+    return res;
+  }
+
   deleteById(id, params) {
     const url = `price-list/id/${id}`;
     const res = axiosClient.delete(url, params);
+    return res;
+  }
+
+  getPriceListDetails(params) {
+    const url = `price-list/price-detail`;
+    const res = axiosClient.get(url, {
+      params: {
+        sort: "ASC",
+        ...params,
+      },
+    });
     return res;
   }
 }

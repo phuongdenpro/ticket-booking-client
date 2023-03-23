@@ -14,10 +14,15 @@ import customToast from "../../components/ToastCustom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+
 
 const Home = (props) => {
   const [optionsProvince, setOptionsProvince] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [startDate, setStartDate] = useState(new Date());
   const getDataProvince = async () => {
     try {
       setLoading(true);
@@ -147,7 +152,7 @@ const Home = (props) => {
 
           <div
             style={{
-              width: "60vw",
+              width: "65vw",
               height: "150px",
               backgroundColor: "#ffffff",
               display: "flex",
@@ -159,7 +164,7 @@ const Home = (props) => {
           >
             <div
               style={{
-                width: "56vw",
+                width: "60vw",
                 height: "100px",
                 display: "flex",
                 flexDirection: "row",
@@ -178,7 +183,6 @@ const Home = (props) => {
                   alignItems: "center",
                   justifyContent: "center",
                   marginRight: 20,
-
                 }}
               >
                 <AdjustIcon
@@ -194,7 +198,7 @@ const Home = (props) => {
                   noOptionsText={"Không có dữ liệu"}
                   id="country-select-demo"
                   options={optionsProvince}
-                  sx={{ width: 300 }}
+                  sx={{ width: 220 }}
                   autoHighlight
                   isOptionEqualToValue={(option, value) =>
                     option.name === value.name
@@ -234,7 +238,7 @@ const Home = (props) => {
                   noOptionsText={"Không có dữ liệu"}
                   id="country-select-demo"
                   options={optionsProvince}
-                  sx={{ width: 300 }}
+                  sx={{ width: 220 }}
                   autoHighlight
                   getOptionLabel={(option) => option?.name}
                   renderInput={(params) => (
@@ -250,6 +254,34 @@ const Home = (props) => {
                   )}
                 />
               </div>
+              <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                marginRight: 15,
+              }}
+            >
+              <CalendarMonthIcon
+                style={{
+                  backgroundColor: "white",
+                  fill: "#4671f2",
+                  marginTop: 20,
+                  marginRight: 5,
+                }}
+              ></CalendarMonthIcon>
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+                dateFormat="dd/MM/yyyy"
+                showYearDropdown
+                scrollableMonthYearDropdown
+                customInput={<TextField variant="standard" label="Ngày đi" />}
+                locale="vi"
+              />
+              </div>
+              
               <Button
                 variant="contained"
                 size="large"

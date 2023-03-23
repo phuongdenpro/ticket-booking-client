@@ -1,9 +1,10 @@
 import { Button } from "@mui/material";
+import moment from "moment";
 
 import DataTable from "../../../../components/DataTable";
 import TableCustom from "../../../../components/TableCustom";
 
-const GroupTicketList = (props) => {
+const GroupTicketPriceList = (props) => {
   const {
     data,
     selectionModel,
@@ -25,29 +26,60 @@ const GroupTicketList = (props) => {
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
+      renderCell: (params) => {
+        return (
+          <span
+            style={{
+              color: "#1A89AC",
+              fontSize: "0.8rem",
+              display: "inline-block",
+              textTransform: "none",
+            }}
+          >
+            {params.row?.code}
+          </span>
+        );
+      },
     },
     {
-      field: "name",
+      field: "ticketGroup",
       headerName: "Tên nhóm vé",
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
+      renderCell: (params) => {
+        return <span>{params.row?.ticketGroup.name}</span>;
+      },
     },
     {
-      field: "description",
-      flex: 200,
-      headerName: "Mô tả",
+      field: "price",
+      flex: 100,
+      headerName: "Đơn giá",
       headerAlign: "center",
       headerClassName: "theme",
     },
     {
       field: "note",
       headerName: "Ghi chú",
+      flex: 200,
+      headerAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+    },
+
+    {
+      field: "createdAt",
+      headerName: "Ngày áp dụng",
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
+      renderCell: (params) => {
+        return (
+          <span>{moment(params.row?.createdAt).format("DD/MM/YYYY")}</span>
+        );
+      },
     },
     {
       field: "action",
@@ -71,7 +103,7 @@ const GroupTicketList = (props) => {
                 textTransform: "none",
               }}
             >
-              Cập nhật
+              Xóa
             </span>
           </Button>
         );
@@ -94,8 +126,9 @@ const GroupTicketList = (props) => {
       total={total}
       page={page}
       pageSize={pageSize}
+      pagination={false}
     />
   );
 };
 
-export default GroupTicketList;
+export default GroupTicketPriceList;

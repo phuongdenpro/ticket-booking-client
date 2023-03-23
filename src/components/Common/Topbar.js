@@ -101,7 +101,13 @@ const Topbar = (props) => {
           justifyContent: "space-between",
         }}
       >
-        <div style={{ display: "flex", flexDirection: "row", alignItems:'center' }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
           <Button
             variant="text"
             onClick={() => {
@@ -122,7 +128,7 @@ const Topbar = (props) => {
               fontWeight: "bold",
             }}
           >
-            Home
+            Trang chủ
           </a>
           <ChevronRightIcon className="icon-right-header" />
           <a className="home-title" style={{ color: "#4D4D4D" }}>
@@ -139,7 +145,12 @@ const Topbar = (props) => {
         >
           <ClockCircleOutlined style={{ marginRight: 7 }} />
           <Typography
-            style={{ fontWeight: "600", marginRight: 30, width: 200 }}
+            style={{
+              textDecoration: "none",
+              color: "#000",
+              fontWeight: "bold",
+              marginRight: 30,
+            }}
           >
             {" "}
             {time}
@@ -147,7 +158,22 @@ const Topbar = (props) => {
           <Typography
             style={{ fontWeight: "500", color: "#333", marginLeft: 20 }}
           >
-            Xin chào, {Cookies.get("fullName")}
+            Xin chào,
+            <span
+              style={{
+                backgroundColor: "#f26565",
+                marginLeft: 5,
+                color: "#ffffff",
+                fontWeight: "bold",
+                paddingLeft: 5,
+                paddingRight: 5,
+                paddingBottom:2,
+                border: "1px solid",
+                borderRadius: 5,
+              }}
+            >
+              {Cookies.get("fullName")}
+            </span>
           </Typography>
           <Dropdown menu={{ items }} className="avata-profile">
             <Avatar

@@ -103,7 +103,6 @@ const AdminPriceList = (props) => {
     setPageSize(+event.target.value);
     setPage(0);
   };
-  console.log(data);
   const defaultValues = {
     startDate: null,
     endDate: null,

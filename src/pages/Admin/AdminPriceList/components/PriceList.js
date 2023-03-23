@@ -62,7 +62,7 @@ const PriceList = (props) => {
       renderCell: (params) => {
         return (
           <Button
-          onClick={() => handleShowDetail(params?.row?.code)}
+          onClick={() => handleShowDetail(params?.row?.id)}
             style={{ backgroundColor: 'transparent' }}
             disabled={false}
             color="primary"
@@ -146,8 +146,8 @@ const PriceList = (props) => {
         return (
           <div>
             <Badge
-              type={params?.row?.status == true ? "success" : "danger"}
-              content={params?.row?.status == true ? "Hoạt động" : "Tạm ngưng"}
+              type={params?.row?.status == "Kích hoạt" ? "success" : "danger"}
+              content={params?.row?.status == "Kích hoạt" ? "Hoạt động" : "Tạm ngưng"}
             />
           </div>
         );

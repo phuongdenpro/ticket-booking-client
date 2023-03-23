@@ -12,6 +12,14 @@ class VehicleApi {
     return res;
   }
 
+  createVehicle(params) {
+    const url = `vehicle`;
+    const res = axiosClient.post(url, {
+      ...params,
+    });
+    return res;
+  }
+
   getType() {
     const url = "vehicle/vehicle-type";
     const res = axiosClient.get(url);
