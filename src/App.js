@@ -1,16 +1,23 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { createBrowserHistory } from "history";
-import Login from "./pages/Admin/AdminLogin/AdminLogin";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./assets/boxicons-2.0.7/css/boxicons.min.css";
+import "./assets/scss/grid.scss";
+import "./assets/scss/index.scss";
+import "./assets/scss/theme.scss";
 import AdminLayout from "./components/Layout/AdminLayout";
+import NotFound from "./components/NotFound/404NotFound";
 import AdminAddTicket from "./pages/Admin/AdminAddTicket/AdminTicket";
 import AdminDashboard from "./pages/Admin/AdminDashboard/AdminDashboard";
 import AdminDashboardCost from "./pages/Admin/AdminDashboardCost/AdminDashboardCost";
 import AdminDashboardPromotion from "./pages/Admin/AdminDashboardPromotion/AdminDashboardPromotion";
 import AdminDashboardTicket from "./pages/Admin/AdminDashboardTicket/AdminDashboardTicket";
+import AdminGroupTicket from "./pages/Admin/AdminGroupTicket/AdminGroupTicket";
 import AdminGroupUser from "./pages/Admin/AdminGroupUser/AdminGroupUser";
+import Login from "./pages/Admin/AdminLogin/AdminLogin";
 import AdminOrder from "./pages/Admin/AdminOrder/AdminOrder";
 import AdminOrderRefund from "./pages/Admin/AdminOrderRefund/AdminOrderRefund";
 import AdminPriceList from "./pages/Admin/AdminPriceList/AdminPriceList";
+import DetailPriceList from "./pages/Admin/AdminPriceList/components/DetailPriceList";
 import AdminPromotion from "./pages/Admin/AdminPromotion/AdminPromotion";
 import AdminStation from "./pages/Admin/AdminStation/AdminStation";
 import AdminTicket from "./pages/Admin/AdminTicketList/AdminTicket";
@@ -18,13 +25,6 @@ import AdminTrip from "./pages/Admin/AdminTrip/AdminTrip";
 import AdminUser from "./pages/Admin/AdminUser/AdminUser";
 import AdminVehicle from "./pages/Admin/AdminVehicle/AdminVehicle";
 import Home from "./pages/Home/Home";
-import "./assets/boxicons-2.0.7/css/boxicons.min.css";
-import "./assets/scss/grid.scss";
-import "./assets/scss/theme.scss";
-import "./assets/scss/index.scss";
-import NotFound from "./components/NotFound/404NotFound";
-import EditPriceList from "./pages/Admin/AdminPriceList/components/EditPriceList";
-import AdminGroupTicket from "./pages/Admin/AdminGroupTicket/AdminGroupTicket";
 
 export const history = createBrowserHistory();
 
@@ -42,7 +42,7 @@ function App() {
           <Route path="/admin/ticket/price-list" element={<AdminPriceList />}/>
             <Route
               path="/admin/ticket/price-list/detail/:id"
-              element={<EditPriceList />}
+              element={<DetailPriceList />}
             ></Route>
           </Route>
           <Route path="/admin/ticket/ticket-group" element={<AdminGroupTicket />} />

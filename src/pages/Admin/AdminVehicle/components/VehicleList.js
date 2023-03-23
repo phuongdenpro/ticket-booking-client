@@ -52,7 +52,7 @@ const VehicleList = (props) => {
             }}
           >
             <img
-              src={params.row.images?.[0]}
+              src={params.row.images[0]?.url}
               alt=""
               style={{ aspectRatio: 1, width: '60px', backgroundSize: 'cover' }}
             />
