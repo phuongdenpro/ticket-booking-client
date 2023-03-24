@@ -165,7 +165,7 @@ const CreatePriceListDetail = (props) => {
                   </FormControlCustom>
                 </Grid>
                 <Grid item xs={6} className="auto-complete">
-                  <FormControlCustom label={"Mã nhóm vé áp dụng"} fullWidth>
+                  <FormControlCustom label={"Mã nhóm vé áp dụng"} fullWidth isMarked>
                     <AutocompleteCustom
                       name={"codeGroupTicket"}
                       placeholder={"Chọn mã nhóm vé"}
@@ -190,7 +190,7 @@ const CreatePriceListDetail = (props) => {
                 </Grid>
 
                 <Grid item xs={6}>
-                  <FormControlCustom label={"Đơn giá"} fullWidth>
+                  <FormControlCustom label={"Đơn giá"} fullWidth isMarked>
                     <InputField
                       name={"price"}
                       helperText={errors?.price?.message}
