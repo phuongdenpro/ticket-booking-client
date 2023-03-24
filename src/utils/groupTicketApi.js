@@ -13,6 +13,12 @@ class GroupTicketApi {
     return res;
   }
 
+  getList() {
+    const url = "ticket-group?sort=ASC&isAll=true";
+    const res = axiosClient.get(url);
+    return res;
+  }
+
   getById(id,params) {
     const url = `ticket-group/id/${id}`;
     const res = axiosClient.get(url, {

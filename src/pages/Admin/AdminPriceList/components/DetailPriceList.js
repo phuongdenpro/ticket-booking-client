@@ -11,6 +11,7 @@ import "../../../../assets/scss/default.scss";
 import FormControlCustom from "../../../../components/FormControl";
 import customToast from "../../../../components/ToastCustom";
 import { PriceListApi } from "../../../../utils/priceListApi";
+import CreatePriceListDetail from "./AddGroupTicket";
 import EditPriceList from "./EditPriceList";
 import GroupTicketPriceList from "./GroupTicketPriceList";
 
@@ -21,6 +22,7 @@ const DetailPriceList = (props) => {
   const codePriceList = useParams();
   const [detailPriceList, setDetailPriceList] = useState({});
   const [showDrawer, setShowDrawer] = useState(false);
+  const [showDrawerAdd, setShowDrawerAdd] = useState(false);
 
   const [priceListDetails, setPriceListDetails] = useState([]);
 
@@ -313,12 +315,13 @@ const DetailPriceList = (props) => {
                   variant="outlined"
                   size="medium"
                   style={{ height: "2rem" }}
+                  onClick={() => setShowDrawerAdd(true)}
                 >
                   <span className={"txt"}>Thêm nhóm</span>
                 </Button>
               </div>
             </Grid>
-            <GroupTicketPriceList data={priceListDetails} />
+            <GroupTicketPriceList data={priceListDetails} getPriceListDetails={getPriceListDetails}/>
           </div>
         </Grid>
       </Grid>
@@ -329,6 +332,13 @@ const DetailPriceList = (props) => {
         dataPriceList={detailPriceList}
         getDetailPriceList={getDetailPriceList}
       ></EditPriceList>
+
+      <CreatePriceListDetail
+        setShowDrawer={setShowDrawerAdd}
+        showDrawer={showDrawerAdd}
+        idPriceList={detailPriceList.id}
+        getPriceListDetails={getPriceListDetails}
+      ></CreatePriceListDetail>
     </div>
   );
 };
