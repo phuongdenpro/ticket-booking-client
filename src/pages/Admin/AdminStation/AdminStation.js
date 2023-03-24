@@ -83,7 +83,7 @@ const AdminStation = (props) => {
     const tmpSelected = [];
     if (!isEmpty(selected)) {
       selected.map((item) =>
-        data?.data?.map((elm) => {
+        data?.data?.data?.map((elm) => {
           if (item === elm?.id) {
             tmpSelected.push(elm);
             setSelectedStation(tmpSelected);
