@@ -163,7 +163,7 @@ const InfoUser = (props) => {
               dataCustomer?.status == "Chưa kích hoạt"
                 ? "warning"
                 : dataCustomer?.status == "Tạm khóa"
-                ? "error"
+                ? "danger"
                 : "success"
             }
             content={dataCustomer?.status}

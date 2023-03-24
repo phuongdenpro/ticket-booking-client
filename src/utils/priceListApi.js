@@ -52,5 +52,21 @@ class PriceListApi {
     });
     return res;
   }
+
+  createPriceListDetail(params){
+    const url = `price-list/price-detail`;
+    const res = axiosClient.post(url, {
+      ...params,
+    });
+    return res;
+  }
+
+  deletePriceListDetail(id,params){
+    const url = `price-list/price-detail/id/${id}`;
+    const res = axiosClient.delete(url, {
+      ...params,
+    });
+    return res;
+  }
 }
 export { PriceListApi };

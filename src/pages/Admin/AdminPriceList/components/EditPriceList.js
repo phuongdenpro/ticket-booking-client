@@ -18,7 +18,6 @@ import "../../../../assets/scss/default.scss";
 import { LoadingButton } from "@mui/lab";
 import customToast from "../../../../components/ToastCustom";
 import { GroupCusApi } from "../../../../utils/groupCusApi";
-import "./EditPriceList.scss";
 import SelectCustom from "../../../../components/SelectCustom";
 import { PriceListApi } from "../../../../utils/priceListApi";
 
