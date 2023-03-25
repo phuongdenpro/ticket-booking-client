@@ -58,6 +58,7 @@ const PriceList = (props) => {
       flex: 40,
       headerAlign: "center",
       headerClassName: "theme",
+      contentAlign:'center',
       sortable: false,
       renderCell: (params) => {
         return (
@@ -85,6 +86,7 @@ const PriceList = (props) => {
     {
       field: "name",
       headerName: "Tên bảng giá",
+      contentAlign:'center',
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
@@ -95,6 +97,7 @@ const PriceList = (props) => {
       field: "startDate",
       flex: 130,
       headerName: "Ngày bắt đầu",
+      contentAlign:'center',
       headerAlign: "center",
       headerClassName: "theme",
       renderCell: (params) => {
@@ -113,6 +116,7 @@ const PriceList = (props) => {
       field: "endDate",
       flex: 130,
       headerName: "Ngày kết thúc",
+      contentAlign:'center',
       headerAlign: "center",
       headerClassName: "theme",
       renderCell: (params) => {
@@ -138,6 +142,7 @@ const PriceList = (props) => {
     {
       field: "status",
       headerName: "Trạng thái",
+      contentAlign:'center',
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
@@ -159,6 +164,7 @@ const PriceList = (props) => {
       flex: 30,
       headerAlign: "center",
       headerClassName: "theme",
+      contentAlign:'center',
       sortable: false,
       renderCell: (params) => {
         return (

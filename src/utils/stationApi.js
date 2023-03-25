@@ -12,6 +12,12 @@ class StationApi {
     return res;
   }
 
+  getList(){
+    const url = "station?isAll=true";
+    const res = axiosClient.get(url);
+    return res;
+  }
+
   getStationById(id, params) {
     const url = `station/id/${id}`;
     const res = axiosClient.get(url, {
@@ -33,7 +39,7 @@ class StationApi {
 
   deleteStation(id, params) {
     const url = `station/id/${id}`;
-    const res = axiosClient.get(url, {
+    const res = axiosClient.delete(url, {
       params: {
         ...params,
       },

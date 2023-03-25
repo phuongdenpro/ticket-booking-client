@@ -154,7 +154,7 @@ const TableCustom = (props) => {
                 {columns?.map((column) => (
                   <TableCell
                     width={column.flex}
-                    align={column.headerAlign}
+                    align={column.contentAlign}
                     style={{ height: "60px" }}
                   >
                     {renderRow(row, column, index)}

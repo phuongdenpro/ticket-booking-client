@@ -27,12 +27,14 @@ const UserList = (props) => {
       headerName: "STT",
       flex: 40,
       headerAlign: "center",
+      contentAlign:'center',
       headerClassName: "theme",
       sortable: false,
     },
     {
       field: "fullName",
       headerName: "Tên khách hàng",
+      contentAlign:'center',
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
@@ -43,12 +45,14 @@ const UserList = (props) => {
       field: "email",
       flex: 130,
       headerName: "Email",
+      contentAlign:'center',
       headerAlign: "center",
       headerClassName: "theme",
     },
     {
       field: "phone",
       headerName: "Số điện thoại",
+      contentAlign:'center',
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
@@ -59,6 +63,7 @@ const UserList = (props) => {
       headerName: "Giới tính",
       flex: 70,
       headerAlign: "center",
+      contentAlign:'center',
       headerClassName: "theme",
       sortable: false,
       renderCell: (params) => {
@@ -78,6 +83,7 @@ const UserList = (props) => {
     {
       field: "status",
       headerName: "Trạng thái",
+      contentAlign:'center',
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
@@ -104,6 +110,7 @@ const UserList = (props) => {
       headerName: "Nhóm khách hàng",
       flex: 150,
       headerAlign: "center",
+      contentAlign:'center',
       headerClassName: "theme",
       sortable: false,
       renderCell: (params) => {
@@ -124,6 +131,7 @@ const UserList = (props) => {
       headerName: "",
       flex: 30,
       headerAlign: "center",
+      contentAlign:'center',
       headerClassName: "theme",
       sortable: false,
       renderCell: (params) => {

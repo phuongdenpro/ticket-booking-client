@@ -59,12 +59,14 @@ const UserGroupList = (props) => {
       headerName: "Mã nhóm",
       flex: 40,
       headerAlign: "center",
+      contentAlign:'center',
       headerClassName: "theme",
       sortable: false,
     },
     {
       field: "name",
       headerName: "Tên nhóm",
+      contentAlign:'center',
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
@@ -91,6 +93,7 @@ const UserGroupList = (props) => {
       headerName: "Thao tác",
       flex: 50,
       headerAlign: "center",
+      contentAlign:'center',
       headerClassName: "theme",
       sortable: false,
       renderCell: (params) => {

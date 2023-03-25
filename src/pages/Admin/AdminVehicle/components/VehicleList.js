@@ -59,6 +59,7 @@ const VehicleList = (props) => {
     {
       field: "code",
       headerName: "Mã",
+      contentAlign:'center',
       flex: 50,
       headerAlign: "center",
       headerClassName: "theme",
@@ -67,6 +68,7 @@ const VehicleList = (props) => {
     {
       field: "name",
       headerName: "Tên xe",
+      contentAlign:'center',
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
@@ -76,6 +78,7 @@ const VehicleList = (props) => {
     {
       field: "images",
       headerName: "Ảnh",
+      contentAlign:'center',
       flex: 70,
       headerAlign: "center",
       headerClassName: "theme",
@@ -103,12 +106,13 @@ const VehicleList = (props) => {
       flex: 200,
       headerName: "Mô tả",
       headerAlign: "center",
+      contentAlign:'center',
       headerClassName: "theme",
     },
     {
       field: "type",
       headerName: "Loại xe",
-
+      contentAlign:'center',
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
@@ -118,6 +122,7 @@ const VehicleList = (props) => {
     {
       field: "licensePlate",
       headerName: "Biển số xe",
+      contentAlign:'center',
       flex: 120,
       headerAlign: "center",
       headerClassName: "theme",
@@ -127,6 +132,7 @@ const VehicleList = (props) => {
     {
       field: "floorNumber",
       headerName: "Số tầng",
+      contentAlign:'center',
       flex: 50,
       headerAlign: "center",
       headerClassName: "theme",
@@ -135,6 +141,7 @@ const VehicleList = (props) => {
     {
       field: "action",
       headerName: "Thao tác",
+      contentAlign:'center',
       flex: 80,
       headerAlign: "center",
       headerClassName: "theme",

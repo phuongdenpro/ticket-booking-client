@@ -59,6 +59,7 @@ const GroupTicketPriceList = (props) => {
       flex: 50,
       headerAlign: "center",
       headerClassName: "theme",
+      contentAlign:'center',
       sortable: false,
       renderCell: (params) => {
         return (
@@ -78,6 +79,7 @@ const GroupTicketPriceList = (props) => {
     {
       field: "ticketGroup",
       headerName: "Mã nhóm vé",
+      contentAlign:'center',
       flex: 70,
       headerAlign: "center",
       headerClassName: "theme",
@@ -89,6 +91,7 @@ const GroupTicketPriceList = (props) => {
     {
       field: "ticketGroup",
       headerName: "Tên nhóm vé",
+      contentAlign:'center',
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
@@ -101,6 +104,7 @@ const GroupTicketPriceList = (props) => {
       field: "price",
       flex: 100,
       headerName: "Đơn giá",
+      contentAlign:'center',
       headerAlign: "center",
       headerClassName: "theme",
       renderCell: (params) => {
@@ -119,6 +123,7 @@ const GroupTicketPriceList = (props) => {
     {
       field: "createdAt",
       headerName: "Ngày áp dụng",
+      contentAlign:'center',
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
@@ -132,6 +137,7 @@ const GroupTicketPriceList = (props) => {
     {
       field: "action",
       headerName: "Thao tác",
+      contentAlign:'center',
       flex: 70,
       headerAlign: "center",
       headerClassName: "theme",

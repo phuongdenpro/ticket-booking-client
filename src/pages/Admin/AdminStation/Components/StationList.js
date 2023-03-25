@@ -27,6 +27,7 @@ const StationList = (props) => {
       headerName: "STT",
       headerAlign: "center",
       headerClassName: "theme",
+      contentAlign:'center',
       flex: 50,
     },
     {
@@ -34,6 +35,7 @@ const StationList = (props) => {
       headerName: "Mã bến xe",
       headerAlign: "center",
       headerClassName: "theme",
+      contentAlign:'center',
       flex: 100,
     },
     {
@@ -41,6 +43,7 @@ const StationList = (props) => {
       headerName: "Tên bến xe",
       headerAlign: "center",
       headerClassName: "theme",
+      contentAlign:'center',
       flex: 250,
       editable: true,
     },
@@ -57,6 +60,7 @@ const StationList = (props) => {
       headerName: "Ngày tạo",
       headerAlign: "center",
       headerClassName: "theme",
+      contentAlign:'center',
       type: "date",
       flex: 110,
       editable: true,
@@ -70,6 +74,7 @@ const StationList = (props) => {
     {
       field: "action",
       headerName: "Thao tác",
+      contentAlign:'center',
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",

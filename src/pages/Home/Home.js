@@ -16,13 +16,13 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 const Home = (props) => {
   const [optionsProvince, setOptionsProvince] = useState([]);
   const [loading, setLoading] = useState(true);
   const [startDate, setStartDate] = useState(new Date());
+  console.log(startDate);
   const getDataProvince = async () => {
     try {
       setLoading(true);
@@ -255,33 +255,34 @@ const Home = (props) => {
                 />
               </div>
               <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-                marginRight: 15,
-              }}
-            >
-              <CalendarMonthIcon
                 style={{
-                  backgroundColor: "white",
-                  fill: "#4671f2",
-                  marginTop: 20,
-                  marginRight: 5,
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginRight: 15,
                 }}
-              ></CalendarMonthIcon>
-              <DatePicker
-                selected={startDate}
-                onChange={(date) => setStartDate(date)}
-                dateFormat="dd/MM/yyyy"
-                showYearDropdown
-                scrollableMonthYearDropdown
-                customInput={<TextField variant="standard" label="Ngày đi" />}
-                locale="vi"
-              />
+              >
+                <CalendarMonthIcon
+                  style={{
+                    backgroundColor: "white",
+                    fill: "#4671f2",
+                    marginTop: 20,
+                    marginRight: 5,
+                  }}
+                ></CalendarMonthIcon>
+                <DatePicker
+                  autoFocus={true}
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  dateFormat="dd/MM/yyyy"
+                  showYearDropdown
+                  scrollableMonthYearDropdown
+                  customInput={<TextField variant="standard" label="Ngày đi" />}
+                  locale="vi"
+                />
               </div>
-              
+
               <Button
                 variant="contained"
                 size="large"

@@ -58,6 +58,7 @@ const GroupTicketList = (props) => {
     {
       field: "code",
       headerName: "Mã",
+      contentAlign:'center',
       flex: 50,
       headerAlign: "center",
       headerClassName: "theme",
@@ -66,6 +67,7 @@ const GroupTicketList = (props) => {
     {
       field: "name",
       headerName: "Tên nhóm vé",
+      contentAlign:'center',
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
@@ -91,6 +93,7 @@ const GroupTicketList = (props) => {
       field: "action",
       headerName: "Thao tác",
       flex: 70,
+      contentAlign:'center',
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
