@@ -93,7 +93,7 @@ const AdminPriceList = (props) => {
   }, [page, pageSize, filterParams]);
 
   const handleSearch = (e) => {
-    setFilterParams({ keywords: searchValue || undefined });
+    setSearchValue(e.target.value)
   };
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -116,6 +116,7 @@ const AdminPriceList = (props) => {
   const watchTime = watch("time");
   useEffect(() => {
     const params = {
+      ...filterParams,
       status: watchStatus?.code,
       startDate: new Date(selectedDate?.startDate),
       endDate: new Date(selectedDate?.endDate),

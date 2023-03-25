@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Grid } from "@mui/material";
+import { Box, Button, Divider, Grid, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import PrintIcon from "@mui/icons-material/Print";
@@ -13,6 +13,14 @@ import TripList from "./components/TripList";
 import { TripApi } from "../../../utils/tripApi";
 import customToast from "../../../components/ToastCustom";
 import { Helmet } from "react-helmet";
+import AddTrip from "./components/AddTrip";
+import { StationApi } from "../../../utils/stationApi";
+import AutocompleteCustom from "../../../components/AutocompleteCustom";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { Toolbar } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import dayjs from "dayjs";
 
 const AdminTrip = (props) => {
   const [data, setData] = useState([]);
@@ -23,8 +31,38 @@ const AdminTrip = (props) => {
   const [filterParams, setFilterParams] = useState(null);
   const [fromStationId, setFromStationId] = useState(null);
   const [toStationId, setToStationId] = useState(null);
+  const [searchValue, setSearchValue] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [showDrawerCreate, setShowDrawerCreate] = useState(false);
+  const [optionStation, setOptionStation] = useState([]);
+  const [disable, setDisable] = useState(true);
+
+  const filterDateTime = [
+    {
+      id: 1,
+      code: "ALL",
+      name: "Tất cả",
+    },
+    {
+      id: 2,
+      code: "option",
+      name: "Tùy chọn",
+    },
+  ];
+  const handelGetOptionStations = async () => {
+    try {
+      const stationApi = new StationApi();
+      const response = await stationApi.getList();
+      setOptionStation(response?.data?.data);
+    } catch (error) {
+      customToast.error(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    handelGetOptionStations();
+  }, []);
 
   const handleGetData = async () => {
     try {
@@ -39,6 +77,17 @@ const AdminTrip = (props) => {
       customToast.error(error.response.data.message);
     }
   };
+
+  useEffect(() => {
+    setFilterParams({ ...filterParams, keywords: searchValue });
+  }, [searchValue]);
+  const handleSearch = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  useEffect(() => {
+    setSearchValue("");
+  }, []);
 
   useEffect(() => {
     setFilterParams({
@@ -70,6 +119,76 @@ const AdminTrip = (props) => {
     defaultValues,
   });
   const { handleSubmit, reset, watch } = methods;
+  const watchFromStation = watch("codeStationFrom");
+  const watchToStation = watch("codeStationTo");
+  useEffect(() => {
+    const params = {
+      ...filterParams,
+      fromStationId: watchFromStation?.id,
+      toStationId: watchToStation?.id,
+    };
+    setFilterParams(params);
+  }, [watchFromStation, watchToStation]);
+
+  const buildOptionSelect = (option, props) => {
+    return (
+      <div style={{ width: "150px" }} {...props}>
+        <Grid container style={{ alignItems: "center" }}>
+          <Grid item style={{ marginLeft: "5px" }}>
+            <div className={"class-display"}>
+              <span style={{ fontSize: "13px", color: "#0C59CC" }}>
+                {" "}
+                {option?.code}
+              </span>
+              <span style={{ fontSize: "13px" }}>- {option?.name}</span>
+            </div>
+          </Grid>
+        </Grid>
+        <Divider />
+      </div>
+    );
+  };
+  const watchTime = watch("time");
+  useEffect(() => {
+    const params = {
+      ...filterParams,
+      startDate: startDate ? new Date(startDate) : undefined,
+      endDate: endDate ? new Date(endDate) : undefined,
+    };
+    setFilterParams(params);
+  }, [watchTime, startDate, endDate]);
+  useEffect(() => {
+    const now = new Date();
+
+    if (watchTime?.code === "option") {
+      // setSelectedDate({ ...selectedDate, dateFrom: '', dateTo: '' });
+    } else {
+      const currentYear = new Date().getFullYear();
+      const firstDay = new Date(currentYear, 0, 1);
+      const lastDay = new Date(currentYear, 11, 31);
+
+      setStartDate(null);
+      setEndDate(null);
+    }
+  }, [watchTime]);
+  useEffect(() => {
+    if (watchTime?.code === "option") {
+      setDisable(false);
+    } else {
+      setDisable(true);
+    }
+  }, [watchTime]);
+
+  const resetFilterParams = () => {
+    setPage(0);
+    setPageSize(10);
+    setSearchValue("");
+    setStartDate(null);
+    setEndDate(null);
+    handleGetData();
+    customToast.success("Làm mới dữ liệu thành công");
+  };
+
   return (
     <Box sx={{ height: "100%", width: "100%" }}>
       <Helmet>
@@ -92,6 +211,7 @@ const AdminTrip = (props) => {
               variant="contained"
               color="info"
               startIcon={<RefreshOutlinedIcon />}
+              onClick={() => resetFilterParams()}
             >
               <span className={"txt"}>Làm mới</span>
             </Button>
@@ -110,6 +230,7 @@ const AdminTrip = (props) => {
               className={"btn-create"}
               startIcon={<AddIcon />}
               style={{ marginTop: 20, marginRight: 20 }}
+              onClick={() => setShowDrawerCreate(true)}
             >
               <span className={"txt"}>Thêm mới</span>
             </Button>
@@ -123,46 +244,86 @@ const AdminTrip = (props) => {
         style={{ marginTop: 10, marginBottom: 10 }}
       >
         <FormProvider {...methods}>
-          <Grid item md={8.5} style={{ marginRight: 30 }}>
+          <Grid item md={8.5}>
             <Box
               style={{ display: "flex", justifyContent: "flex-start" }}
               flexDirection={{ xs: "column", md: "row" }}
             >
-              <FormControlCustom label="Nơi đi" fullWidth>
-                <div className="view-input" style={{ marginRight: 20 }}>
-                  <SelectCustom placeholder={"Tất cả"} name={"status"} />
-                </div>
-              </FormControlCustom>
-              <FormControlCustom label="Nơi đến" fullWidth>
-                <div className="view-input" style={{ marginRight: 20 }}>
-                  <SelectCustom placeholder={"Tất cả"} name={"outOfDate"} />
+              <FormControlCustom label="Thời gian" fullWidth>
+                <div className="view-input">
+                  <SelectCustom
+                    options={filterDateTime}
+                    placeholder={"Tất cả"}
+                    name={"time"}
+                  />
                 </div>
               </FormControlCustom>
               <FormControlCustom label="Ngày xuất phát" fullWidth>
-                <div className="view-input" style={{ marginRight: 20 }}>
-                  <SelectCustom placeholder={"Tất cả"} name={"brand"} />
+                <div className="view-input">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      disabled={disable}
+                      onChange={(e) => {
+                        setStartDate(new Date(e));
+                      }}
+                      value={dayjs(startDate)}
+                      className={"date-picker"}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                  </LocalizationProvider>
                 </div>
               </FormControlCustom>
               <FormControlCustom label="Ngày đến" fullWidth>
                 <div className="view-input">
-                  <SelectCustom placeholder={"Tất cả"} name={"brand"} />
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      disabled={disable}
+                      value={dayjs(endDate)}
+                      onChange={(e) => {
+                        setEndDate(new Date(e));
+                      }}
+                      className={"date-picker"}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                  </LocalizationProvider>
+                </div>
+              </FormControlCustom>
+
+              <FormControlCustom label="Nơi đi" fullWidth>
+                <div className="view-input">
+                  <AutocompleteCustom
+                    name={"codeStationFrom"}
+                    placeholder={"Chọn nơi đi"}
+                    options={optionStation || []}
+                    optionLabelKey={"code"}
+                    renderOption={buildOptionSelect}
+                  />
+                </div>
+              </FormControlCustom>
+              <FormControlCustom label="Nơi đến" fullWidth>
+                <div className="view-input">
+                  <AutocompleteCustom
+                    name={"codeStationTo"}
+                    placeholder={"Chọn nơi đến"}
+                    options={optionStation || []}
+                    optionLabelKey={"code"}
+                    renderOption={buildOptionSelect}
+                  />
                 </div>
               </FormControlCustom>
             </Box>
           </Grid>
-          <Grid item md={3} style={{ marginTop: 3 }}>
+          <Grid item md={3.3} style={{ marginTop: 3 }}>
             <div style={{ marginBottom: 5 }}>
-              <span className="txt-find" style={{ marginBottom: 20 }}>
-                Tìm kiếm
-              </span>
+              <span className="txt-find">Tìm kiếm</span>
             </div>
 
             <SearchInput
               className="txt-search"
               placeholder={"Tìm kiếm chuyến xe"}
-              // value={searchValue}
-              // setSearchValue={setSearchValue}
-              // handleSearch={handleSearch}
+              value={searchValue}
+              setSearchValue={setSearchValue}
+              handleSearch={handleSearch}
             />
           </Grid>
         </FormProvider>
@@ -174,10 +335,16 @@ const AdminTrip = (props) => {
           justifyContent: "flex-end",
           marginBottom: 10,
           marginRight: 30,
+          color: "#000",
+          marginRight: 5,
+          fontSize: 15,
+          fontWeight: "bold",
         }}
         md={6}
       >
-        <span className="title-price">Tổng số chuyến xe: </span>
+        <span className="title-price" style={{ marginRight: 10 }}>
+          Tổng số chuyến xe:{" "}
+        </span>
         <span className="txt-price">{data?.data?.pagination?.total}</span>
       </Grid>
       <div style={{ display: "flex" }}>
@@ -193,6 +360,11 @@ const AdminTrip = (props) => {
           ></TripList>
         </div>
       </div>
+      <AddTrip
+        showDrawer={showDrawerCreate}
+        setShowDrawer={setShowDrawerCreate}
+        handleGetData={handleGetData}
+      ></AddTrip>
     </Box>
   );
 };

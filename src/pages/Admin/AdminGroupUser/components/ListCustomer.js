@@ -40,6 +40,7 @@ const CustomerList = (props) => {
     {
       field: "fullName",
       headerName: "Tên",
+      contentAlign:'center',
       flex: 70,
       headerAlign: "center",
       headerClassName: "theme",
@@ -58,12 +59,14 @@ const CustomerList = (props) => {
       headerName: "Điện thoại",
       flex: 50,
       headerAlign: "center",
+      contentAlign:'center',
       headerClassName: "theme",
       sortable: false,
     },
     {
       field: "gender",
       headerName: "Giới tính",
+      contentAlign:'center',
       flex: 70,
       headerAlign: "center",
       headerClassName: "theme",
@@ -87,6 +90,7 @@ const CustomerList = (props) => {
       headerName: "Ngày sinh",
       flex: 70,
       headerAlign: "center",
+      contentAlign:'center',
       headerClassName: "theme",
       sortable: false,
       renderCell: (params) => {

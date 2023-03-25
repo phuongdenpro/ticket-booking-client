@@ -11,5 +11,23 @@ class TripApi {
     });
     return res;
   }
+
+  createTrip(params) {
+    const url = `trip`;
+    const res = axiosClient.post(url, {
+      ...params,
+    });
+    return res;
+  }
+
+  deleteTrip(id, params) {
+    const url = `trip/id/${id}`;
+    const res = axiosClient.delete(url, {
+      params: {
+        ...params,
+      },
+    });
+    return res;
+  }
 }
 export { TripApi };

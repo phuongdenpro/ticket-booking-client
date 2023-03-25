@@ -80,20 +80,16 @@ const AdminVehicle = (props) => {
   }, [searchValue]);
 
   const handleSearch = (e) => {
-    setFilterParams({ keywords: searchValue || undefined });
+    setSearchValue(e.target.value);
   };
+
+  useEffect(() => {
+    setSearchValue('');
+  }, []);
 
   useEffect(() => {
     handelGetType();
   }, []);
-
-  useEffect(() => {
-    setFilterParams({
-      ...filterParams,
-      typeSearch: typeSearch,
-      floorNumber: floorNumber,
-    });
-  }, [typeSearch, floorNumber]);
 
   useEffect(() => {
     handleGetData();
@@ -121,8 +117,9 @@ const AdminVehicle = (props) => {
 
   useEffect(() => {
     const params = {
+      ...filterParams,
       type: watchType?.name,
-      floorNumber: watchFloorNumber?.code,
+      floorNumber: watchFloorNumber?.id,
     };
     setFilterParams(params);
   }, [watchType, watchFloorNumber]);
