@@ -84,7 +84,7 @@ const UserList = (props) => {
       field: "status",
       headerName: "Trạng thái",
       contentAlign:'center',
-      flex: 100,
+      flex: 110,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,

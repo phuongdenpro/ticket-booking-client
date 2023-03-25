@@ -9,28 +9,31 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { FormProvider, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import FormControlCustom from "../../../components/FormControl";
 import SearchInput from "../../../components/InputSearch";
 import SelectCustom from "../../../components/SelectCustom";
 import customToast from "../../../components/ToastCustom";
+import { PromotionApi } from "../../../utils/promotionApi";
 import "./AdminPromotion.scss";
+import AddPromotion from "./conponents/AddPromotion";
 import PromotionList from "./conponents/PromotionList";
 
 const AdminPromotion = (props) => {
   const [loadings, setLoadings] = useState([]);
   const currentYear = new Date().getFullYear();
-  const firstDay = new Date(currentYear, 0, 1);
-  const lastDay = new Date(currentYear, 11, 31);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [searchValue, setSearchValue] = useState("");
   const [filterParams, setFilterParams] = useState(null);
   const [data, setData] = useState([]);
+  const [optionStatus, setOptionStatus] = useState([]);
   const [selected, setSelected] = useState([]);
-  const [selectedDate, setSelectedDate] = useState({
-    startDate: firstDay,
-    endDate: lastDay,
-  });
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [showDrawerCreate, setShowDrawerCreate] = useState(false);
+  const navigate = useNavigate();
+  
   const filterDateTime = [
     {
       id: 1,
@@ -44,35 +47,50 @@ const AdminPromotion = (props) => {
     },
   ];
 
-  const filterStatus = [
-    {
-      id: 1,
-      code: null,
-      name: "Tất cả",
-    },
-    {
-      id: 2,
-      code: "Tạm ngưng",
-      name: "Tạm ngưng",
-    },
-    {
-      id: 3,
-      code: "Kích hoạt",
-      name: "Hoạt động",
-    },
-  ];
+  const onDetailPromotion = (id) => {
+    navigate(`/admin/promotion/detail/${id}`);
+  };
+
+  const handelOptionStatus = async () => {
+    try {
+      const promotionApi = new PromotionApi();
+      const response = await promotionApi.getStatus();
+
+      setOptionStatus(response?.data.data);
+    } catch (error) {
+      customToast.error(error.response.data.message);
+    }
+  };
 
   const [disable, setDisable] = useState(true);
-
+  const handleGetData = async () => {
+    try {
+      const promotionApi = new PromotionApi();
+      const response = await promotionApi.getAll({
+        page: page + 1,
+        pageSize: pageSize,
+        ...filterParams,
+      });
+      setData(response);
+    } catch (error) {
+      customToast.error(error.response.data.message);
+    }
+  };
   useEffect(() => {
     setFilterParams({ ...filterParams, keywords: searchValue });
   }, [searchValue]);
 
-  useEffect(() => {}, [page, pageSize, filterParams]);
+  useEffect(() => {
+    handleGetData();
+  }, [page, pageSize, filterParams]);
 
   const handleSearch = (e) => {
-    setFilterParams({ keywords: searchValue || undefined });
+    setSearchValue(e.target.value);
   };
+  useEffect(() => {
+    setSearchValue("");
+    handelOptionStatus();
+  }, []);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -81,7 +99,7 @@ const AdminPromotion = (props) => {
     setPageSize(+event.target.value);
     setPage(0);
   };
-  console.log(moment(selectedDate?.startDate).format("DD-MM-YYYY"));
+
   const defaultValues = {
     startDate: null,
     endDate: null,
@@ -95,12 +113,13 @@ const AdminPromotion = (props) => {
   const watchTime = watch("time");
   useEffect(() => {
     const params = {
-      status: watchStatus?.code,
-      startDate: new Date(selectedDate?.startDate),
-      endDate: new Date(selectedDate?.endDate),
+      ...filterParams,
+      status: watchStatus,
+      startDate: startDate ? new Date(startDate) : undefined,
+      endDate: endDate ? new Date(endDate) : undefined,
     };
     setFilterParams(params);
-  }, [watchStatus, watchTime, selectedDate?.startDate, selectedDate?.endDate]);
+  }, [watchStatus, watchTime, startDate, endDate]);
   useEffect(() => {
     const now = new Date();
 
@@ -111,11 +130,8 @@ const AdminPromotion = (props) => {
       const firstDay = new Date(currentYear, 0, 1);
       const lastDay = new Date(currentYear, 11, 31);
 
-      setSelectedDate({
-        ...selectedDate,
-        startDate: firstDay,
-        endDate: lastDay,
-      });
+      setStartDate(null);
+      setEndDate(null);
     }
   }, [watchTime]);
   useEffect(() => {
@@ -125,24 +141,13 @@ const AdminPromotion = (props) => {
       setDisable(true);
     }
   }, [watchTime]);
-  function getFirstDayOfWeek(d) {
-    const date = new Date(d);
-    const day = date.getDay(); // 👉️ get day of week
-
-    const diff = date.getDate() - day + (day === 0 ? -6 : 1);
-
-    return new Date(date.setDate(diff));
-  }
   const resetFilterParams = () => {
     // handleGetData()
     setPage(0);
     setPageSize(10);
     setSearchValue("");
-    setSelectedDate({
-      ...selectedDate,
-      startDate: firstDay,
-      endDate: lastDay,
-    });
+    setStartDate(null);
+    setEndDate(null);
     customToast.success("Làm mới dữ liệu thành công");
   };
   return (
@@ -177,6 +182,9 @@ const AdminPromotion = (props) => {
               className={"btn-create"}
               startIcon={<AddIcon />}
               style={{ marginTop: 10, marginRight: 20 }}
+              onClick={() => {
+                setShowDrawerCreate(true);
+              }}
             >
               <span className={"txt"}>Thêm mới</span>
             </Button>
@@ -208,16 +216,13 @@ const AdminPromotion = (props) => {
                 <div className="view-input" style={{ marginRight: 10 }}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
-                      disabled={disable}
-                      value={dayjs(selectedDate?.startDate)}
-                      onChange={(e) => {
-                        setSelectedDate({
-                          ...selectedDate,
-                          startDate: new Date(e),
-                        });
-                      }}
-                      className={"date-picker"}
-                      renderInput={(params) => <TextField {...params} />}
+                    disabled={disable}
+                    onChange={(e) => {
+                      setStartDate(new Date(e));
+                    }}
+                    value={dayjs(startDate)}
+                    className={"date-picker"}
+                    renderInput={(params) => <TextField {...params} />}
                     />
                   </LocalizationProvider>
                 </div>
@@ -227,16 +232,13 @@ const AdminPromotion = (props) => {
                 <div className="view-input" style={{ marginRight: 10 }}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
-                      disabled={disable}
-                      value={dayjs(selectedDate?.endDate)}
-                      onChange={(e) => {
-                        setSelectedDate({
-                          ...selectedDate,
-                          endDate: new Date(e),
-                        });
-                      }}
-                      className={"date-picker"}
-                      renderInput={(params) => <TextField {...params} />}
+                    disabled={disable}
+                    value={dayjs(endDate)}
+                    onChange={(e) => {
+                      setEndDate(new Date(e));
+                    }}
+                    className={"date-picker"}
+                    renderInput={(params) => <TextField {...params} />}
                     />
                   </LocalizationProvider>
                 </div>
@@ -247,7 +249,7 @@ const AdminPromotion = (props) => {
                   <SelectCustom
                     placeholder={"Tất cả"}
                     name={"status"}
-                    options={filterStatus}
+                    options={optionStatus}
                   />
                 </div>
               </FormControlCustom>
@@ -288,13 +290,27 @@ const AdminPromotion = (props) => {
         >
           Tổng số:{" "}
         </span>
-        <span className="txt-price"> </span>
+        <span className="txt-price"> {data?.data?.pagination?.total}</span>
       </Grid>
       <div style={{ display: "flex" }}>
         <div style={{ flexGrow: 1 }}>
-          <PromotionList></PromotionList>
+          <PromotionList
+            data={data?.data?.data || []}
+            handleShowDetail={onDetailPromotion}
+            handleChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+            total={data?.data?.pagination?.total}
+            handleGetData={handleGetData}
+            page={page}
+            pageSize={pageSize}
+          ></PromotionList>
         </div>
       </div>
+      <AddPromotion
+      setShowDrawer={setShowDrawerCreate}
+      showDrawer={showDrawerCreate}
+      handleGetData={handleGetData}
+    ></AddPromotion>
     </Box>
   );
 };

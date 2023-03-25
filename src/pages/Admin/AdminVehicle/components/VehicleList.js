@@ -103,10 +103,9 @@ const VehicleList = (props) => {
     },
     {
       field: "description",
-      flex: 200,
+      flex: 300,
       headerName: "Mô tả",
       headerAlign: "center",
-      contentAlign:'center',
       headerClassName: "theme",
     },
     {

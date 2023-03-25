@@ -19,6 +19,7 @@ import AdminOrderRefund from "./pages/Admin/AdminOrderRefund/AdminOrderRefund";
 import AdminPriceList from "./pages/Admin/AdminPriceList/AdminPriceList";
 import DetailPriceList from "./pages/Admin/AdminPriceList/components/DetailPriceList";
 import AdminPromotion from "./pages/Admin/AdminPromotion/AdminPromotion";
+import DetailPromotion from "./pages/Admin/AdminPromotion/conponents/DetailPromotion";
 import AdminStation from "./pages/Admin/AdminStation/AdminStation";
 import AdminTicket from "./pages/Admin/AdminTicketList/AdminTicket";
 import AdminTrip from "./pages/Admin/AdminTrip/AdminTrip";
@@ -39,16 +40,29 @@ function App() {
           <Route path="/admin/station" element={<AdminStation />} />
           <Route path="/admin/ticket-list" element={<AdminTicket />} />
           <Route path="/admin/ticket">
-          <Route path="/admin/ticket/price-list" element={<AdminPriceList />}/>
+            <Route
+              path="/admin/ticket/price-list"
+              element={<AdminPriceList />}
+            />
             <Route
               path="/admin/ticket/price-list/detail/:id"
               element={<DetailPriceList />}
             ></Route>
           </Route>
-          <Route path="/admin/ticket/ticket-group" element={<AdminGroupTicket />} />
+          <Route
+            path="/admin/ticket/ticket-group"
+            element={<AdminGroupTicket />}
+          />
           <Route path="/admin/create-ticket" element={<AdminAddTicket />} />
           <Route path="/admin/trip" element={<AdminTrip />} />
-          <Route path="/admin/promotion" element={<AdminPromotion />} />
+          <Route path="/admin/promotion">
+            DetailPromotion
+            <Route path="/admin/promotion" element={<AdminPromotion />}></Route>
+            <Route
+              path="/admin/promotion/detail/:id"
+              element={<DetailPromotion />}
+            ></Route>
+          </Route>
           <Route path="/admin/vehicle" element={<AdminVehicle />} />
           <Route path="/admin/order">
             <Route path="/admin/order/order-list" element={<AdminOrder />} />
