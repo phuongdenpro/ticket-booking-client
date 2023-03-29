@@ -28,6 +28,14 @@ class PriceListApi {
     return res;
   }
 
+  getPriceListByCode(id, params) {
+    const url = `price-list/code/${id}`;
+    const res = axiosClient.get(url, {
+      ...params,
+    });
+    return res;
+  }
+
   updateByCode(code, params) {
     const url = `price-list/code/${code}`;
     const res = axiosClient.patch(url, {

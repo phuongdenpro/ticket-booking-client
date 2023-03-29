@@ -11,7 +11,6 @@ import AdminDashboard from "./pages/Admin/AdminDashboard/AdminDashboard";
 import AdminDashboardCost from "./pages/Admin/AdminDashboardCost/AdminDashboardCost";
 import AdminDashboardPromotion from "./pages/Admin/AdminDashboardPromotion/AdminDashboardPromotion";
 import AdminDashboardTicket from "./pages/Admin/AdminDashboardTicket/AdminDashboardTicket";
-import AdminGroupTicket from "./pages/Admin/AdminGroupTicket/AdminGroupTicket";
 import AdminGroupUser from "./pages/Admin/AdminGroupUser/AdminGroupUser";
 import Login from "./pages/Admin/AdminLogin/AdminLogin";
 import AdminOrder from "./pages/Admin/AdminOrder/AdminOrder";
@@ -19,8 +18,8 @@ import AdminOrderRefund from "./pages/Admin/AdminOrderRefund/AdminOrderRefund";
 import AdminPriceList from "./pages/Admin/AdminPriceList/AdminPriceList";
 import DetailPriceList from "./pages/Admin/AdminPriceList/components/DetailPriceList";
 import AdminPromotion from "./pages/Admin/AdminPromotion/AdminPromotion";
+import DetailPromotion from "./pages/Admin/AdminPromotion/conponents/DetailPromotion";
 import AdminStation from "./pages/Admin/AdminStation/AdminStation";
-import AdminTicket from "./pages/Admin/AdminTicketList/AdminTicket";
 import AdminTrip from "./pages/Admin/AdminTrip/AdminTrip";
 import AdminUser from "./pages/Admin/AdminUser/AdminUser";
 import AdminVehicle from "./pages/Admin/AdminVehicle/AdminVehicle";
@@ -37,18 +36,27 @@ function App() {
           <Route path="/admin/customer" element={<AdminUser />} />
           <Route path="/admin/group-customer" element={<AdminGroupUser />} />
           <Route path="/admin/station" element={<AdminStation />} />
-          <Route path="/admin/ticket-list" element={<AdminTicket />} />
-          <Route path="/admin/ticket">
-          <Route path="/admin/ticket/price-list" element={<AdminPriceList />}/>
+          <Route path="/admin/price-list">
             <Route
-              path="/admin/ticket/price-list/detail/:id"
+              path="/admin/price-list"
+              element={<AdminPriceList />}
+            />
+            <Route
+              path="/admin/price-list/detail/:id"
               element={<DetailPriceList />}
             ></Route>
           </Route>
-          <Route path="/admin/ticket/ticket-group" element={<AdminGroupTicket />} />
+         
           <Route path="/admin/create-ticket" element={<AdminAddTicket />} />
           <Route path="/admin/trip" element={<AdminTrip />} />
-          <Route path="/admin/promotion" element={<AdminPromotion />} />
+          <Route path="/admin/promotion">
+            DetailPromotion
+            <Route path="/admin/promotion" element={<AdminPromotion />}></Route>
+            <Route
+              path="/admin/promotion/detail/:id"
+              element={<DetailPromotion />}
+            ></Route>
+          </Route>
           <Route path="/admin/vehicle" element={<AdminVehicle />} />
           <Route path="/admin/order">
             <Route path="/admin/order/order-list" element={<AdminOrder />} />

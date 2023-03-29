@@ -29,5 +29,48 @@ class TripApi {
     });
     return res;
   }
+
+  getById(id,params){
+    const url = `trip/id/${id}`;
+    const res = axiosClient.get(url, {
+      params: {
+        ...params,
+      },
+    });
+    return res;
+  }
+  getList() {
+    const url = "trip?sort=ASC&isAll=true";
+    const res = axiosClient.get(url);
+    return res;
+  }
+
+  updateTrip(id, params) {
+    const url = `trip/id/${id}`;
+    const res = axiosClient.patch(url, {
+      ...params,
+    });
+    return res;
+    
+  }
+
+  getTripDetail(params){
+    const url = `trip-detail`;
+    const res = axiosClient.get(url, {
+      params: {
+        ...params,
+      },
+    });
+    return res;
+  }
+  deleteTripDetail(id, params) {
+    const url = `trip-detail/id/${id}`;
+    const res = axiosClient.delete(url, {
+      params: {
+        ...params,
+      },
+    });
+    return res;
+  }
 }
 export { TripApi };

@@ -174,7 +174,6 @@ const CreateStation = ({ setShowDrawer, showDrawer, handleGetData }) => {
       wardCode: value.wardCode.code,
       images: imageParams,
     };
-    console.log(params);
     try {
       const stationApi = new StationApi();
       const res = await stationApi.createStation(params);

@@ -20,29 +20,47 @@ import customToast from "../../../../components/ToastCustom";
 import { GroupCusApi } from "../../../../utils/groupCusApi";
 import SelectCustom from "../../../../components/SelectCustom";
 import { PriceListApi } from "../../../../utils/priceListApi";
+import { PromotionApi } from "../../../../utils/promotionApi";
+import { UploadApi } from "../../../../utils/uploadApi";
+import UploadSingle from "../../../../components/UploadImage/uploadSingle";
 
-const EditPriceList = (props) => {
+const EditPromotion = (props) => {
   const {
     setShowDrawer,
     showDrawer,
     handleGetData,
-    dataPriceList,
-    getDetailPriceList,
+    dataPromotion,
+    getDetailPromotion,
   } = props;
-  const now = new Date();
   const currentYear = new Date().getFullYear();
-  const firstDay = new Date(dataPriceList?.startDate);
-  const lastDay = new Date(dataPriceList?.endDate);
+  const firstDay = new Date(dataPromotion?.startDate);
+  const lastDay = new Date(dataPromotion?.endDate);
   const [errorStartDate, setErrorStartDate] = useState(false);
   const [errorMessageStartDate, setErrorMessageStartDate] = useState("");
   const [errorEndDate, setErrorEndDate] = useState(false);
   const [errorMessageEndDate, setErrorMessageEndDate] = useState("");
+  const [images, setImages] = useState([]);
+  const [loadingUpload, setLoadingUpload] = useState(false);
+  const [urlImage, setUrlImage] = useState([]);
   const [selectedDate, setSelectedDate] = useState({
     startDate: firstDay,
     endDate: lastDay,
   });
-  const optionStatus = ["Kích hoạt", "Tạm ngưng"];
+  const [optionStatus, setOptionStatus] = useState([]);
 
+  const handelOptionStatus = async () => {
+    try {
+      const promotionApi = new PromotionApi();
+      const response = await promotionApi.getStatus();
+
+      setOptionStatus(response?.data.data);
+    } catch (error) {
+      customToast.error(error.response.data.message);
+    }
+  };
+  useEffect(() => {
+    handelOptionStatus();
+  }, []);
   const handleDateChangeStartDate = (e) => {
     const newDate = new Date(e);
     if (!newDate || isNaN(newDate.getTime())) {
@@ -92,12 +110,13 @@ const EditPriceList = (props) => {
 
   const defaultValues = useMemo(
     () => ({
-      code: dataPriceList?.code,
-      name: dataPriceList?.name,
-      note: dataPriceList?.note,
-      status: dataPriceList?.status,
+      code: dataPromotion?.code,
+      name: dataPromotion?.name,
+      description: dataPromotion?.description,
+      status: dataPromotion?.status,
+      image: dataPromotion?.image || "",
     }),
-    [dataPriceList]
+    [dataPromotion]
   );
   const methods = useForm({
     mode: "onSubmit",
@@ -110,13 +129,64 @@ const EditPriceList = (props) => {
 
   useEffect(() => {
     reset({ ...defaultValues });
+
+    setImages([dataPromotion?.image] || []);
+    setUrlImage(dataPromotion?.image || []);
     setSelectedDate({
-      startDate: new Date(dataPriceList?.startDate),
-      endDate: new Date(dataPriceList?.endDate),
+      startDate: new Date(dataPromotion?.startDate),
+      endDate: new Date(dataPromotion?.endDate),
     });
-  }, [dataPriceList]);
+  }, [dataPromotion]);
+
+  const onChange = (imageList) => {
+    // data for submit
+    funcUpload(imageList);
+    setImages(imageList);
+  };
+
+  const getUrlFromIMG = async (fromData) => {
+    setLoadingUpload(true);
+    let data = new FormData();
+    data.append("images", fromData[0].file, fromData[0].file.name);
+    const uploadApi = new UploadApi();
+    const response = await uploadApi.uploadMutiFile(data);
+
+    setUrlImage(response?.data?.data?.images[0]?.Location);
+    setLoadingUpload(false);
+  };
+
+  const funcUpload = async (image) => {
+    function readFileAsync() {
+      return new Promise((resolve, reject) => {
+        const file = image;
+        getUrlFromIMG(file).then((response) => {
+          if (!response) {
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = () => {
+            resolve({
+              id: response?.data?.id,
+              url: response?.data?.url,
+              name: response?.data?.name,
+              type: "image",
+            });
+          };
+          reader.onerror = reject;
+          // reader.readAsBinaryString(file);
+        });
+      });
+    }
+    await readFileAsync();
+  };
+
+  const onRemove = () => {
+    setUrlImage("");
+  };
 
   const goBack = () => {
+    setImages([]);
+    setUrlImage([]);
     setSelectedDate({
       ...selectedDate,
       startDate: firstDay,
@@ -140,20 +210,19 @@ const EditPriceList = (props) => {
 
   const onSubmit = async (value) => {
     const params = {
-      name: value?.name,
-      status: value?.status,
-      note: value?.note,
-      startDate:
-        firstDay <= now && dataPriceList?.status == "Kích hoạt"
-          ? undefined
-          : new Date(selectedDate?.startDate),
+      code: value.code,
+      name: value.name,
+      status: value.status,
+      description: value?.description,
+      startDate: new Date(selectedDate?.startDate),
       endDate: new Date(selectedDate?.endDate),
+      image: urlImage,
     };
     try {
-      const priceListApi = new PriceListApi();
-      const res = await priceListApi.updateByCode(dataPriceList?.code, params);
+      const promotionApi = new PromotionApi();
+      const res = await promotionApi.updateById(dataPromotion?.id,params);
       customToast.success("Cập nhật thành công");
-      getDetailPriceList();
+      getDetailPromotion();
       setShowDrawer(false);
       reset();
     } catch (error) {
@@ -183,15 +252,15 @@ const EditPriceList = (props) => {
           </div>
           <div className="content-drawer">
             <div className="title-group">
-              <span>Thông tin bảng giá</span>
+              <span>Thông tin khuyến mãi</span>
             </div>
             <div className="content">
               <Grid container spacing={1.5}>
                 <Grid item xs={6} className="auto-complete">
-                  <FormControlCustom label={"Mã bảng giá"} fullWidth isMarked>
+                  <FormControlCustom label={"Mã khuyến mãi"} fullWidth isMarked>
                     <InputField
                       name={"code"}
-                      placeholder={"Nhập mã bảng giá"}
+                      placeholder={"Nhập mã khuyến mãi"}
                       error={Boolean(errors.code)}
                       helperText={errors?.code?.message}
                       disabled
@@ -199,10 +268,14 @@ const EditPriceList = (props) => {
                   </FormControlCustom>
                 </Grid>
                 <Grid item xs={6}>
-                  <FormControlCustom label={"Tên bảng giá"} fullWidth isMarked>
+                  <FormControlCustom
+                    label={"Tên khuyến mãi"}
+                    fullWidth
+                    isMarked
+                  >
                     <InputField
                       name={"name"}
-                      placeholder={"Nhập tên bảng giá"}
+                      placeholder={"Nhập tên khuyến mãi"}
                       helperText={errors?.name?.message}
                       error={Boolean(errors.name)}
                     />
@@ -212,12 +285,6 @@ const EditPriceList = (props) => {
                   <FormControlCustom label="Ngày bắt đầu" fullWidth isMarked>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
-                        disabled={
-                          firstDay <= now &&
-                          dataPriceList?.status == "Kích hoạt"
-                            ? true
-                            : false
-                        }
                         value={dayjs(selectedDate?.startDate)}
                         onChange={handleDateChangeStartDate}
                         className={"date-picker"}
@@ -268,18 +335,35 @@ const EditPriceList = (props) => {
                 </Grid>
 
                 <Grid item xs={12}>
-                  <FormControlCustom label={"Ghi chú"} fullWidth>
+                  <FormControlCustom label={"Mô tả"} fullWidth isMarked>
                     <InputField
                       className="input-note"
-                      name={"note"}
+                      name={"description"}
                       helperText={""}
-                      placeholder={"Nhập ghi chú"}
+                      placeholder={"Nhập mô tả"}
                       rows={3}
                       multiline
                     />
                   </FormControlCustom>
                 </Grid>
               </Grid>
+            </div>
+            <div style={{ marginLeft: 20, marginTop: 10 }}>
+              <span>Hình ảnh</span>
+            </div>
+            <div className="view-image">
+              <div className="image-product">
+                <UploadSingle
+                  onChange={onChange}
+                  images={!isEmpty(urlImage) ? images : ""}
+                  onRemove={onRemove}
+                />
+              </div>
+              {errors.image && (
+                <span style={{ fontSize: "0.875rem", color: "red" }}>
+                  {errors?.image?.message}
+                </span>
+              )}
             </div>
           </div>
 
@@ -324,4 +408,4 @@ const EditPriceList = (props) => {
   );
 };
 
-export default EditPriceList;
+export default EditPromotion;

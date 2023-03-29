@@ -11,48 +11,48 @@ import "../../../../assets/scss/default.scss";
 import FormControlCustom from "../../../../components/FormControl";
 import customToast from "../../../../components/ToastCustom";
 import { PriceListApi } from "../../../../utils/priceListApi";
-import CreatePriceListDetail from "./AddPriceDetailList";
-import EditPriceList from "./EditPriceList";
-import GroupDetailPriceList from "./GroupDetailPriceList";
+import { PromotionApi } from "../../../../utils/promotionApi";
+import GroupDetailPriceList from "../../AdminPriceList/components/GroupDetailPriceList";
+import EditPromotion from "./EditPromotion";
+import PromotionDetailList from "./PromotionDetailList";
 
-const DetailPriceList = (props) => {
+const DetailPromotion = (props) => {
   const [dataCustomer, setData] = useState();
   const dateNow = moment(new Date()).format("DD-MM-YYYY hh:mm");
   const navigate = useNavigate();
-  const codePriceList = useParams();
-  const [detailPriceList, setDetailPriceList] = useState({});
+  const codePromotion = useParams();
+  const [detailPromotion, setDetailPromotion] = useState({});
   const [showDrawer, setShowDrawer] = useState(false);
   const [showDrawerAdd, setShowDrawerAdd] = useState(false);
 
   const [priceListDetails, setPriceListDetails] = useState([]);
 
-  const getDetailPriceList = async () => {
+  const getDetailPromotion = async () => {
     try {
-      const priceListApi = new PriceListApi();
-      const res = await priceListApi.getPriceListByCode(codePriceList.id);
-      setDetailPriceList(res?.data.data);
+      const promotionApi = new PromotionApi();
+      const res = await promotionApi.getById(codePromotion.id);
+      setDetailPromotion(res?.data.data);
     } catch (error) {
       customToast.error(error);
     }
   };
 
   const getPriceListDetails = async () => {
-    try {
-      const priceListApi = new PriceListApi();
-      const res = await priceListApi.getPriceListDetails({
-        priceListCode: codePriceList.id,
-      });
-      setPriceListDetails(res?.data.data);
-    } catch (error) {
-      customToast.error(error);
-    }
+    // try {
+    //   const priceListApi = new PriceListApi();
+    //   const res = await priceListApi.getPriceListDetails({
+    //     priceListId: codePriceList.id,
+    //   });
+    //   setPriceListDetails(res?.data.data);
+    // } catch (error) {
+    //   customToast.error(error);
+    // }
   };
 
   useEffect(() => {
-    getDetailPriceList();
+    getDetailPromotion();
     getPriceListDetails();
-  }, [codePriceList]);
-  
+  }, [codePromotion]);
   const defaultValues = useMemo(
     () => ({
       province: dataCustomer?.citiesId || "",
@@ -95,7 +95,7 @@ const DetailPriceList = (props) => {
   return (
     <div className={"page-layout-blank"} style={{ width: "100%" }}>
       <Helmet>
-        <title> PDBus - Chi tiết bảng giá</title>
+        <title> PDBus - Chi tiết chương trình khuyến mãi</title>
       </Helmet>
       <Grid container spacing={1}>
         <Grid md={12}>
@@ -110,16 +110,18 @@ const DetailPriceList = (props) => {
               <div style={{ display: "flex", alignItems: "center" }}>
                 <div>
                   <h2 className={"txt-title"}>
-                    Bảng giá #{detailPriceList?.code}
+                    Chương trình khuyến mãi #{detailPromotion?.code}
                   </h2>
                 </div>
                 <div style={{ padding: "2px 5px" }}>
                   <div
                     style={{
                       backgroundColor:
-                        detailPriceList?.status == "Tạm ngưng"
+                        detailPromotion?.status == "Ngừng hoạt động"
                           ? "red"
-                          : "green",
+                          : detailPromotion?.status == "Đang hoạt động"
+                          ? "green"
+                          : "#f27932",
                       borderRadius: "15px",
                     }}
                   >
@@ -133,9 +135,7 @@ const DetailPriceList = (props) => {
                         alignItems: "center",
                       }}
                     >
-                      {detailPriceList?.status == "Tạm ngưng"
-                        ? "Tạm ngưng"
-                        : "Hoạt động"}
+                      {detailPromotion?.status}
                     </span>
                   </div>
                 </div>
@@ -172,7 +172,7 @@ const DetailPriceList = (props) => {
                   <Grid container spacing={2}>
                     <Grid item xs={6}>
                       <FormControlCustom
-                        label={"Mã bảng giá*"}
+                        label={"Mã khuyến mãi*"}
                         classNameLabel={
                           "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
                         }
@@ -181,18 +181,18 @@ const DetailPriceList = (props) => {
                       >
                         <TextField
                           style={{ width: "100%" }}
-                          name={"address"}
+                          name={"code"}
                           placeholder={""}
                           className={"input-detail"}
                           disabled
-                          value={detailPriceList?.code}
+                          value={detailPromotion?.code}
                         />
                       </FormControlCustom>
                     </Grid>
 
                     <Grid item xs={6}>
                       <FormControlCustom
-                        label={"Tên bảng giá"}
+                        label={"Tên khuyến mãi"}
                         classNameLabel={
                           "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
                         }
@@ -201,11 +201,11 @@ const DetailPriceList = (props) => {
                       >
                         <TextField
                           style={{ width: "100%" }}
-                          name={"address"}
+                          name={"name"}
                           placeholder={""}
                           className={"input-detail"}
                           disabled
-                          value={detailPriceList?.name}
+                          value={detailPromotion?.name}
                         />
                       </FormControlCustom>
                     </Grid>
@@ -221,12 +221,12 @@ const DetailPriceList = (props) => {
                       >
                         <TextField
                           style={{ width: "100%" }}
-                          name={"phone"}
+                          name={"startDate"}
                           helperText={""}
                           placeholder={""}
                           className={"input-detail"}
                           disabled
-                          value={detailPriceList?.startDate}
+                          value={detailPromotion?.startDate}
                         />
                       </FormControlCustom>
                     </Grid>
@@ -241,12 +241,12 @@ const DetailPriceList = (props) => {
                       >
                         <TextField
                           style={{ width: "100%" }}
-                          name={"phone"}
+                          name={"endDate"}
                           helperText={""}
                           placeholder={""}
                           className={"input-detail"}
                           disabled
-                          value={detailPriceList?.endDate}
+                          value={detailPromotion?.endDate}
                         />
                       </FormControlCustom>
                     </Grid>
@@ -257,18 +257,18 @@ const DetailPriceList = (props) => {
                           "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
                         }
                         className={"flex-direction-row"}
-                        label={"Ghi chú"}
+                        label={"Mô tả"}
                         fullWidth
                       >
                         <TextField
                           style={{ width: "100%" }}
                           multiline
                           rows={3}
-                          name={"note"}
+                          name={"description"}
                           helperText={""}
                           className={"input-detail"}
                           disabled
-                          value={detailPriceList?.note}
+                          value={detailPromotion?.description}
                         />
                       </FormControlCustom>
                     </Grid>
@@ -278,20 +278,20 @@ const DetailPriceList = (props) => {
                           "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
                         }
                         className={"flex-direction-row"}
-                        label={"Ngày tạo"}
+                        label={"Hình ảnh"}
                         fullWidth
                       >
-                        <TextField
-                          disabled
-                          style={{ width: "100%" }}
-                          name={"createdAt"}
-                          placeholder={"Nhập ngày tạo bảng giá"}
-                          helperText={""}
-                          className={"input-detail"}
-                          value={moment(detailPriceList?.createdAt).format(
-                            "DD/MM/YYYY HH:MM"
-                          )}
-                        />
+                        <div>
+                          <img
+                            src={detailPromotion?.image}
+                            alt=""
+                            style={{
+                              aspectRatio: 1,
+                              width: "100px",
+                              backgroundSize: "cover",
+                            }}
+                          />
+                        </div>
                       </FormControlCustom>
                     </Grid>
                   </Grid>
@@ -303,7 +303,7 @@ const DetailPriceList = (props) => {
           <div className={"page-layout"} style={{ marginTop: 50 }}>
             <Grid className={"align-items-center header_title"}>
               <Grid md={7}>
-                <h2 className={"txt-title"}>DANH SÁCH GIÁ</h2>
+                <h2 className={"txt-title"}>DÒNG KHUYẾN MÃI</h2>
               </Grid>
               <div
                 className="item-btn-right"
@@ -316,33 +316,25 @@ const DetailPriceList = (props) => {
                   style={{ height: "2rem" }}
                   onClick={() => setShowDrawerAdd(true)}
                 >
-                  <span className={"txt"}>Thêm nhóm</span>
+                  <span className={"txt"}>Thêm mới</span>
                 </Button>
               </div>
             </Grid>
-            <GroupDetailPriceList
+            <PromotionDetailList
               data={priceListDetails}
               getPriceListDetails={getPriceListDetails}
             />
           </div>
         </Grid>
       </Grid>
-
-      <EditPriceList
+      <EditPromotion
         setShowDrawer={setShowDrawer}
         showDrawer={showDrawer}
-        dataPriceList={detailPriceList}
-        getDetailPriceList={getDetailPriceList}
-      ></EditPriceList>
-
-      <CreatePriceListDetail
-        setShowDrawer={setShowDrawerAdd}
-        showDrawer={showDrawerAdd}
-        idPriceList={detailPriceList.id}
-        getPriceListDetails={getPriceListDetails}
-      ></CreatePriceListDetail>
+        dataPromotion={detailPromotion}
+        getDetailPromotion={getDetailPromotion}
+      ></EditPromotion>
     </div>
   );
 };
 
-export default DetailPriceList;
+export default DetailPromotion;

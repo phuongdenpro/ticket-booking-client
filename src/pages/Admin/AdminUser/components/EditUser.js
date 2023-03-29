@@ -248,7 +248,6 @@ const EditUser = (props) => {
       customerGroupId: value?.customerGroupId.id,
       status: value?.status
     };
-    console.log(params);
     try {
       const customerApi = new CustomerApi();
       const res = await customerApi.editById(dataCustomer.id, params);

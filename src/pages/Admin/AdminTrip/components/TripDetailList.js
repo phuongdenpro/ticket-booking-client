@@ -1,21 +1,25 @@
 import { Button, IconButton, Tooltip } from "@mui/material";
 
-import DeleteIcon from '@mui/icons-material/Delete';
-import moment from "moment";
-import { useState } from "react";
-import Badge from "../../../../components/Badge";
-import ModalAlert from "../../../../components/Modal";
+import DataTable from "../../../../components/DataTable";
 import TableCustom from "../../../../components/TableCustom";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import { useState } from "react";
+import ModalAlert from "../../../../components/Modal";
+import { GroupCusApi } from "../../../../utils/groupCusApi";
 import customToast from "../../../../components/ToastCustom";
-import { PriceListApi } from "../../../../utils/priceListApi";
+import DeleteIcon from "@mui/icons-material/Delete";
+import moment from "moment";
+import { TripApi } from "../../../../utils/tripApi";
 
-const PriceList = (props) => {
+const TripDetailList = (props) => {
   const {
     data,
     handleGetData,
     selectionModel,
     handleSelectionModeChange,
     handleShowDetail,
+    handelDetail,
     handleClick,
     onChangeRowsPerPage,
     handleChangePage,
@@ -24,88 +28,85 @@ const PriceList = (props) => {
     pageSize,
   } = props;
   const [openModal, setOpenModal] = useState(false);
-  const [idPriceList, setIdPriceList] = useState(null);
-  const [namePriceList, setNamePriceList] = useState("");
-  const [codePriceList, setCodePriceList] = useState("");
+  const [idGroup, setIdGroup] = useState(null);
+  const [nameGroup, setNameGroup] = useState("");
+  const [codeGroup, setCodeGroup] = useState("");
 
   const handleCloseModal = () => {
     setOpenModal(false);
   };
   const handleOpenModal = (id, name, code) => {
-    setIdPriceList(id);
-    setNamePriceList(name);
-    setCodePriceList(code);
+    setIdGroup(id);
+    setNameGroup(name);
+    setCodeGroup(code);
     setOpenModal(true);
   };
 
   const handleConfirm = async () => {
     try {
-      const priceListApi = new PriceListApi();
-      const response = await priceListApi.deleteById(idPriceList);
+      const tripApi = new TripApi();
+      const response = await tripApi.deleteTripDetail(idGroup);
       customToast.success("Xóa thành công");
 
       handleGetData();
       setOpenModal(false);
-      setIdPriceList(null);
+      setIdGroup(null);
     } catch (error) {
       customToast.error(error.response.data.message);
     }
   };
   const columns = [
     {
-      field: "code",
-      headerName: "Mã",
+      field: "stt",
+      headerName: "STT ",
       flex: 40,
       headerAlign: "center",
+      contentAlign: "center",
       headerClassName: "theme",
-      contentAlign:'center',
+      sortable: false,
+    },
+    {
+      field: "code",
+      headerName: "Mã ",
+      flex: 40,
+      headerAlign: "center",
+      contentAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+    },
+    {
+      field: "departureTime",
+      headerName: "Giờ khởi hành",
+      contentAlign: "center",
+      flex: 160,
+      headerAlign: "center",
+      headerClassName: "theme",
       sortable: false,
       renderCell: (params) => {
         return (
-          <Button
-          onClick={() => handleShowDetail(params?.row?.code)}
-            style={{ backgroundColor: 'transparent' }}
-            disabled={false}
-            color="primary"
-          >
-            <span
-              style={{
-                textDecorationLine: 'underline',
-                color: '#1A89AC',
-                fontSize: '0.8rem',
-                display: 'inline-block',
-                textTransform: 'none',
-              }}
-            >
-              {params?.row?.code}
+          <div>
+            <span>
+              {params.row?.departureTime !== undefined && params.row?.departureTime !== null
+                ? moment(params.row.departureTime).format("DD-MM-YYYY HH:mm A")
+                : "chưa xác định"}
             </span>
-          </Button>
+          </div>
         );
       },
     },
-    {
-      field: "name",
-      headerName: "Tên bảng giá",
-      contentAlign:'center',
-      flex: 100,
-      headerAlign: "center",
-      headerClassName: "theme",
-      sortable: false,
-    },
 
     {
-      field: "startDate",
-      flex: 130,
-      headerName: "Ngày bắt đầu",
-      contentAlign:'center',
+      field: "expectedTime",
+      flex: 160,
+      headerName: "Thời gian dự kiến",
       headerAlign: "center",
       headerClassName: "theme",
       renderCell: (params) => {
         return (
           <div>
             <span>
-              {params.row?.startDate !== undefined && params.row?.startDate !== null
-                ? moment(params.row.startDate).format("DD-MM-YYYY hh:mm A")
+              {params.row?.expectedTime !== undefined && params.row?.expectedTime !== null
+                ? moment(params.row.expectedTime).format("DD-MM-YYYY HH:mm A")
                 : "chưa xác định"}
             </span>
           </div>
@@ -113,19 +114,42 @@ const PriceList = (props) => {
       },
     },
     {
-      field: "endDate",
-      flex: 130,
-      headerName: "Ngày kết thúc",
-      contentAlign:'center',
+      field: "status",
+      headerName: "Tình trạng",
+      flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
+      sortable: false,
+    },
+    {
+      field: "isActive",
+      headerName: "Trạng thái",
+      flex: 100,
+      headerAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
       renderCell: (params) => {
         return (
           <div>
             <span>
-              {params.row?.endDate !== undefined && params.row?.endDate !== null
-                ? moment(params.row.endDate).format("DD-MM-YYYY hh:mm A")
-                : "chưa xác định"}
+              {params.row?.isActive == 1 ? "Hoạt động" : "Tạm dừng"}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      field: "vehicle",
+      headerName: "Tên xe",
+      flex: 150,
+      headerAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <div>
+            <span>
+              {params?.row?.vehicle.name}
             </span>
           </div>
         );
@@ -133,16 +157,24 @@ const PriceList = (props) => {
     },
     {
       field: "note",
-      headerName: "Ghi chú",
-      flex: 100,
+      headerName: "Loại xe",
+      flex: 110,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
+      renderCell: (params) => {
+        return (
+          <div>
+            <span>
+              {params?.row?.vehicle.type}
+            </span>
+          </div>
+        );
+      },
     },
     {
-      field: "status",
-      headerName: "Trạng thái",
-      contentAlign:'center',
+      field: "note",
+      headerName: "Biển số",
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
@@ -150,26 +182,37 @@ const PriceList = (props) => {
       renderCell: (params) => {
         return (
           <div>
-            <Badge
-              type={params?.row?.status == "Kích hoạt" ? "success" : "danger"}
-              content={params?.row?.status == "Kích hoạt" ? "Hoạt động" : "Tạm ngưng"}
-            />
+            <span>
+              {params?.row?.vehicle.licensePlate}
+            </span>
           </div>
         );
       },
     },
     {
       field: "action",
-      headerName: "",
-      flex: 30,
+      headerName: "Thao tác",
+      flex: 100,
       headerAlign: "center",
+      contentAlign: "center",
       headerClassName: "theme",
-      contentAlign:'center',
       sortable: false,
       renderCell: (params) => {
         return (
           <div>
-            {" "}
+          <Tooltip title="Cập nhật">
+          <IconButton>
+            <BorderColorIcon
+             
+              style={{
+                backgroundColor: "white",
+                borderRadius: 5,
+                width: 17,
+                height: 17,
+              }}
+            />
+          </IconButton>
+        </Tooltip>
             <Tooltip title="Xóa">
               <IconButton>
                 <DeleteIcon
@@ -225,7 +268,7 @@ const PriceList = (props) => {
         icon={true}
         renderContentModal={
           <div className="view-input-discount">
-            <span>Mã bảng giá: {codePriceList} </span>
+            <span>Mã nhóm: {codeGroup} </span>
           </div>
         }
       />
@@ -233,4 +276,4 @@ const PriceList = (props) => {
   );
 };
 
-export default PriceList;
+export default TripDetailList;

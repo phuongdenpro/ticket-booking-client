@@ -13,6 +13,8 @@ import {
 // import noDataTable from "../../assets/icons/noDataTable.svg";
 import './index.scss';
 
+
+
 const DataTable = (props) => {
   const {
     rows,

@@ -59,7 +59,7 @@ const DetailStation = (props) => {
               display: "block",
               fill: "#1a89ac",
               marginRight: 10,
-              marginTop:5,
+              marginTop: 5,
               borderRadius: "50%",
               padding: 2,
               backgroundColor: "#fff",

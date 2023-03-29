@@ -9,7 +9,7 @@ import customToast from "../../../../components/ToastCustom";
 import { convertCurrency } from "../../../../data/curren";
 import { PriceListApi } from "../../../../utils/priceListApi";
 
-const GroupTicketPriceList = (props) => {
+const PromotionDetailList = (props) => {
   const {
     data,
     selectionModel,
@@ -41,7 +41,6 @@ const GroupTicketPriceList = (props) => {
     try {
       const priceListApi = new PriceListApi();
       const response = await priceListApi.deletePriceListDetail(id);
-      console.log(response);
       customToast.success("Xóa thành công");
 
       getPriceListDetails();
@@ -78,7 +77,7 @@ const GroupTicketPriceList = (props) => {
     },
     {
       field: "ticketGroup",
-      headerName: "Mã nhóm vé",
+      headerName: "Mô tả",
       contentAlign:'center',
       flex: 70,
       headerAlign: "center",
@@ -90,7 +89,7 @@ const GroupTicketPriceList = (props) => {
     },
     {
       field: "ticketGroup",
-      headerName: "Tên nhóm vé",
+      headerName: "Loại khuyến mãi",
       contentAlign:'center',
       flex: 100,
       headerAlign: "center",
@@ -100,25 +99,7 @@ const GroupTicketPriceList = (props) => {
         return <span>{params.row?.ticketGroup.name}</span>;
       },
     },
-    {
-      field: "price",
-      flex: 100,
-      headerName: "Đơn giá",
-      contentAlign:'center',
-      headerAlign: "center",
-      headerClassName: "theme",
-      renderCell: (params) => {
-        return <div>{convertCurrency(params?.row.price)}</div>;
-      },
-    },
-    {
-      field: "note",
-      headerName: "Ghi chú",
-      flex: 200,
-      headerAlign: "center",
-      headerClassName: "theme",
-      sortable: false,
-    },
+    
 
     {
       field: "createdAt",
@@ -134,6 +115,20 @@ const GroupTicketPriceList = (props) => {
         );
       },
     },
+    {
+        field: "endDateAt",
+        headerName: "Ngày kết thúc",
+        contentAlign:'center',
+        flex: 100,
+        headerAlign: "center",
+        headerClassName: "theme",
+        sortable: false,
+        renderCell: (params) => {
+          return (
+            <span>{moment(params.row?.endDateAt).format("DD/MM/YYYY")}</span>
+          );
+        },
+      },
     {
       field: "action",
       headerName: "Thao tác",
@@ -204,4 +199,4 @@ const GroupTicketPriceList = (props) => {
   );
 };
 
-export default GroupTicketPriceList;
+export default PromotionDetailList;

@@ -37,7 +37,7 @@ const AdminPriceList = (props) => {
     endDate: lastDay,
   });
   const onDetailPriceList = (id) => {
-    navigate(`/admin/ticket/price-list/detail/${id}`);
+    navigate(`/admin/price-list/detail/${id}`);
   };
   const filterDateTime = [
     {

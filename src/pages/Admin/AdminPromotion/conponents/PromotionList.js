@@ -1,13 +1,15 @@
-import { IconButton, Tooltip } from "@mui/material";
+import { Button, IconButton, Tooltip } from "@mui/material";
 
 import BorderColorIcon from "@mui/icons-material/BorderColor";
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import moment from "moment";
 import { useState } from "react";
 import Badge from "../../../../components/Badge";
 import TableCustom from "../../../../components/TableCustom";
-
+import ModalAlert from "../../../../components/Modal";
+import { PromotionApi } from "../../../../utils/promotionApi";
+import customToast from "../../../../components/ToastCustom";
 
 const PromotionList = (props) => {
   const {
@@ -24,95 +26,120 @@ const PromotionList = (props) => {
     pageSize,
   } = props;
   const [openModal, setOpenModal] = useState(false);
-  const [idGroup, setIdGroup] = useState(null);
-  const [nameGroup, setNameGroup] = useState("");
-  const [codeGroup, setCodeGroup] = useState("");
+  const [idPromotion, setIdPromotion] = useState(null);
+  const [codePromotion, setCodePromotion] = useState("");
 
-//   const handleCloseModal = () => {
-//     setOpenModal(false);
-//   };
-//   const handleOpenModal = (id, name, code) => {
-//     setIdGroup(id);
-//     setNameGroup(name);
-//     setCodeGroup(code);
-//     setOpenModal(true);
-//   };
+    const handleCloseModal = () => {
+      setOpenModal(false);
+    };
+    const handleOpenModal = (id, code) => {
+      setIdPromotion(id);
+      setCodePromotion(code);
+      setOpenModal(true);
+    };
 
-//   const handleConfirm = async () => {
-//     try {
-//       const groupCusApi = new GroupCusApi();
-//       const response = await groupCusApi.deleteById(idGroup);
-//       customToast.success("Xóa thành công");
+    const handleConfirm = async () => {
+      try {
+        const promotionApi = new PromotionApi();
+        const response = await promotionApi.deleteById(idPromotion);
+        customToast.success("Xóa thành công");
 
-//       handleGetData();
-//       setOpenModal(false);
-//       setIdGroup(null);
-//     } catch (error) {
-//       customToast.error(error.response.data.message);
-//     }
-//   };
+        handleGetData();
+        setOpenModal(false);
+        setIdPromotion(null);
+      } catch (error) {
+        customToast.error(error.response.data.message);
+      }
+    };
   const columns = [
     {
       field: "code",
       headerName: "Mã",
-      flex: 40,
+      contentAlign: "center",
+      flex: 30,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
-    },
-    {
-        field: 'image',
-        headerName: ' Hình ảnh',
-        flex: 70,
-        headerAlign: 'center',
-        headerClassName: 'theme',
-        sortable: false,
-        renderCell: (params) => {
-          return (
-            <div
+      renderCell: (params) => {
+        return (
+          <Button
+          onClick={() => handleShowDetail(params?.row?.id)}
+            style={{ backgroundColor: 'transparent' }}
+            disabled={false}
+            color="primary"
+          >
+            <span
               style={{
-                alignItems: 'center',
-                display: 'flex',
-                justifyContent: 'center',
+                textDecorationLine: 'underline',
+                color: '#1A89AC',
+                fontSize: '0.8rem',
+                display: 'inline-block',
+                textTransform: 'none',
               }}
             >
-              <img
-                src={params.row.images?.[0]}
-                alt=""
-                style={{ aspectRatio: 1, width: '60px', backgroundSize: 'cover' }}
-              />
-            </div>
-          );
-        },
+              {params?.row?.code}
+            </span>
+          </Button>
+        );
       },
+    },
+    {
+      field: "image",
+      headerName: " Hình ảnh",
+      contentAlign: "center",
+      flex: 70,
+      headerAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <div
+            style={{
+              alignItems: "center",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <img
+              src={params.row.image}
+              alt=""
+              style={{ aspectRatio: 1, width: "50px", backgroundSize: "cover" }}
+            />
+          </div>
+        );
+      },
+    },
     {
       field: "name",
       headerName: "Tiêu đề",
+      contentAlign: "center",
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
     },
     {
-        field: "description",
-        headerName: "Mô tả",
-        flex: 100,
-        headerAlign: "center",
-        headerClassName: "theme",
-        sortable: false,
-      },
+      field: "description",
+      headerName: "Mô tả",
+      flex: 150,
+      headerAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+    },
 
     {
       field: "startDate",
-      flex: 130,
+      flex: 120,
       headerName: "Ngày bắt đầu",
+      contentAlign: "center",
       headerAlign: "center",
       headerClassName: "theme",
       renderCell: (params) => {
         return (
           <div>
             <span>
-              {params.row?.startDate !== undefined && params.row?.startDate !== null
+              {params.row?.startDate !== undefined &&
+              params.row?.startDate !== null
                 ? moment(params.row.startDate).format("DD-MM-YYYY hh:mm A")
                 : "chưa xác định"}
             </span>
@@ -122,8 +149,9 @@ const PromotionList = (props) => {
     },
     {
       field: "endDate",
-      flex: 130,
+      flex: 120,
       headerName: "Ngày kết thúc",
+      contentAlign: "center",
       headerAlign: "center",
       headerClassName: "theme",
       renderCell: (params) => {
@@ -138,11 +166,12 @@ const PromotionList = (props) => {
         );
       },
     },
-    
+
     {
       field: "status",
       headerName: "Trạng thái",
-      flex: 100,
+      contentAlign: "center",
+      flex: 115,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
@@ -150,8 +179,14 @@ const PromotionList = (props) => {
         return (
           <div>
             <Badge
-              type={params?.row?.status == true ? "success" : "danger"}
-              content={params?.row?.status == true ? "Hoạt động" : "Tạm ngưng"}
+              type={
+                params?.row?.status == "Đang hoạt động"
+                  ? "success"
+                  : params?.row?.status == "Ngừng hoạt động"
+                  ? "danger"
+                  : "warning"
+              }
+              content={params?.row?.status}
             />
           </div>
         );
@@ -160,7 +195,8 @@ const PromotionList = (props) => {
     {
       field: "action",
       headerName: "Thao tác",
-      flex: 70,
+      contentAlign: "center",
+      flex: 50,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
@@ -168,35 +204,15 @@ const PromotionList = (props) => {
         return (
           <div>
             {" "}
-            <Tooltip title="Xem chi tiết">
-              <IconButton>
-                <VisibilityIcon
-                  style={{
-                    backgroundColor: "white",
-                    borderRadius: 5,
-                    fill: "#1a89ac",
-                    width: 17,
-                    height: 17,
-                  }}
-                />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Cập nhật">
-              <IconButton>
-                <BorderColorIcon
-                  style={{
-                    backgroundColor: "white",
-                    borderRadius: 5,
-                    width: 17,
-                    height: 17,
-                  }}
-                />
-              </IconButton>
-            </Tooltip>
             <Tooltip title="Xóa">
               <IconButton>
                 <DeleteIcon
-                
+                onClick={() =>
+                  handleOpenModal(
+                    params?.row?.id,
+                    params?.row?.code
+                  )
+                }
                   style={{
                     backgroundColor: "white",
                     borderRadius: 5,
@@ -228,6 +244,23 @@ const PromotionList = (props) => {
         total={total}
         page={page}
         pageSize={pageSize}
+      />
+      <ModalAlert
+        open={openModal}
+        handleClose={() => handleCloseModal()}
+        handleCancel={() => handleCloseModal()}
+        handleConfirm={() => handleConfirm()}
+        title={"Xác nhận xóa"}
+        description={
+          "Thao tác sẽ không thể hoàn tác, bạn có chắc chắn muốn tiếp tục không?"
+        }
+        type={"error"}
+        icon={true}
+        renderContentModal={
+          <div className="view-input-discount">
+            <span>Mã bảng giá: {codePromotion} </span>
+          </div>
+        }
       />
     </div>
   );

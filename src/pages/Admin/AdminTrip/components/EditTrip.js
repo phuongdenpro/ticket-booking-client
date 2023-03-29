@@ -11,7 +11,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import * as yup from "yup";
 
 import { LoadingButton } from "@mui/lab";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "../../../../assets/scss/default.scss";
 import FormControlCustom from "../../../../components/FormControl";
 import InputField from "../../../../components/InputField";
@@ -22,25 +22,28 @@ import AutocompleteCustom from "../../../../components/AutocompleteCustom";
 import { GroupTicketApi } from "../../../../utils/groupTicketApi";
 import { TripApi } from "../../../../utils/tripApi";
 
-const AddTrip = (props) => {
-  const { setShowDrawer, showDrawer, handleGetData } = props;
+const EditTrip = (props) => {
+  const { setShowDrawer, showDrawer, handleGetData, dataTrip } = props;
   const currentYear = new Date().getFullYear();
-  const currentMonth = new Date().getMonth();
-  const firstDay = new Date();
-  const lastDay = new Date(currentYear, currentMonth, 31);
+  const firstDay = new Date(dataTrip.startDate);
+  const lastDay = new Date(dataTrip.endDate);
   const [selectedDate, setSelectedDate] = useState({
     startDate: firstDay,
     endDate: lastDay,
   });
   const optionStatus = ["Kích hoạt", "Tạm ngưng"];
   const [optionStations, setOptionStations] = useState([]);
-  
 
   const handelGetOptionStations = async () => {
     try {
       const stationApi = new StationApi();
       const response = await stationApi.getList();
-      setOptionStations(response?.data?.data);
+      const option = [];
+      const options = [];
+      response.data.data.map((item) =>
+        options.push({ id: item.id, name: item.name, code: item.code })
+      );
+      setOptionStations(options);
     } catch (error) {
       customToast.error(error.response.data.message);
     }
@@ -74,12 +77,17 @@ const AddTrip = (props) => {
       .required("Vui lòng chọn nơi đến"),
   });
 
-  const defaultValues = {
-    code: "",
-    name: "",
-    note: "",
-    status: "",
-  };
+  const defaultValues = useMemo(
+    () => ({
+      code: dataTrip?.code,
+      name: dataTrip?.name,
+      status: dataTrip?.status,
+      codeStationFrom: dataTrip.fromStation,
+      codeStationTo: dataTrip?.toStation,
+      note: dataTrip?.note,
+    }),
+    [dataTrip]
+  );
 
   const methods = useForm({
     mode: "onSubmit",
@@ -89,6 +97,14 @@ const AddTrip = (props) => {
 
   const { handleSubmit, reset, formState, setValue, watch } = methods;
   const { errors } = formState;
+
+  useEffect(() => {
+    reset({ ...defaultValues });
+    setSelectedDate({
+        startDate: new Date(dataTrip?.startDate),
+        endDate: new Date(dataTrip?.endDate),
+      });
+  }, [dataTrip]);
 
   const goBack = () => {
     setSelectedDate({
@@ -114,7 +130,6 @@ const AddTrip = (props) => {
 
   const onSubmit = async (value) => {
     const params = {
-      code: value.code,
       name: value.name,
       status: value.status,
       note: value?.note,
@@ -125,8 +140,8 @@ const AddTrip = (props) => {
     };
     try {
       const tripApi = new TripApi();
-      const res = await tripApi.createTrip(params);
-      customToast.success("Thêm mới thành công");
+      const res = await tripApi.updateTrip(dataTrip.id,params);
+      customToast.success("Cập nhật thành công");
       handleGetData();
       setShowDrawer(false);
       reset();
@@ -170,7 +185,7 @@ const AddTrip = (props) => {
               <ArrowBackIosIcon className="icon-back" />
             </div>
             <div>
-              <span>Tạo mới tuyến xe</span>
+              <span>Cập nhật thông tin</span>
             </div>
           </div>
           <div className="content-drawer">
@@ -182,6 +197,7 @@ const AddTrip = (props) => {
                 <Grid item xs={6} className="auto-complete">
                   <FormControlCustom label={"Mã tuyến"} fullWidth isMarked>
                     <InputField
+                    disabled
                       name={"code"}
                       placeholder={"Nhập mã tuyến"}
                       error={Boolean(errors.code)}
@@ -330,4 +346,4 @@ const AddTrip = (props) => {
   );
 };
 
-export default AddTrip;
+export default EditTrip;

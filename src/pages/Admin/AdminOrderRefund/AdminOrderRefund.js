@@ -83,7 +83,6 @@ const AdminOrderRefund = (props) => {
     setPageSize(+event.target.value);
     setPage(0);
   };
-  console.log(moment(selectedDate?.startDate).format("DD-MM-YYYY"));
   const defaultValues = {
     startDate: null,
     endDate: null,

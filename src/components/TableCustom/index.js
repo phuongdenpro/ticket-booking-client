@@ -155,7 +155,8 @@ const TableCustom = (props) => {
                   <TableCell
                     width={column.flex}
                     align={column.contentAlign}
-                    style={{ height: "60px" }}
+                    padding='normal'
+                    style={{height: "10px", fontSize: "13px", color:'black' }}
                   >
                     {renderRow(row, column, index)}
                   </TableCell>
