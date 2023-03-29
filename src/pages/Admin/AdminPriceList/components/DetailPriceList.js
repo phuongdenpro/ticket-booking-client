@@ -28,7 +28,6 @@ const DetailPriceList = (props) => {
 
   const getDetailPriceList = async () => {
     try {
-      console.log(codePriceList);
       const priceListApi = new PriceListApi();
       const res = await priceListApi.getPriceListByCode(codePriceList.id);
       setDetailPriceList(res?.data.data);

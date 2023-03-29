@@ -33,7 +33,6 @@ const EditTrip = (props) => {
   });
   const optionStatus = ["Kích hoạt", "Tạm ngưng"];
   const [optionStations, setOptionStations] = useState([]);
-  console.log(dataTrip);
 
   const handelGetOptionStations = async () => {
     try {
@@ -130,7 +129,6 @@ const EditTrip = (props) => {
   }, [showDrawer]);
 
   const onSubmit = async (value) => {
-    console.log(value);
     const params = {
       name: value.name,
       status: value.status,

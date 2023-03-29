@@ -22,7 +22,6 @@ const Home = (props) => {
   const [optionsProvince, setOptionsProvince] = useState([]);
   const [loading, setLoading] = useState(true);
   const [startDate, setStartDate] = useState(new Date());
-  console.log(startDate);
   const getDataProvince = async () => {
     try {
       setLoading(true);

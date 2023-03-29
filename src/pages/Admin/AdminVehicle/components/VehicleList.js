@@ -44,7 +44,6 @@ const VehicleList = (props) => {
     try {
       const vehicleApi = new VehicleApi();
       const response = await vehicleApi.deleteVehicle(idVehicle);
-      console.log(response);
       customToast.success("Xóa thành công");
 
       handleGetData();

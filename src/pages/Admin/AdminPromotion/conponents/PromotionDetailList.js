@@ -41,7 +41,6 @@ const PromotionDetailList = (props) => {
     try {
       const priceListApi = new PriceListApi();
       const response = await priceListApi.deletePriceListDetail(id);
-      console.log(response);
       customToast.success("Xóa thành công");
 
       getPriceListDetails();

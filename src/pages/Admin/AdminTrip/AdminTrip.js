@@ -17,6 +17,7 @@ import { StationApi } from "../../../utils/stationApi";
 import { TripApi } from "../../../utils/tripApi";
 import AddTrip from "./components/AddTrip";
 import EditTrip from "./components/EditTrip";
+import TripDetail from "./components/TripDetail";
 import TripList from "./components/TripList";
 
 const AdminTrip = (props) => {
@@ -37,6 +38,11 @@ const AdminTrip = (props) => {
   const [showDrawerEdit, setShowDrawerEdit] = useState(false);
   const [idTrip, setIdTrip] = useState(null);
   const [detailTrip, setDetailTrip] = useState("");
+  const [showDrawerDetail, setShowDrawerDetail] = useState(false);
+  const handelDetail = (id) => {
+    setShowDrawerDetail(true);
+    setIdTrip(id);
+  };
 
   const filterDateTime = [
     {
@@ -368,6 +374,7 @@ const AdminTrip = (props) => {
             data={data?.data?.data || []}
             handleChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
+            handelDetail={handelDetail}
             handleShowDetail={handleShowDetail}
             total={data?.data?.pagination?.total}
             handleGetData={handleGetData}
@@ -387,6 +394,11 @@ const AdminTrip = (props) => {
         dataTrip={detailTrip}
         handleGetData={handleGetData}
       ></EditTrip>
+      <TripDetail
+        setShowDrawerDetail={setShowDrawerDetail}
+        showDrawerDetail={showDrawerDetail}
+        dataTrip={detailTrip}
+      ></TripDetail>
     </Box>
   );
 };

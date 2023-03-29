@@ -1,25 +1,25 @@
-import { Button, IconButton, Tooltip, Typography } from "@mui/material";
+import { Button, IconButton, Tooltip } from "@mui/material";
 
 import DataTable from "../../../../components/DataTable";
 import TableCustom from "../../../../components/TableCustom";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
-import DeleteIcon from "@mui/icons-material/Delete";
-import moment from "moment";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useState } from "react";
 import ModalAlert from "../../../../components/Modal";
-import { TripApi } from "../../../../utils/tripApi";
+import { GroupCusApi } from "../../../../utils/groupCusApi";
 import customToast from "../../../../components/ToastCustom";
-import Badge from "../../../../components/Badge";
-moment.locale("vi");
+import DeleteIcon from "@mui/icons-material/Delete";
+import moment from "moment";
+import { TripApi } from "../../../../utils/tripApi";
 
-const TripList = (props) => {
+const TripDetailList = (props) => {
   const {
     data,
+    handleGetData,
     selectionModel,
     handleSelectionModeChange,
     handleShowDetail,
     handelDetail,
-    handleGetData,
     handleClick,
     onChangeRowsPerPage,
     handleChangePage,
@@ -27,112 +27,86 @@ const TripList = (props) => {
     page,
     pageSize,
   } = props;
-
   const [openModal, setOpenModal] = useState(false);
-  const [idTrip, setIdTrip] = useState(null);
-  const [codeTrip, setCodeTrip] = useState("");
+  const [idGroup, setIdGroup] = useState(null);
+  const [nameGroup, setNameGroup] = useState("");
+  const [codeGroup, setCodeGroup] = useState("");
 
   const handleCloseModal = () => {
     setOpenModal(false);
   };
-  const handleOpenModal = (id, code) => {
-    setIdTrip(id);
-    setCodeTrip(code);
+  const handleOpenModal = (id, name, code) => {
+    setIdGroup(id);
+    setNameGroup(name);
+    setCodeGroup(code);
     setOpenModal(true);
   };
 
   const handleConfirm = async () => {
     try {
       const tripApi = new TripApi();
-      const response = await tripApi.deleteTrip(idTrip);
+      const response = await tripApi.deleteTripDetail(idGroup);
       customToast.success("Xóa thành công");
+
       handleGetData();
       setOpenModal(false);
-      setIdTrip(null);
-      setCodeTrip("");
+      setIdGroup(null);
     } catch (error) {
       customToast.error(error.response.data.message);
     }
   };
-
   const columns = [
     {
+      field: "stt",
+      headerName: "STT ",
+      flex: 40,
+      headerAlign: "center",
+      contentAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+    },
+    {
       field: "code",
-      headerName: "Mã",
-      flex: 50,
+      headerName: "Mã ",
+      flex: 40,
       headerAlign: "center",
       contentAlign: "center",
       headerClassName: "theme",
       sortable: false,
     },
     {
-      field: "name",
-      headerName: "Tên chuyến",
-      flex: 200,
-      headerAlign: "center",
-      headerClassName: "theme",
-      sortable: false,
-    },
-
-    {
-      field: "fromStation",
-      flex: 150,
-      headerName: "Nơi đi",
-      headerAlign: "center",
-      headerClassName: "theme",
-      renderCell: (params) => {
-        return (
-          <span>
-            {params?.row?.fromStation?.name}({params?.row?.fromStation?.code})
-          </span>
-        );
-      },
-    },
-    {
-      field: "toStation",
-      headerName: "Nơi đến",
-      flex: 200,
-      headerAlign: "center",
-      headerClassName: "theme",
-      sortable: false,
-      renderCell: (params) => {
-        return (
-          <span
-           
-          >
-            {params?.row?.toStation?.name}({params?.row?.toStation?.code})
-          </span>
-        );
-      },
-    },
-    {
-      field: "startDate",
-      headerName: "Thời gian đi",
-      flex: 100,
-      headerAlign: "center",
+      field: "departureTime",
+      headerName: "Giờ khởi hành",
       contentAlign: "center",
-      headerClassName: "theme",
-      sortable: false,
-      renderCell: (params) => {
-        return (
-          <span>{moment(params.row?.startDate).format("DD-MM-YYYY")}</span>
-        );
-      },
-    },
-    {
-      field: "endDate",
-      headerName: "Thời gian đến",
-      flex: 110,
+      flex: 160,
       headerAlign: "center",
-      contentAlign: "center",
       headerClassName: "theme",
       sortable: false,
       renderCell: (params) => {
         return (
           <div>
             <span>
-              {params.row?.endDate !== undefined && params.row?.endDate !== null
-                ? moment(params.row.endDate).format("DD-MM-YYYY")
+              {params.row?.departureTime !== undefined && params.row?.departureTime !== null
+                ? moment(params.row.departureTime).format("DD-MM-YYYY HH:mm A")
+                : "chưa xác định"}
+            </span>
+          </div>
+        );
+      },
+    },
+
+    {
+      field: "expectedTime",
+      flex: 160,
+      headerName: "Thời gian dự kiến",
+      headerAlign: "center",
+      headerClassName: "theme",
+      renderCell: (params) => {
+        return (
+          <div>
+            <span>
+              {params.row?.expectedTime !== undefined && params.row?.expectedTime !== null
+                ? moment(params.row.expectedTime).format("DD-MM-YYYY HH:mm A")
                 : "chưa xác định"}
             </span>
           </div>
@@ -141,47 +115,84 @@ const TripList = (props) => {
     },
     {
       field: "status",
-      headerName: "Trạng thái",
-      flex: 125,
+      headerName: "Tình trạng",
+      flex: 100,
       headerAlign: "center",
-      contentAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+    },
+    {
+      field: "isActive",
+      headerName: "Trạng thái",
+      flex: 100,
+      headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
       renderCell: (params) => {
         return (
           <div>
-            <Badge
-              type={params?.row?.status == "Kích hoạt" ? "success" : "danger"}
-              content={
-                params?.row?.status == "Kích hoạt" ? "Hoạt động" : "Tạm ngưng"
-              }
-            />
+            <span>
+              {params.row?.isActive == 1 ? "Hoạt động" : "Tạm dừng"}
+            </span>
           </div>
         );
       },
     },
     {
-      field: "TripDetails",
-      headerName: "Chuyến chi tiết",
-      flex: 140,
+      field: "vehicle",
+      headerName: "Tên xe",
+      flex: 150,
       headerAlign: "center",
       headerClassName: "theme",
-      contentAlign: "center",
       sortable: false,
       renderCell: (params) => {
         return (
           <div>
-            {" "}
-            <Button  onClick={() => handelDetail(params.id)}>Xem chi tiết</Button>
+            <span>
+              {params?.row?.vehicle.name}
+            </span>
           </div>
         );
       },
     },
-
+    {
+      field: "note",
+      headerName: "Loại xe",
+      flex: 110,
+      headerAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <div>
+            <span>
+              {params?.row?.vehicle.type}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      field: "note",
+      headerName: "Biển số",
+      flex: 100,
+      headerAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <div>
+            <span>
+              {params?.row?.vehicle.licensePlate}
+            </span>
+          </div>
+        );
+      },
+    },
     {
       field: "action",
       headerName: "Thao tác",
-      flex: 70,
+      flex: 100,
       headerAlign: "center",
       contentAlign: "center",
       headerClassName: "theme",
@@ -189,25 +200,28 @@ const TripList = (props) => {
       renderCell: (params) => {
         return (
           <div>
-            {" "}
-            <Tooltip title="Cập nhật">
-              <IconButton>
-                <BorderColorIcon
-                  onClick={() => handleShowDetail(params.id)}
-                  style={{
-                    backgroundColor: "white",
-                    borderRadius: 5,
-                    width: 17,
-                    height: 17,
-                  }}
-                />
-              </IconButton>
-            </Tooltip>
+          <Tooltip title="Cập nhật">
+          <IconButton>
+            <BorderColorIcon
+             
+              style={{
+                backgroundColor: "white",
+                borderRadius: 5,
+                width: 17,
+                height: 17,
+              }}
+            />
+          </IconButton>
+        </Tooltip>
             <Tooltip title="Xóa">
               <IconButton>
                 <DeleteIcon
                   onClick={() =>
-                    handleOpenModal(params?.row?.id, params?.row?.code)
+                    handleOpenModal(
+                      params?.row?.id,
+                      params?.row?.name,
+                      params?.row?.code
+                    )
                   }
                   style={{
                     backgroundColor: "white",
@@ -254,7 +268,7 @@ const TripList = (props) => {
         icon={true}
         renderContentModal={
           <div className="view-input-discount">
-            <span>Mã chuyến: {codeTrip} </span>
+            <span>Mã nhóm: {codeGroup} </span>
           </div>
         }
       />
@@ -262,4 +276,4 @@ const TripList = (props) => {
   );
 };
 
-export default TripList;
+export default TripDetailList;

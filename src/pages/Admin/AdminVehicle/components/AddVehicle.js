@@ -185,7 +185,6 @@ const AddVehicle = ({ setShowDrawer, showDrawer, handleGetData }) => {
         },
       ],
     };
-    console.log(params);
 
     try {
       const vehicleApi = new VehicleApi();

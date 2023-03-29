@@ -69,7 +69,6 @@ const EditStation = (props) => {
       setOptionsWard(options);
     } catch (error) {}
   };
-  console.log(dataStation);
 
   const defaultValues = useMemo(
     () => ({

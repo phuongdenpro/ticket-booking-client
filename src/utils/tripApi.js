@@ -53,5 +53,24 @@ class TripApi {
     return res;
     
   }
+
+  getTripDetail(params){
+    const url = `trip-detail`;
+    const res = axiosClient.get(url, {
+      params: {
+        ...params,
+      },
+    });
+    return res;
+  }
+  deleteTripDetail(id, params) {
+    const url = `trip-detail/id/${id}`;
+    const res = axiosClient.delete(url, {
+      params: {
+        ...params,
+      },
+    });
+    return res;
+  }
 }
 export { TripApi };

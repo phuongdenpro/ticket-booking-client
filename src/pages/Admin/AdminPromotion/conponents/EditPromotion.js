@@ -63,7 +63,6 @@ const EditPromotion = (props) => {
   }, []);
   const handleDateChangeStartDate = (e) => {
     const newDate = new Date(e);
-    console.log("vào");
     if (!newDate || isNaN(newDate.getTime())) {
       setErrorStartDate(true);
       setErrorMessageStartDate("Vui lòng chọn một ngày hợp lệ.");
@@ -80,7 +79,6 @@ const EditPromotion = (props) => {
 
   const handleDateChangeEndDate = (e) => {
     const newDate = new Date(e);
-    console.log("vào");
     if (!newDate || isNaN(newDate.getTime())) {
       setErrorEndDate(true);
       setErrorMessageEndDate("Vui lòng chọn một ngày hợp lệ.");

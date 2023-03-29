@@ -31,7 +31,6 @@ const DetailPromotion = (props) => {
     try {
       const promotionApi = new PromotionApi();
       const res = await promotionApi.getById(codePromotion.id);
-      console.log(res);
       setDetailPromotion(res?.data.data);
     } catch (error) {
       customToast.error(error);
