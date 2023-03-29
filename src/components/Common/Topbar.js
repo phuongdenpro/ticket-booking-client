@@ -18,12 +18,17 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import customToast from "../ToastCustom";
 import ArticleIcon from "@mui/icons-material/Article";
 import { menu } from "../../data/menuData";
+import ModalAlert from "../Modal";
 
 const Topbar = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [time, setTime] = useState();
   const [routeName, setRouteName] = useState();
+  const [open, setOpen] = useState(false);
+  const handleCloseModal = () => {
+    setOpen(false);
+  };
   useEffect(() => {
     setInterval(() => {
       var today = new Date();
@@ -60,18 +65,18 @@ const Topbar = (props) => {
     setRouteName(name);
   }, [location?.pathname]);
 
+  const handleOpenProfileModal = () => {
+    setOpen(true);
+  };
+
   const items = [
     {
-      label: "Thông tin tài khoản",
-      key: "1",
-    },
-    {
       label: (
-        <a rel="noopener noreferrer" href="/doi-mat-khau">
-          Đổi mật khẩu
+        <a rel="noopener noreferrer" onClick={handleOpenProfileModal}>
+          Thông tin tài khoản
         </a>
       ),
-      key: "2",
+      key: "1",
     },
     {
       label: (
@@ -79,7 +84,7 @@ const Topbar = (props) => {
           Đăng xuất
         </a>
       ),
-      key: "3",
+      key: "2",
     },
   ];
   return (
@@ -167,7 +172,7 @@ const Topbar = (props) => {
                 fontWeight: "bold",
                 paddingLeft: 5,
                 paddingRight: 5,
-                paddingBottom:2,
+                paddingBottom: 2,
                 border: "1px solid",
                 borderRadius: 5,
               }}
@@ -188,6 +193,43 @@ const Topbar = (props) => {
               src="https://joesch.moe/api/v1/random?key=1"
             ></Avatar>
           </Dropdown>
+          <ModalAlert
+            isButton={true}
+            open={open}
+            handleClose={() => handleCloseModal()}
+            handleCancel={() => handleCloseModal()}
+            handleConfirm={() => {}}
+            title={"Thông tin tài khoản"}
+            renderContentModal={
+              <div style={{ flexDirection: "column", alignItems: "center" }}>
+                <div
+                  className="view-input-discount"
+                  style={{ flexDirection: "column", alignItems: "flex-start" }}
+                >
+                  <div>
+                    <span>Tên đăng nhập: </span>
+                    <span style={{ fontSize: "15px", color: "#666666" }}>
+                      {'user?.userName'}
+                    </span>
+                  </div>
+
+                  <div>
+                    <span style={{ fontWeight: "500" }}>Tên: </span>
+                    <span style={{ fontSize: "15px", color: "#666666" }}>
+                      {'user?.name'}
+                    </span>
+                  </div>
+                  <div>
+                    <span>Số điện thoại: </span>
+                    <span style={{ fontSize: "15px", color: "#666666" }}>
+                      {''}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            }
+            type={"information"}
+          />
         </div>
       </Toolbar>
     </AppBar>

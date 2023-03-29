@@ -1,26 +1,23 @@
-import { Box, Button, Divider, Grid, TextField } from "@mui/material";
-import React, { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
-import PrintIcon from "@mui/icons-material/Print";
-import DeleteIcon from "@mui/icons-material/Delete";
-import SearchInput from "../../../components/InputSearch";
-import { FormProvider, useForm } from "react-hook-form";
-import FormControlCustom from "../../../components/FormControl";
-import SelectCustom from "../../../components/SelectCustom";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
-import TripList from "./components/TripList";
-import { TripApi } from "../../../utils/tripApi";
-import customToast from "../../../components/ToastCustom";
-import { Helmet } from "react-helmet";
-import AddTrip from "./components/AddTrip";
-import { StationApi } from "../../../utils/stationApi";
-import AutocompleteCustom from "../../../components/AutocompleteCustom";
+import { Box, Button, Divider, Grid, TextField } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { Toolbar } from "@mui/material";
-import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
+import { FormProvider, useForm } from "react-hook-form";
+import AutocompleteCustom from "../../../components/AutocompleteCustom";
+import FormControlCustom from "../../../components/FormControl";
+import SearchInput from "../../../components/InputSearch";
+import SelectCustom from "../../../components/SelectCustom";
+import customToast from "../../../components/ToastCustom";
+import { StationApi } from "../../../utils/stationApi";
+import { TripApi } from "../../../utils/tripApi";
+import AddTrip from "./components/AddTrip";
+import EditTrip from "./components/EditTrip";
+import TripList from "./components/TripList";
 
 const AdminTrip = (props) => {
   const [data, setData] = useState([]);
@@ -37,6 +34,9 @@ const AdminTrip = (props) => {
   const [showDrawerCreate, setShowDrawerCreate] = useState(false);
   const [optionStation, setOptionStation] = useState([]);
   const [disable, setDisable] = useState(true);
+  const [showDrawerEdit, setShowDrawerEdit] = useState(false);
+  const [idTrip, setIdTrip] = useState(null);
+  const [detailTrip, setDetailTrip] = useState("");
 
   const filterDateTime = [
     {
@@ -63,6 +63,21 @@ const AdminTrip = (props) => {
   useEffect(() => {
     handelGetOptionStations();
   }, []);
+
+  const getDetailTrip = async (id) => {
+    if (!id) return;
+    const tripApi = new TripApi();
+    const response = await tripApi.getById(id);
+    setDetailTrip(response.data.data);
+  };
+  useEffect(() => {
+    getDetailTrip(idTrip);
+  }, [idTrip]);
+
+  const handleShowDetail = (id) => {
+    setShowDrawerEdit(true);
+    setIdTrip(id);
+  };
 
   const handleGetData = async () => {
     try {
@@ -353,6 +368,7 @@ const AdminTrip = (props) => {
             data={data?.data?.data || []}
             handleChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
+            handleShowDetail={handleShowDetail}
             total={data?.data?.pagination?.total}
             handleGetData={handleGetData}
             page={page}
@@ -365,6 +381,12 @@ const AdminTrip = (props) => {
         setShowDrawer={setShowDrawerCreate}
         handleGetData={handleGetData}
       ></AddTrip>
+      <EditTrip
+        setShowDrawer={setShowDrawerEdit}
+        showDrawer={showDrawerEdit}
+        dataTrip={detailTrip}
+        handleGetData={handleGetData}
+      ></EditTrip>
     </Box>
   );
 };

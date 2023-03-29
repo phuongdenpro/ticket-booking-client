@@ -56,10 +56,10 @@ const GroupTicketPriceList = (props) => {
     {
       field: "code",
       headerName: "Mã",
-      flex: 50,
+      flex: 40,
       headerAlign: "center",
       headerClassName: "theme",
-      contentAlign:'center',
+      contentAlign: "center",
       sortable: false,
       renderCell: (params) => {
         return (
@@ -77,54 +77,69 @@ const GroupTicketPriceList = (props) => {
       },
     },
     {
-      field: "ticketGroup",
-      headerName: "Mã nhóm vé",
-      contentAlign:'center',
+      field: "priceDetail",
+      headerName: "Mã tuyến",
+      contentAlign: "center",
+      flex: 50,
+      headerAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+      renderCell: (params) => {
+        return <span>{params.row?.trip.code}</span>;
+      },
+    },
+    {
+      field: "priceDetail",
+      headerName: "Tên tuyến",
+
+      flex: 100,
+      headerAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+      renderCell: (params) => {
+        return <span>{params.row?.trip.name}</span>;
+      },
+    },
+    {
+      field: "priceDetail",
+      headerName: "Loại xe",
+      contentAlign: "center",
       flex: 70,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
       renderCell: (params) => {
-        return <span>{params.row?.ticketGroup.code}</span>;
+        return <span>{params.row?.seatType}</span>;
       },
     },
+
     {
-      field: "ticketGroup",
-      headerName: "Tên nhóm vé",
-      contentAlign:'center',
-      flex: 100,
+      field: "priceDetail",
+      headerName: "Giá",
+      contentAlign: "center",
+      flex: 70,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
-      renderCell: (params) => {
-        return <span>{params.row?.ticketGroup.name}</span>;
-      },
-    },
-    {
-      field: "price",
-      flex: 100,
-      headerName: "Đơn giá",
-      contentAlign:'center',
-      headerAlign: "center",
-      headerClassName: "theme",
       renderCell: (params) => {
         return <div>{convertCurrency(params?.row.price)}</div>;
       },
     },
+
     {
       field: "note",
       headerName: "Ghi chú",
-      flex: 200,
+      contentAlign: "left",
+      flex: 150,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
     },
-
     {
       field: "createdAt",
       headerName: "Ngày áp dụng",
-      contentAlign:'center',
-      flex: 100,
+      contentAlign: "center",
+      flex: 70,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
@@ -134,10 +149,11 @@ const GroupTicketPriceList = (props) => {
         );
       },
     },
+
     {
       field: "action",
       headerName: "Thao tác",
-      contentAlign:'center',
+      contentAlign: "center",
       flex: 70,
       headerAlign: "center",
       headerClassName: "theme",

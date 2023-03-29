@@ -22,7 +22,14 @@ import SelectCustom from "../../../../components/SelectCustom";
 import { PriceListApi } from "../../../../utils/priceListApi";
 
 const EditPriceList = (props) => {
-  const { setShowDrawer, showDrawer, handleGetData, dataPriceList,getDetailPriceList } = props;
+  const {
+    setShowDrawer,
+    showDrawer,
+    handleGetData,
+    dataPriceList,
+    getDetailPriceList,
+  } = props;
+  const now = new Date();
   const currentYear = new Date().getFullYear();
   const firstDay = new Date(dataPriceList?.startDate);
   const lastDay = new Date(dataPriceList?.endDate);
@@ -138,12 +145,15 @@ const EditPriceList = (props) => {
       name: value?.name,
       status: value?.status,
       note: value?.note,
-      startDate: new Date(selectedDate?.startDate),
+      startDate:
+        firstDay <= now && dataPriceList?.status == "Kích hoạt"
+          ? undefined
+          : new Date(selectedDate?.startDate),
       endDate: new Date(selectedDate?.endDate),
     };
     try {
       const priceListApi = new PriceListApi();
-      const res = await priceListApi.updateByCode(dataPriceList?.code,params);
+      const res = await priceListApi.updateByCode(dataPriceList?.code, params);
       customToast.success("Cập nhật thành công");
       getDetailPriceList();
       setShowDrawer(false);
@@ -204,6 +214,12 @@ const EditPriceList = (props) => {
                   <FormControlCustom label="Ngày bắt đầu" fullWidth isMarked>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
+                        disabled={
+                          firstDay <= now &&
+                          dataPriceList?.status == "Kích hoạt"
+                            ? true
+                            : false
+                        }
                         value={dayjs(selectedDate?.startDate)}
                         onChange={handleDateChangeStartDate}
                         className={"date-picker"}

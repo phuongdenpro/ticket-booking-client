@@ -11,9 +11,9 @@ import "../../../../assets/scss/default.scss";
 import FormControlCustom from "../../../../components/FormControl";
 import customToast from "../../../../components/ToastCustom";
 import { PriceListApi } from "../../../../utils/priceListApi";
-import CreatePriceListDetail from "./AddGroupTicket";
+import CreatePriceListDetail from "./AddPriceDetailList";
 import EditPriceList from "./EditPriceList";
-import GroupTicketPriceList from "./GroupTicketPriceList";
+import GroupDetailPriceList from "./GroupDetailPriceList";
 
 const DetailPriceList = (props) => {
   const [dataCustomer, setData] = useState();
@@ -30,8 +30,7 @@ const DetailPriceList = (props) => {
     try {
       console.log(codePriceList);
       const priceListApi = new PriceListApi();
-      const res = await priceListApi.getPriceListById(codePriceList.id);
-      console.log(res);
+      const res = await priceListApi.getPriceListByCode(codePriceList.id);
       setDetailPriceList(res?.data.data);
     } catch (error) {
       customToast.error(error);
@@ -42,7 +41,7 @@ const DetailPriceList = (props) => {
     try {
       const priceListApi = new PriceListApi();
       const res = await priceListApi.getPriceListDetails({
-        priceListId: codePriceList.id,
+        priceListCode: codePriceList.id,
       });
       setPriceListDetails(res?.data.data);
     } catch (error) {
@@ -54,6 +53,7 @@ const DetailPriceList = (props) => {
     getDetailPriceList();
     getPriceListDetails();
   }, [codePriceList]);
+  
   const defaultValues = useMemo(
     () => ({
       province: dataCustomer?.citiesId || "",
@@ -304,7 +304,7 @@ const DetailPriceList = (props) => {
           <div className={"page-layout"} style={{ marginTop: 50 }}>
             <Grid className={"align-items-center header_title"}>
               <Grid md={7}>
-                <h2 className={"txt-title"}>DANH SÁCH ÁP DỤNG</h2>
+                <h2 className={"txt-title"}>DANH SÁCH GIÁ</h2>
               </Grid>
               <div
                 className="item-btn-right"
@@ -321,7 +321,10 @@ const DetailPriceList = (props) => {
                 </Button>
               </div>
             </Grid>
-            <GroupTicketPriceList data={priceListDetails} getPriceListDetails={getPriceListDetails}/>
+            <GroupDetailPriceList
+              data={priceListDetails}
+              getPriceListDetails={getPriceListDetails}
+            />
           </div>
         </Grid>
       </Grid>

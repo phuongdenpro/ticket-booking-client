@@ -10,20 +10,7 @@ export const menu = () => {
     },
     {
       text: "Bảng giá",
-      path: "/admin/ticket/price-list",
-    },
-
-    {
-      text: "Thêm mới bảng giá",
-      path: "/admin/ticket/price-list/create",
-    },
-    {
-      text: "Nhóm vé",
-      path: "/admin/ticket/ticket-group",
-    },
-    {
-      text: "Danh sách vé",
-      path: "/admin/ticket-list",
+      path: "/admin/price-list",
     },
     {
       text: "Quản lý xe",

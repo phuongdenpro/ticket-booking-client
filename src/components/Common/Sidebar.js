@@ -56,18 +56,7 @@ const Sidebar = (props) => {
       ],
       true
     ),
-    getItem(
-      "Quản Lý Vé",
-      "subTicket",
-      <IdcardOutlined />,
-      [
-        
-        getChildItem("Bảng giá", "ticket/price-list"),
-        getChildItem("Nhóm vé", "ticket/ticket-group"),
-        getChildItem("Danh sách vé", "ticket-list"),
-      ],
-      true
-    ),
+    getItem("Bảng giá", "price-list", <IdcardOutlined />),
 
     getItem("Quản Lý Xe", "vehicle", <CarOutlined />),
     getItem("Quản Lý Bến Xe", "station", <CarRentalIcon />),

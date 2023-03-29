@@ -15,16 +15,37 @@ import { currencyMark, numberFormat } from "../../../../data/curren";
 import { PriceListApi } from "../../../../utils/priceListApi";
 import { LoadingButton } from "@mui/lab";
 import { isEmpty } from "lodash";
+import { TripApi } from "../../../../utils/tripApi";
+import { VehicleApi } from "../../../../utils/vehicleApi";
+import SelectCustom from "../../../../components/SelectCustom";
 
 const CreatePriceListDetail = (props) => {
   const date = new Date();
   const { setShowDrawer, showDrawer, idPriceList, getPriceListDetails } = props;
-  const [dataGroupTicket, setDataGroupTicket] = useState([]);
+  const [dataTrip, setDataTrip] = useState([]);
+  const [type, setType] = useState("");
+  const handelGetType = async () => {
+    try {
+      const vehicleApi = new VehicleApi();
+      const response = await vehicleApi.getType();
+      const typeTmp = [];
+      response?.data?.data.map((item) => {
+        typeTmp.push({
+          code: item.key,
+          name: item.value,
+        });
+      });
+      setType(typeTmp);
+    } catch (error) {
+      customToast.error(error.response.data.message);
+    }
+  };
+
   const handleGetData = async () => {
     try {
-      const groupTicketApi = new GroupTicketApi();
-      const response = await groupTicketApi.getList();
-      setDataGroupTicket(response);
+      const tripApi = new TripApi();
+      const response = await tripApi.getList();
+      setDataTrip(response);
     } catch (error) {
       customToast.error(error.response.data.message);
     }
@@ -32,6 +53,7 @@ const CreatePriceListDetail = (props) => {
 
   useEffect(() => {
     handleGetData();
+    handelGetType();
   }, []);
 
   const schema = yup.object().shape({
@@ -40,7 +62,11 @@ const CreatePriceListDetail = (props) => {
       .matches(/^\S*$/, "Mã không chưa khoảng trắng")
       .matches(/^[A-Za-z0-9]*$/, "Không chứa kí tự đặc biệt")
       .required("Mã không được phép bỏ trống"),
-    codeGroupTicket: yup
+      type: yup
+      .object()
+      .typeError("Loại xe không được phép bỏ trống")
+      .required("Loại xe không được phép bỏ trống"),
+    codeTrip: yup
       .object()
       .typeError("Vui lòng chọn mã nhóm vé")
       .required("Vui lòng chọn mã nhóm vé"),
@@ -65,17 +91,17 @@ const CreatePriceListDetail = (props) => {
   const { handleSubmit, reset, formState, setValue, watch } = methods;
   const { errors } = formState;
   const watchPrice = watch("price");
-  const watchCodeGroupTicket = watch("codeGroupTicket");
+  const watchCodeTrip = watch("codeTrip");
 
   useEffect(() => {
     setValue("price", currencyMark(watchPrice));
   }, [watchPrice]);
 
   useEffect(() => {
-    const codeGroupTicket = watchCodeGroupTicket;
+    const codeTrip = watchCodeTrip;
 
-    setValue("nameGroupTicket", codeGroupTicket?.name);
-  }, [watchCodeGroupTicket]);
+    setValue("nameTrip", codeTrip?.name);
+  }, [watchCodeTrip]);
 
   useEffect(() => {
     reset();
@@ -111,10 +137,11 @@ const CreatePriceListDetail = (props) => {
   const onSubmit = async (value) => {
     const params = {
       code: value.code,
-      ticketGroupId: value.codeGroupTicket.id,
+      tripCode: value.codeTrip.code,
       price: numberFormat(value?.price),
       note: value?.note,
       priceListId: idPriceList,
+      seatType: value?.type.name
     };
 
     try {
@@ -165,26 +192,41 @@ const CreatePriceListDetail = (props) => {
                   </FormControlCustom>
                 </Grid>
                 <Grid item xs={6} className="auto-complete">
-                  <FormControlCustom label={"Mã nhóm vé áp dụng"} fullWidth isMarked>
+                  <FormControlCustom
+                    label={"Mã tuyến áp dụng"}
+                    fullWidth
+                    isMarked
+                  >
                     <AutocompleteCustom
-                      name={"codeGroupTicket"}
-                      placeholder={"Chọn mã nhóm vé"}
-                      error={Boolean(errors?.codeGroupTicket)}
-                      helperText={errors?.codeGroupTicket?.message}
-                      options={dataGroupTicket?.data?.data || []}
+                      name={"codeTrip"}
+                      placeholder={"Chọn mã tuyến xe"}
+                      error={Boolean(errors?.codeTrip)}
+                      helperText={errors?.codeTrip?.message}
+                      options={dataTrip?.data?.data || []}
                       optionLabelKey={"code"}
                       renderOption={buildOptionSelect}
                     />
                   </FormControlCustom>
                 </Grid>
 
-                <Grid item xs={12}>
-                  <FormControlCustom label={"Tên nhóm vé"} fullWidth>
+                <Grid item xs={6}>
+                  <FormControlCustom label={"Tên tuyến xe"} fullWidth>
                     <InputField
-                      name={"nameGroupTicket"}
+                      name={"nameTrip"}
                       helperText={errors?.name?.message}
                       error={Boolean(errors.name)}
                       disabled={true}
+                    />
+                  </FormControlCustom>
+                </Grid>
+                <Grid item xs={6}>
+                  <FormControlCustom label={"Loại xe"} fullWidth isMarked>
+                    <SelectCustom
+                      name={"type"}
+                      placeholder={"Chọn loại xe"}
+                      error={Boolean(errors?.type)}
+                      helperText={errors?.type?.message}
+                      options={type}
                     />
                   </FormControlCustom>
                 </Grid>

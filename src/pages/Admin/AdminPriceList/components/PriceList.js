@@ -63,7 +63,7 @@ const PriceList = (props) => {
       renderCell: (params) => {
         return (
           <Button
-          onClick={() => handleShowDetail(params?.row?.id)}
+          onClick={() => handleShowDetail(params?.row?.code)}
             style={{ backgroundColor: 'transparent' }}
             disabled={false}
             color="primary"

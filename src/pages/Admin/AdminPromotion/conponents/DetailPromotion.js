@@ -12,7 +12,7 @@ import FormControlCustom from "../../../../components/FormControl";
 import customToast from "../../../../components/ToastCustom";
 import { PriceListApi } from "../../../../utils/priceListApi";
 import { PromotionApi } from "../../../../utils/promotionApi";
-import GroupTicketPriceList from "../../AdminPriceList/components/GroupTicketPriceList";
+import GroupDetailPriceList from "../../AdminPriceList/components/GroupDetailPriceList";
 import EditPromotion from "./EditPromotion";
 import PromotionDetailList from "./PromotionDetailList";
 

@@ -50,7 +50,7 @@ const TripList = (props) => {
       handleGetData();
       setOpenModal(false);
       setIdTrip(null);
-      setCodeTrip('')
+      setCodeTrip("");
     } catch (error) {
       customToast.error(error.response.data.message);
     }
@@ -62,16 +62,15 @@ const TripList = (props) => {
       headerName: "Mã",
       flex: 50,
       headerAlign: "center",
-      contentAlign:'center',
+      contentAlign: "center",
       headerClassName: "theme",
       sortable: false,
     },
     {
       field: "name",
       headerName: "Tên chuyến",
-      flex: 100,
+      flex: 200,
       headerAlign: "center",
-      contentAlign:'center',
       headerClassName: "theme",
       sortable: false,
     },
@@ -81,41 +80,29 @@ const TripList = (props) => {
       flex: 150,
       headerName: "Nơi đi",
       headerAlign: "center",
-      contentAlign:'center',
       headerClassName: "theme",
       renderCell: (params) => {
         return (
-          <Typography
-            style={{
-              fontSize: "1rem",
-              display: "inline-block",
-              textTransform: "none",
-            }}
-          >
+          <span>
             {params?.row?.fromStation?.name}({params?.row?.fromStation?.code})
-          </Typography>
+          </span>
         );
       },
     },
     {
       field: "toStation",
       headerName: "Nơi đến",
-      flex: 150,
+      flex: 200,
       headerAlign: "center",
-      contentAlign:'center',
       headerClassName: "theme",
       sortable: false,
       renderCell: (params) => {
         return (
-          <Typography
-            style={{
-              fontSize: "1rem",
-              display: "inline-block",
-              textTransform: "none",
-            }}
+          <span
+           
           >
             {params?.row?.toStation?.name}({params?.row?.toStation?.code})
-          </Typography>
+          </span>
         );
       },
     },
@@ -124,7 +111,7 @@ const TripList = (props) => {
       headerName: "Thời gian đi",
       flex: 100,
       headerAlign: "center",
-      contentAlign:'center',
+      contentAlign: "center",
       headerClassName: "theme",
       sortable: false,
       renderCell: (params) => {
@@ -136,9 +123,9 @@ const TripList = (props) => {
     {
       field: "endDate",
       headerName: "Thời gian đến",
-      flex: 100,
+      flex: 110,
       headerAlign: "center",
-      contentAlign:'center',
+      contentAlign: "center",
       headerClassName: "theme",
       sortable: false,
       renderCell: (params) => {
@@ -156,9 +143,9 @@ const TripList = (props) => {
     {
       field: "status",
       headerName: "Trạng thái",
-      flex: 110,
+      flex: 125,
       headerAlign: "center",
-      contentAlign:'center',
+      contentAlign: "center",
       headerClassName: "theme",
       sortable: false,
       renderCell: (params) => {
@@ -166,7 +153,9 @@ const TripList = (props) => {
           <div>
             <Badge
               type={params?.row?.status == "Kích hoạt" ? "success" : "danger"}
-              content={params?.row?.status == "Kích hoạt" ? "Hoạt động" : "Tạm ngưng"}
+              content={
+                params?.row?.status == "Kích hoạt" ? "Hoạt động" : "Tạm ngưng"
+              }
             />
           </div>
         );
@@ -174,11 +163,11 @@ const TripList = (props) => {
     },
     {
       field: "TripDetails",
-      headerName: "Các chuyến chi tiết",
-      flex: 150,
+      headerName: "Chuyến chi tiết",
+      flex: 140,
       headerAlign: "center",
       headerClassName: "theme",
-      contentAlign:'center',
+      contentAlign: "center",
       sortable: false,
       renderCell: (id) => {
         return (
@@ -195,7 +184,7 @@ const TripList = (props) => {
       headerName: "Thao tác",
       flex: 70,
       headerAlign: "center",
-      contentAlign:'center',
+      contentAlign: "center",
       headerClassName: "theme",
       sortable: false,
       renderCell: (params) => {
@@ -205,7 +194,7 @@ const TripList = (props) => {
             <Tooltip title="Cập nhật">
               <IconButton>
                 <BorderColorIcon
-                  onClick={() => handelDetail(params.id)}
+                  onClick={() => handleShowDetail(params.id)}
                   style={{
                     backgroundColor: "white",
                     borderRadius: 5,
