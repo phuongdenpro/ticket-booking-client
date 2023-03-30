@@ -80,5 +80,24 @@ class TripApi {
     });
     return res;
   }
+
+  getTripDetailById(id, params) {
+    const url = `trip-detail/id/${id}`;
+    const res = axiosClient.get(url, {
+      params: {
+        ...params,
+      },
+    });
+    return res;
+  }
+
+  updateTripDetail(id, params) {
+    const url = `trip-detail/id/${id}`;
+    const res = axiosClient.patch(url, {
+      ...params,
+    });
+    return res;
+    
+  }
 }
 export { TripApi };

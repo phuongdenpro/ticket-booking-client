@@ -13,10 +13,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import * as yup from "yup";
-
 import "../../../../assets/scss/default.scss";
 import AutocompleteCustom from "../../../../components/AutocompleteCustom";
 import FormControlCustom from "../../../../components/FormControl";
@@ -31,15 +30,21 @@ import { MobileTimePicker, TimePicker } from "@mui/x-date-pickers";
 import SelectCustom from "../../../../components/SelectCustom";
 import { TripApi } from "../../../../utils/tripApi";
 
-const AddTripDetail = (props) => {
-  const { setShowDrawerCreate, showDrawerCreate, idTrip,handleGetData } = props;
+const EditTripDetail = (props) => {
+  const {
+    setShowDrawerEdit,
+    showDrawerEdit,
+    idTrip,
+    handleGetData,
+    dataTripDetail,
+  } = props;
   const [images, setImages] = useState();
   const [urlImage, setUrlImage] = useState();
   const [optionVehicle, setOptionVehicle] = useState([]);
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth();
-  const firstDay = new Date();
-  const lastDay = new Date(currentYear, currentMonth, 31);
+  const firstDay = new Date(dataTripDetail?.departureTime);
+  const lastDay = new Date(dataTripDetail?.expectedTime);
   const [selectedDate, setSelectedDate] = useState({
     startDate: firstDay,
     endDate: lastDay,
@@ -50,6 +55,19 @@ const AddTripDetail = (props) => {
     try {
       const vehicleApi = new VehicleApi();
       const response = await vehicleApi.getList();
+      const options = [];
+      response.data.data.map((item) =>
+        options.push({
+          id: item.id,
+          code: item.code,
+          name: item.name,
+          description:item.description,
+          type: item.type,
+          licensePlate: item.licensePlate,
+          floorNumber:item.floorNumber,
+          totalSeat:item.totalSeat
+        })
+      );
       setOptionVehicle(response?.data?.data);
     } catch (error) {
       customToast.error(error.response.data.message);
@@ -76,11 +94,14 @@ const AddTripDetail = (props) => {
       .required("Vui lòng chọn xe"),
   });
 
-  const defaultValues = {
-    code: "",
-    codeVehicle: "",
-    status: "",
-  };
+  const defaultValues = useMemo(
+    () => ({
+      code: dataTripDetail?.code,
+      status: dataTripDetail?.status,
+      codeVehicle: dataTripDetail?.vehicle,
+    }),
+    [dataTripDetail]
+  );
 
   const methods = useForm({
     mode: "onSubmit",
@@ -90,6 +111,13 @@ const AddTripDetail = (props) => {
 
   const { handleSubmit, reset, formState, setValue, watch } = methods;
   const { errors } = formState;
+  useEffect(() => {
+    reset({ ...defaultValues });
+    setSelectedDate({
+      startDate: new Date(dataTripDetail?.departureTime),
+      endDate: new Date(dataTripDetail?.expectedTime),
+    });
+  }, [dataTripDetail]);
   const watchCodeVehicle = watch("codeVehicle");
   const watchType = watch("vehicleType");
   const watchLicensePlate = watch("licensePlate");
@@ -112,24 +140,21 @@ const AddTripDetail = (props) => {
       startDate: firstDay,
       endDate: lastDay,
     });
-  }, [showDrawerCreate]);
+  }, [showDrawerEdit]);
 
   const onSubmit = async (value) => {
     const params = {
-      code: value.code,
       vehicleId: value.codeVehicle.id,
       status: value.status,
-      tripId:idTrip,
       departureTime: new Date(selectedDate?.startDate),
       expectedTime: new Date(selectedDate?.endDate),
     };
-    console.log(params);
     try {
       const tripApi = new TripApi();
-      const res = await tripApi.createTripDetail(params);
-      customToast.success("Thêm mới thành công");
+      const res = await tripApi.updateTripDetail(dataTripDetail.id,params);
+      customToast.success("Cập nhật thành công");
       handleGetData();
-      setShowDrawerCreate(false);
+      setShowDrawerEdit(false);
       reset();
     } catch (error) {
       customToast.error(error.response.data.message);
@@ -157,8 +182,8 @@ const AddTripDetail = (props) => {
   return (
     <div>
       <Dialog
-        open={showDrawerCreate}
-        onClose={() => setShowDrawerCreate(false)}
+        open={showDrawerEdit}
+        onClose={() => setShowDrawerEdit(false)}
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
         PaperProps={{
@@ -190,7 +215,7 @@ const AddTripDetail = (props) => {
               backgroundColor: "#fff",
             }}
           />
-          Thêm chuyến đi chi tiết
+          Cập nhật chuyến đi
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
@@ -347,7 +372,7 @@ const AddTripDetail = (props) => {
                       <Button
                         className="btn-secondary-disable"
                         //   onClick={goBack}
-                        onClick={() => setShowDrawerCreate(false)}
+                        onClick={() => setShowDrawerEdit(false)}
                         variant="outlined"
                         style={{ width: "80%" }}
                       >
@@ -381,4 +406,4 @@ const AddTripDetail = (props) => {
   );
 };
 
-export default AddTripDetail;
+export default EditTripDetail;
