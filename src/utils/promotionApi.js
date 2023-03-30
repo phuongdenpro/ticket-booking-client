@@ -32,7 +32,7 @@ class PromotionApi {
     return res;
   }
   updateById(code, params) {
-    const url = `promotion/${code}`;
+    const url = `promotion/id/${code}`;
     const res = axiosClient.patch(url, {
       ...params,
     });
@@ -46,6 +46,18 @@ class PromotionApi {
     const res = axiosClient.delete(url, params);
     return res;
   }
+
+  getPromotionLine(params) {
+    const url = `promotion-line`;
+    const res = axiosClient.get(url, {
+      params: {
+        sort: "ASC",
+        ...params,
+      },
+    });
+    return res;
+  }
+
 
  
 }

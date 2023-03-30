@@ -13,6 +13,7 @@ import customToast from "../../../../components/ToastCustom";
 import { PriceListApi } from "../../../../utils/priceListApi";
 import { PromotionApi } from "../../../../utils/promotionApi";
 import GroupDetailPriceList from "../../AdminPriceList/components/GroupDetailPriceList";
+import AddPromotionLine from "./AddPromotionLine";
 import EditPromotion from "./EditPromotion";
 import PromotionDetailList from "./PromotionDetailList";
 
@@ -25,7 +26,7 @@ const DetailPromotion = (props) => {
   const [showDrawer, setShowDrawer] = useState(false);
   const [showDrawerAdd, setShowDrawerAdd] = useState(false);
 
-  const [priceListDetails, setPriceListDetails] = useState([]);
+  const [promotionLine, setPromotionLine] = useState([]);
 
   const getDetailPromotion = async () => {
     try {
@@ -37,21 +38,21 @@ const DetailPromotion = (props) => {
     }
   };
 
-  const getPriceListDetails = async () => {
-    // try {
-    //   const priceListApi = new PriceListApi();
-    //   const res = await priceListApi.getPriceListDetails({
-    //     priceListId: codePriceList.id,
-    //   });
-    //   setPriceListDetails(res?.data.data);
-    // } catch (error) {
-    //   customToast.error(error);
-    // }
+  const getPromotionLine = async () => {
+    try {
+      const promotionApi = new PromotionApi();
+      const res = await promotionApi.getPromotionLine({
+        promotionCode: detailPromotion.code,
+      });
+      setPromotionLine(res?.data.data);
+    } catch (error) {
+      customToast.error(error);
+    }
   };
 
   useEffect(() => {
     getDetailPromotion();
-    getPriceListDetails();
+    getPromotionLine();
   }, [codePromotion]);
   const defaultValues = useMemo(
     () => ({
@@ -321,8 +322,8 @@ const DetailPromotion = (props) => {
               </div>
             </Grid>
             <PromotionDetailList
-              data={priceListDetails}
-              getPriceListDetails={getPriceListDetails}
+              data={promotionLine}
+              getPromotionLine={getPromotionLine}
             />
           </div>
         </Grid>
@@ -333,6 +334,12 @@ const DetailPromotion = (props) => {
         dataPromotion={detailPromotion}
         getDetailPromotion={getDetailPromotion}
       ></EditPromotion>
+      <AddPromotionLine
+        setShowDrawer={setShowDrawerAdd}
+        showDrawer={showDrawerAdd}
+        idPromotion={detailPromotion.id}
+        getPromotionLine={getPromotionLine}
+      ></AddPromotionLine>
     </div>
   );
 };
