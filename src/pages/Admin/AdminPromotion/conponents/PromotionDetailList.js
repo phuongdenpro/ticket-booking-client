@@ -58,7 +58,7 @@ const PromotionDetailList = (props) => {
       flex: 50,
       headerAlign: "center",
       headerClassName: "theme",
-      contentAlign:'center',
+      contentAlign: "center",
       sortable: false,
       renderCell: (params) => {
         return (
@@ -76,63 +76,65 @@ const PromotionDetailList = (props) => {
       },
     },
     {
-      field: "ticketGroup",
-      headerName: "Mô tả",
-      contentAlign:'center',
+      field: "couponCode",
+      headerName: "Mã áp dụng",
+      contentAlign: "center",
       flex: 70,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
-      renderCell: (params) => {
-        return <span>{params.row?.ticketGroup.code}</span>;
-      },
     },
     {
-      field: "ticketGroup",
+      field: "title",
+      headerName: "Tiêu đề",
+      contentAlign: "center",
+      flex: 70,
+      headerAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+    },
+    {
+      field: "type",
       headerName: "Loại khuyến mãi",
-      contentAlign:'center',
+      contentAlign: "center",
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
-      renderCell: (params) => {
-        return <span>{params.row?.ticketGroup.name}</span>;
-      },
     },
-    
 
     {
-      field: "createdAt",
-      headerName: "Ngày áp dụng",
-      contentAlign:'center',
+      field: "startDate",
+      headerName: "Ngày bắt đầu",
+      contentAlign: "center",
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
       renderCell: (params) => {
         return (
-          <span>{moment(params.row?.createdAt).format("DD/MM/YYYY")}</span>
+          <span>{moment(params.row?.startDate).format("DD/MM/YYYY")}</span>
         );
       },
     },
     {
-        field: "endDateAt",
-        headerName: "Ngày kết thúc",
-        contentAlign:'center',
-        flex: 100,
-        headerAlign: "center",
-        headerClassName: "theme",
-        sortable: false,
-        renderCell: (params) => {
-          return (
-            <span>{moment(params.row?.endDateAt).format("DD/MM/YYYY")}</span>
-          );
-        },
+      field: "endDate",
+      headerName: "Ngày kết thúc",
+      contentAlign: "center",
+      flex: 100,
+      headerAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <span>{moment(params.row?.endDate).format("DD/MM/YYYY")}</span>
+        );
       },
+    },
     {
       field: "action",
       headerName: "Thao tác",
-      contentAlign:'center',
+      contentAlign: "center",
       flex: 70,
       headerAlign: "center",
       headerClassName: "theme",
