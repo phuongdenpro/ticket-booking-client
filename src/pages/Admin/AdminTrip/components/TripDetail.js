@@ -127,7 +127,7 @@ const TripDetail = (props) => {
   const methods = useForm({
     defaultValues,
   });
-  const { handleSubmit, reset, watch } = methods;
+  const { handleSubmit, reset, watch, setValue } = methods;
   const watchStatus = watch("status");
 
   useEffect(() => {
@@ -148,6 +148,10 @@ const TripDetail = (props) => {
       setIdTripDetail("");
     }
   }, [showDrawerEdit]);
+
+  useEffect(() => {
+    setValue("status", filterStatus[0]);
+  }, [showDrawerDetail]);
 
   const getDetailDataTripDetail = async (id) => {
     if (!id) return;

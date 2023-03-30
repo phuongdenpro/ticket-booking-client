@@ -392,7 +392,7 @@ const EditTripDetail = (props) => {
                         variant="contained"
                         style={{ width: "80%", marginRight: 50 }}
                       >
-                        {"Thêm mới "}
+                        {"Cập nhật"}
                       </LoadingButton>
                     </Grid>
                   </Grid>
