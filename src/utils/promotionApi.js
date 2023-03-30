@@ -24,8 +24,8 @@ class PromotionApi {
     });
     return res;
   }
-  getById(id, params) {
-    const url = `promotion/id/${id}`;
+  getByCode(id, params) {
+    const url = `promotion/code/${id}`;
     const res = axiosClient.get(url, {
       ...params,
     });
@@ -39,26 +39,18 @@ class PromotionApi {
     return res;
   }
 
-  
-
   deleteById(id, params) {
     const url = `promotion/${id}`;
     const res = axiosClient.delete(url, params);
     return res;
   }
 
-  getPromotionLine(params) {
-    const url = `promotion-line`;
-    const res = axiosClient.get(url, {
-      params: {
-        sort: "ASC",
-        ...params,
-      },
-    });
+  getPromotionLine(codePromotion) {
+    console.log(codePromotion);
+    const url = `promotion-line?promotionCode=${codePromotion}&sort=ASC&isAll=true`;
+    console.log(codePromotion);
+    const res = axiosClient.get(url);
     return res;
   }
-
-
- 
 }
 export { PromotionApi };
