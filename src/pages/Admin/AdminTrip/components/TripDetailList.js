@@ -115,15 +115,15 @@ const TripDetailList = (props) => {
     },
     {
       field: "status",
-      headerName: "Tình trạng",
+      headerName: "Trạng thái",
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
     },
     {
-      field: "isActive",
-      headerName: "Trạng thái",
+      field: "vehicle",
+      headerName: "Mã xe",
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
@@ -132,7 +132,7 @@ const TripDetailList = (props) => {
         return (
           <div>
             <span>
-              {params.row?.isActive == 1 ? "Hoạt động" : "Tạm dừng"}
+              {params?.row?.vehicle.code}
             </span>
           </div>
         );
@@ -203,7 +203,7 @@ const TripDetailList = (props) => {
           <Tooltip title="Cập nhật">
           <IconButton>
             <BorderColorIcon
-             
+            onClick={() => handleShowDetail(params.id)}
               style={{
                 backgroundColor: "white",
                 borderRadius: 5,

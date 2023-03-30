@@ -29,6 +29,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import TripDetailList from "./TripDetailList";
 import { TripApi } from "../../../../utils/tripApi";
 import customToast from "../../../../components/ToastCustom";
+import AddTripDetail from "./AddTripDetail";
+import FormControlCustom from "../../../../components/FormControl";
+import SelectCustom from "../../../../components/SelectCustom";
+import EditTripDetail from "./EditTripDetail";
 
 const useStyles = makeStyles((theme) => ({
   dialogRoot: {
@@ -56,6 +60,37 @@ const TripDetail = (props) => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [filterParams, setFilterParams] = useState(null);
+  const [showDrawerCreate, setShowDrawerCreate] = useState(false);
+  const [showDrawerEdit, setShowDrawerEdit] = useState(false);
+  const [idTripDetail, setIdTripDetail] = useState(null);
+  const [dataTripDetail, setDataTripDetail] = useState("");
+  const filterStatus = [
+    {
+      id: 1,
+      code: null,
+      name: "Tất cả",
+    },
+    {
+      id: 2,
+      code: "Còn vé",
+      name: "Còn vé",
+    },
+    {
+      id: 3,
+      code: "Hết vé",
+      name: "Hết vé",
+    },
+    {
+      id: 4,
+      code: "Chưa xuất phát",
+      name: "Chưa xuất phát",
+    },
+    {
+      id: 5,
+      code: "Đã xuất phát",
+      name: "Đã xuất phát",
+    },
+  ];
 
   const handleGetData = async (id) => {
     try {
@@ -84,6 +119,45 @@ const TripDetail = (props) => {
     setPageSize(+event.target.value);
     setPage(0);
   };
+  const defaultValues = {
+    startDate: null,
+    endDate: null,
+    status: null,
+  };
+  const methods = useForm({
+    defaultValues,
+  });
+  const { handleSubmit, reset, watch } = methods;
+  const watchStatus = watch("status");
+
+  useEffect(() => {
+    const params = {
+      ...filterParams,
+      status: watchStatus?.code,
+    };
+    setFilterParams(params);
+  }, [watchStatus]);
+
+  const handelShowDetail = (id) => {
+    setShowDrawerEdit(true);
+    setIdTripDetail(id);
+  };
+
+  useEffect(() => {
+    if (!showDrawerEdit) {
+      setIdTripDetail("");
+    }
+  }, [showDrawerEdit]);
+
+  const getDetailDataTripDetail = async (id) => {
+    if (!id) return;
+    const tripApi = new TripApi();
+    const response = await tripApi.getTripDetailById(id);
+    setDataTripDetail(response.data.data);
+  };
+  useEffect(() => {
+    getDetailDataTripDetail(idTripDetail);
+  }, [idTripDetail]);
   return (
     <div>
       <Dialog
@@ -131,13 +205,30 @@ const TripDetail = (props) => {
             color="warning"
             className={"btn-create"}
             startIcon={<AddIcon />}
+            onClick={() => {
+              setShowDrawerCreate(true);
+            }}
           >
             Thêm mới
           </Button>
         </DialogTitle>
         <DialogContent className={classes.dialogContent}>
           <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
-            <div className="row"></div>
+            <div className="row" style={{ marginBottom: 20 }}>
+              <div className="col-3">
+                <FormProvider {...methods}>
+                  <FormControlCustom label="Trạng thái" fullWidth>
+                    <div className="view-input">
+                      <SelectCustom
+                        placeholder={"Tất cả"}
+                        name={"status"}
+                        options={filterStatus}
+                      />
+                    </div>
+                  </FormControlCustom>
+                </FormProvider>
+              </div>
+            </div>
 
             <Divider />
 
@@ -146,6 +237,7 @@ const TripDetail = (props) => {
               total={data?.data?.pagination?.total}
               handleGetData={handleGetData}
               handleChangePage={handleChangePage}
+              handleShowDetail={handelShowDetail}
               onChangeRowsPerPage={handleChangeRowsPerPage}
               page={page}
               pageSize={pageSize}
@@ -162,6 +254,19 @@ const TripDetail = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
+      <AddTripDetail
+        setShowDrawerCreate={setShowDrawerCreate}
+        showDrawerCreate={showDrawerCreate}
+        handleGetData={handleGetData}
+        idTrip={dataTrip.id}
+      ></AddTripDetail>
+      <EditTripDetail
+        setShowDrawerEdit={setShowDrawerEdit}
+        showDrawerEdit={showDrawerEdit}
+        handleGetData={handleGetData}
+        idTrip={dataTrip.id}
+        dataTripDetail={dataTripDetail}
+      ></EditTripDetail>
     </div>
   );
 };

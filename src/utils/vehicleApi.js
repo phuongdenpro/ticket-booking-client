@@ -12,6 +12,13 @@ class VehicleApi {
     return res;
   }
 
+  getList(){
+    const url = "vehicle?isAll=true";
+    const res = axiosClient.get(url);
+    return res;
+  }
+
+
   createVehicle(params) {
     const url = `vehicle`;
     const res = axiosClient.post(url, {

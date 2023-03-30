@@ -38,7 +38,6 @@ const EditTrip = (props) => {
     try {
       const stationApi = new StationApi();
       const response = await stationApi.getList();
-      const option = [];
       const options = [];
       response.data.data.map((item) =>
         options.push({ id: item.id, name: item.name, code: item.code })
