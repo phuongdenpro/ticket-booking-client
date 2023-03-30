@@ -29,6 +29,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import TripDetailList from "./TripDetailList";
 import { TripApi } from "../../../../utils/tripApi";
 import customToast from "../../../../components/ToastCustom";
+import AddTripDetail from "./AddTripDetail";
 
 const useStyles = makeStyles((theme) => ({
   dialogRoot: {
@@ -56,6 +57,7 @@ const TripDetail = (props) => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [filterParams, setFilterParams] = useState(null);
+  const [showDrawerCreate, setShowDrawerCreate] = useState(false);
 
   const handleGetData = async (id) => {
     try {
@@ -131,6 +133,9 @@ const TripDetail = (props) => {
             color="warning"
             className={"btn-create"}
             startIcon={<AddIcon />}
+            onClick={() => {
+              setShowDrawerCreate(true);
+            }}
           >
             Thêm mới
           </Button>
@@ -162,6 +167,13 @@ const TripDetail = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
+      <AddTripDetail
+        setShowDrawerCreate={setShowDrawerCreate}
+        showDrawerCreate={showDrawerCreate}
+        handleGetData={handleGetData}
+        idTrip={dataTrip.id}
+        handleGetData={handleGetData}
+      ></AddTripDetail>
     </div>
   );
 };
