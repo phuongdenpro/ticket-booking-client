@@ -31,7 +31,7 @@ const DetailPromotion = (props) => {
   const getDetailPromotion = async () => {
     try {
       const promotionApi = new PromotionApi();
-      const res = await promotionApi.getById(codePromotion.id);
+      const res = await promotionApi.getByCode(codePromotion.id);
       setDetailPromotion(res?.data.data);
     } catch (error) {
       customToast.error(error);
@@ -41,9 +41,8 @@ const DetailPromotion = (props) => {
   const getPromotionLine = async () => {
     try {
       const promotionApi = new PromotionApi();
-      const res = await promotionApi.getPromotionLine({
-        promotionCode: detailPromotion.code,
-      });
+      const res = await promotionApi.getPromotionLine(codePromotion.id);
+      console.log(res);
       setPromotionLine(res?.data.data);
     } catch (error) {
       customToast.error(error);
