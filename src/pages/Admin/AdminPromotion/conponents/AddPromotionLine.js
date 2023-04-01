@@ -22,35 +22,34 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
+import { PromotionApi } from "../../../../utils/promotionApi";
 
 const AddPromotionLine = (props) => {
   const date = new Date();
-  const { setShowDrawer, showDrawer, idPriceList, getPriceListDetails } = props;
+  const { setShowDrawer, showDrawer, codePromotion, getPromotionLine } =
+    props;
   const [dataTrip, setDataTrip] = useState([]);
-  const [type, setType] = useState("");
   const currentYear = new Date().getFullYear();
-  const firstDay = new Date(currentYear, 0, 1);
-  const lastDay = new Date(currentYear, 11, 31);
+  const currentMonth = new Date().getMonth();
+  const firstDay = new Date();
+  const lastDay = new Date(currentYear, currentMonth, 31);
+  const [disabledMoney, setDisabledMoney] = useState(true);
+  const [disabledPercent, setDisabledPercent] = useState(true);
   const [selectedDate, setSelectedDate] = useState({
     startDate: firstDay,
     endDate: lastDay,
   });
-  const handelGetType = async () => {
-    try {
-      const vehicleApi = new VehicleApi();
-      const response = await vehicleApi.getType();
-      const typeTmp = [];
-      response?.data?.data.map((item) => {
-        typeTmp.push({
-          code: item.key,
-          name: item.value,
-        });
-      });
-      setType(typeTmp);
-    } catch (error) {
-      customToast.error(error.response.data.message);
-    }
-  };
+
+  const optionsType = [
+    {
+      id: 1,
+      name: "Giảm giá phần trăm",
+    },
+    {
+      id: 2,
+      name: "Giảm giá tiền trực tiếp",
+    },
+  ];
 
   const handleGetData = async () => {
     try {
@@ -64,7 +63,6 @@ const AddPromotionLine = (props) => {
 
   useEffect(() => {
     handleGetData();
-    handelGetType();
   }, []);
 
   const schema = yup.object().shape({
@@ -73,24 +71,76 @@ const AddPromotionLine = (props) => {
       .matches(/^\S*$/, "Mã không chưa khoảng trắng")
       .matches(/^[A-Za-z0-9]*$/, "Không chứa kí tự đặc biệt")
       .required("Mã không được phép bỏ trống"),
+    title: yup
+      .string()
+      .typeError("Vui lòng nhập tiêu đề")
+      .required("Vui lòng nhập tiêu đề"),
+    couponCode: yup
+      .string()
+      .typeError("Vui lòng nhập mã giảm giá")
+      .required("Vui lòng nhập mã giảm giá"),
+    description: yup
+      .string()
+      .typeError("Vui lòng nhập mô tả")
+      .required("Vui lòng nhập mô tả"),
     type: yup
       .object()
-      .typeError("Loại xe không được phép bỏ trống")
-      .required("Loại xe không được phép bỏ trống"),
-    codeTrip: yup
-      .object()
-      .typeError("Vui lòng chọn mã nhóm vé")
-      .required("Vui lòng chọn mã nhóm vé"),
-    price: yup
+      .typeError("Vui lòng chọn loại khuyến mãi")
+      .required("Vui lòng chọn loại khuyến mãi"),
+
+    maxBudget: yup
       .string()
-      .typeError("Vui lòng nhập giá")
-      .required("Vui lòng nhập giá"),
+      .typeError("Vui lòng nhập ngân sách tối đa")
+      .required("Vui lòng nhập ngân sách tối đa"),
+    maxQuantity: yup
+      .string()
+      .typeError("Vui lòng nhập số lượng tối đa")
+      .required("Vui lòng nhập số lượng tối đa"),
+    maxQuantityPerCustomer: yup
+      .string()
+      .typeError("Vui lòng nhập số lượng tối đa cho khách hàng")
+      .required("Vui lòng nhập số lượng tối đa cho khách hàng"),
+    tripCode: yup
+      .object()
+      .typeError("Vui lòng chọn tuyến áp dụng")
+      .required("Vui lòng chọn tuyến áp dụng"),
+    quantityBuy: yup
+      .string()
+      .typeError("Vui lòng nhập số lượng mua")
+      .required("Vui lòng nhập số lượng mua"),
+    purchaseAmount: yup
+      .string()
+      .typeError("Vui lòng nhập số tiền mua")
+      .required("Vui lòng nhập số tiền mua"),
+    reductionAmount: yup
+      .string()
+      .typeError("Vui lòng nhập số tiền giảm")
+      .required("Vui lòng nhập số tiền giảm"),
+    percentDiscount: yup
+      .string()
+      .typeError("Vui lòng nhập phần trăm giảm")
+      .required("Vui lòng nhập phần trăm giảm"),
+    maxReductionAmount: yup
+      .string()
+      .typeError("Vui lòng nhập số tiền giảm tối đa")
+      .required("Vui lòng nhập số tiền giảm tối đa"),
   });
 
   const defaultValues = {
     code: "",
-    price: "",
-    createdAt: moment(new Date()).format("DD/MM/YYYY"),
+    title: "",
+    couponCode: "",
+    description: "",
+    type: "",
+    quantityBuy: "",
+    maxBudget: "",
+    maxQuantity: "",
+    maxQuantityPerCustomer: "",
+    tripCode: "",
+    purchaseAmount: "",
+    reductionAmount: "",
+    percentDiscount: "",
+    maxReductionAmount: "",
   };
 
   const methods = useForm({
@@ -101,21 +151,49 @@ const AddPromotionLine = (props) => {
 
   const { handleSubmit, reset, formState, setValue, watch } = methods;
   const { errors } = formState;
-  const watchPrice = watch("price");
-  const watchCodeTrip = watch("codeTrip");
+  const watchType = watch("type");
+  const watchPurchaseAmount = watch("purchaseAmount");
+  const watchMaxBudget = watch("maxBudget");
+
+  const watchReductionAmount = watch("reductionAmount");
+  const watchMaxReductionAmount = watch("maxReductionAmount");
 
   useEffect(() => {
-    setValue("price", currencyMark(watchPrice));
-  }, [watchPrice]);
+    if (watchType?.id == 1) {
+      setDisabledPercent(false);
+      setDisabledMoney(true);
+
+      setValue("reductionAmount", "0");
+    } else if (watchType?.id == 2) {
+      setDisabledPercent(true);
+      setDisabledMoney(false);
+      setValue("percentDiscount", "0");
+    } else {
+      setValue("reductionAmount", "0");
+      setValue("percentDiscount", "0");
+    }
+  }, [watchType]);
 
   useEffect(() => {
-    const codeTrip = watchCodeTrip;
-
-    setValue("nameTrip", codeTrip?.name);
-  }, [watchCodeTrip]);
+    setValue("maxBudget", currencyMark(watchMaxBudget));
+  }, [watchMaxBudget]);
+  useEffect(() => {
+    setValue("purchaseAmount", currencyMark(watchPurchaseAmount));
+  }, [watchPurchaseAmount]);
+  useEffect(() => {
+    setValue("reductionAmount", currencyMark(watchReductionAmount));
+  }, [watchReductionAmount]);
+  useEffect(() => {
+    setValue("maxReductionAmount", currencyMark(watchMaxReductionAmount));
+  }, [watchMaxReductionAmount]);
 
   useEffect(() => {
     reset();
+    setSelectedDate({
+      ...selectedDate,
+      startDate: firstDay,
+      endDate: lastDay,
+    });
   }, [showDrawer]);
 
   const goBack = () => {
@@ -148,20 +226,42 @@ const AddPromotionLine = (props) => {
   const onSubmit = async (value) => {
     const params = {
       code: value.code,
-      tripCode: value.codeTrip.code,
-      price: numberFormat(value?.price),
+      title: value.title,
+      description: value.description,
       note: value?.note,
-      priceListId: idPriceList,
-      seatType: value?.type.name,
+      couponCode: value.couponCode,
+      tripCode: value.tripCode.code,
+      startDate: new Date(selectedDate?.startDate),
+      endDate: new Date(selectedDate?.endDate),
+      maxQuantity: value.maxQuantity,
+      maxQuantityPerCustomer: value.maxQuantityPerCustomer,
+      maxBudget: numberFormat(value.maxBudget),
+      type: value.type.name,
+      promotionCode: codePromotion,
+      productDiscountPercent: {
+        quantityBuy: value.quantityBuy,
+        purchaseAmount: numberFormat(value.purchaseAmount),
+        percentDiscount: value.percentDiscount,
+        maxReductionAmount: numberFormat(value.maxReductionAmount),
+      },
+      productDiscount: {
+        quantityBuy: value.quantityBuy,
+        purchaseAmount: numberFormat(value.purchaseAmount),
+        reductionAmount: numberFormat(value.reductionAmount),
+        maxReductionAmount: numberFormat(value.maxReductionAmount),
+      },
     };
 
+    console.log(params);
+
     try {
-      const priceListApi = new PriceListApi();
-      const response = await priceListApi.createPriceListDetail(params);
+      const promotionApi = new PromotionApi();
+      const response = await promotionApi.createPromotionLine(params);
       customToast.success("Thêm thành công");
       setShowDrawer(false);
-      getPriceListDetails();
+      getPromotionLine();
     } catch (error) {
+      console.log(error);
       customToast.error(error.response.data.message);
     }
   };
@@ -207,8 +307,27 @@ const AddPromotionLine = (props) => {
                     <InputField
                       name={"title"}
                       placeholder={"Nhập tiêu đề"}
-                      error={Boolean(errors.code)}
-                      helperText={errors?.code?.message}
+                      error={Boolean(errors.title)}
+                      helperText={errors?.title?.message}
+                    />
+                  </FormControlCustom>
+                </Grid>
+                <Grid item xs={6}>
+                  <FormControlCustom label={"Mã giảm giá"} fullWidth>
+                    <InputField
+                      name={"couponCode"}
+                      helperText={errors?.couponCode?.message}
+                      error={Boolean(errors.couponCode)}
+                    />
+                  </FormControlCustom>
+                </Grid>
+
+                <Grid item xs={6}>
+                  <FormControlCustom label={"Diễn giải"} fullWidth>
+                    <InputField
+                      name={"description"}
+                      helperText={errors?.description?.message}
+                      error={Boolean(errors.description)}
                     />
                   </FormControlCustom>
                 </Grid>
@@ -227,7 +346,6 @@ const AddPromotionLine = (props) => {
                         renderInput={(params) => (
                           <InputField
                             name={"startDate"}
-                            placeholder={"Nhập tên bảng giá"}
                             helperText={errors?.name?.message}
                             error={Boolean(errors.name)}
                           />
@@ -255,28 +373,6 @@ const AddPromotionLine = (props) => {
                 </Grid>
 
                 <Grid item xs={6}>
-                  <FormControlCustom label={"Diễn giải"} fullWidth>
-                    <InputField
-                      name={"nameTrip"}
-                      helperText={errors?.name?.message}
-                      error={Boolean(errors.name)}
-                      disabled={true}
-                    />
-                  </FormControlCustom>
-                </Grid>
-                <Grid item xs={6}>
-                  <FormControlCustom label={"Trạng thái"} fullWidth isMarked>
-                    <SelectCustom
-                      name={"type"}
-                      placeholder={"Chọn trạng thái"}
-                      error={Boolean(errors?.type)}
-                      helperText={errors?.type?.message}
-                      options={type}
-                    />
-                  </FormControlCustom>
-                </Grid>
-
-                <Grid item xs={6}>
                   <FormControlCustom
                     label={"Loại khuyến mãi"}
                     fullWidth
@@ -287,7 +383,7 @@ const AddPromotionLine = (props) => {
                       placeholder={"Chọn loại khuyến mãi"}
                       error={Boolean(errors?.type)}
                       helperText={errors?.type?.message}
-                      options={type}
+                      options={optionsType}
                     />
                   </FormControlCustom>
                 </Grid>
@@ -296,12 +392,13 @@ const AddPromotionLine = (props) => {
                   <FormControlCustom
                     label={"Ngân sách tối đa áp dụng"}
                     fullWidth
+                    isMarked
                   >
                     <InputField
-                      name={"nameTrip"}
-                      helperText={errors?.name?.message}
-                      error={Boolean(errors.name)}
-                      disabled={true}
+                      name={"maxBudget"}
+                      helperText={errors?.maxBudget?.message}
+                      error={Boolean(errors.maxBudget)}
+                      placeholder="0"
                     />
                   </FormControlCustom>
                 </Grid>
@@ -313,10 +410,10 @@ const AddPromotionLine = (props) => {
                     isMarked
                   >
                     <InputField
-                      name={"price"}
-                      helperText={errors?.price?.message}
+                      name={"maxQuantity"}
+                      helperText={errors?.maxQuantity?.message}
                       placeholder="0"
-                      error={Boolean(errors.price)}
+                      error={Boolean(errors.maxQuantity)}
                     />
                   </FormControlCustom>
                 </Grid>
@@ -326,10 +423,9 @@ const AddPromotionLine = (props) => {
                     fullWidth
                   >
                     <InputField
-                      name={"createdAt"}
-                      helperText={errors?.createdAt?.message}
-                      error={Boolean(errors.createdAt)}
-                      disabled={true}
+                      name={"maxQuantityPerCustomer"}
+                      helperText={errors?.maxQuantityPerCustomer?.message}
+                      error={Boolean(errors.maxQuantityPerCustomer)}
                     />
                   </FormControlCustom>
                 </Grid>
@@ -351,30 +447,52 @@ const AddPromotionLine = (props) => {
             </div>
             <div className="content">
               <Grid container spacing={1.5}>
+                <Grid item xs={6} className="auto-complete">
+                  <FormControlCustom
+                    label={"Mã tuyến áp dụng"}
+                    fullWidth
+                    isMarked
+                  >
+                    <AutocompleteCustom
+                      name={"tripCode"}
+                      placeholder={"Chọn mã tuyến xe"}
+                      error={Boolean(errors?.tripCode)}
+                      helperText={errors?.tripCode?.message}
+                      options={dataTrip?.data?.data || []}
+                      optionLabelKey={"code"}
+                      renderOption={buildOptionSelect}
+                    />
+                  </FormControlCustom>
+                </Grid>
                 <Grid item xs={6}>
-                  <FormControlCustom label={"Số lượng mua"} fullWidth isMarked>
+                  <FormControlCustom label={"Số lượng vé mua"} fullWidth isMarked>
                     <InputField
-                      name={"code"}
-                      error={Boolean(errors.code)}
-                      helperText={errors?.code?.message}
+                      type={"number"}
+                      name={"quantityBuy"}
+                      placeholder="0"
+                      error={Boolean(errors.quantityBuy)}
+                      helperText={errors?.quantityBuy?.message}
                     />
                   </FormControlCustom>
                 </Grid>
                 <Grid item xs={6}>
                   <FormControlCustom label={"Số tiền mua"} fullWidth isMarked>
                     <InputField
-                      name={"code"}
-                      error={Boolean(errors.code)}
-                      helperText={errors?.code?.message}
+                      name={"purchaseAmount"}
+                      placeholder="0"
+                      error={Boolean(errors.purchaseAmount)}
+                      helperText={errors?.purchaseAmount?.message}
                     />
                   </FormControlCustom>
                 </Grid>
                 <Grid item xs={6}>
                   <FormControlCustom label={"Số tiền giảm"} fullWidth isMarked>
                     <InputField
-                      name={"code"}
-                      error={Boolean(errors.code)}
-                      helperText={errors?.code?.message}
+                      disabled={disabledMoney}
+                      placeholder={"0"}
+                      name={"reductionAmount"}
+                      error={Boolean(errors.reductionAmount)}
+                      helperText={errors?.reductionAmount?.message}
                     />
                   </FormControlCustom>
                 </Grid>
@@ -385,9 +503,22 @@ const AddPromotionLine = (props) => {
                     isMarked
                   >
                     <InputField
-                      name={"code"}
-                      error={Boolean(errors.code)}
-                      helperText={errors?.code?.message}
+                      disabled={disabledPercent}
+                      type={"number"}
+                      placeholder={"0"}
+                      inputProps={{
+                        inputMode: "numeric",
+                        pattern: "[0-9]*",
+                        min: 0,
+                        max: 100,
+                      }}
+                      name={"percentDiscount"}
+                      error={Boolean(errors.percentDiscount)}
+                      helperText={errors?.percentDiscount?.message}
+                      onKeyDown={(evt) =>
+                        ["e", "E", "+", "-"].includes(evt.key) &&
+                        evt.preventDefault()
+                      }
                     />
                   </FormControlCustom>
                 </Grid>
@@ -398,9 +529,10 @@ const AddPromotionLine = (props) => {
                     isMarked
                   >
                     <InputField
-                      name={"code"}
-                      error={Boolean(errors.code)}
-                      helperText={errors?.code?.message}
+                      name={"maxReductionAmount"}
+                      placeholder="0"
+                      error={Boolean(errors.maxReductionAmount)}
+                      helperText={errors?.maxReductionAmount?.message}
                     />
                   </FormControlCustom>
                 </Grid>
