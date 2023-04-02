@@ -161,6 +161,7 @@ const AddPromotion = (props) => {
   };
 
   const onSubmit = async (value) => {
+    console.log(value);
     const params = {
       code: value.code,
       name: value.name,

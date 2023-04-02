@@ -40,16 +40,30 @@ class PromotionApi {
   }
 
   deleteById(id, params) {
-    const url = `promotion/${id}`;
+    const url = `promotion/id/${id}`;
     const res = axiosClient.delete(url, params);
     return res;
   }
 
   getPromotionLine(codePromotion) {
-    console.log(codePromotion);
     const url = `promotion-line?promotionCode=${codePromotion}&sort=ASC&isAll=true`;
-    console.log(codePromotion);
+
     const res = axiosClient.get(url);
+    return res;
+  }
+
+  createPromotionLine(params) {
+    const url = `promotion-line`;
+    const res = axiosClient.post(url, {
+      ...params,
+    });
+    return res;
+
+  }
+
+  deletePromotionLine(id){
+    const url = `promotion-line/id/${id}`;
+    const res = axiosClient.delete(url);
     return res;
   }
 }

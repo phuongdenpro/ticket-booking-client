@@ -336,7 +336,7 @@ const DetailPromotion = (props) => {
       <AddPromotionLine
         setShowDrawer={setShowDrawerAdd}
         showDrawer={showDrawerAdd}
-        idPromotion={detailPromotion.id}
+        codePromotion={detailPromotion.code}
         getPromotionLine={getPromotionLine}
       ></AddPromotionLine>
     </div>

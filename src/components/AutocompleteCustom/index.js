@@ -25,7 +25,7 @@ const AutocompleteCustom = (props) => {
   const { control } = useFormContext();
   const filterOptions = createFilterOptions({
     matchFrom: 'any',
-    stringify: (option) => option.code + option.name,
+    stringify: (option) => option.code + option.name + option.phone + option.fullName,
   });
   return (
     <Controller
