@@ -1,58 +1,256 @@
-import {Button, Divider, Grid } from "@mui/material";
+import { Button, Divider, Grid } from "@mui/material";
 
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
 import { FormProvider, useForm } from "react-hook-form";
 import AutocompleteCustom from "../../../components/AutocompleteCustom";
 import FormControlCustom from "../../../components/FormControl";
 import InputField from "../../../components/InputField";
-import * as yup from 'yup';
-import { isEmpty } from 'lodash';
-import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup";
+import { isEmpty } from "lodash";
+import { yupResolver } from "@hookform/resolvers/yup";
 import moment from "moment";
 import SelectCustom from "../../../components/SelectCustom";
-import './AdminTicket.scss'
-import '../../../assets/scss/default.scss'
+import "./AdminTicket.scss";
+import "../../../assets/scss/default.scss";
 import PriceList from "../AdminPriceList/components/PriceList";
+import { CustomerApi } from "../../../utils/customerApi";
+import { OrderApi } from "../../../utils/orderApi";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import useDebounce from "../../../components/debounce";
+import AddCustomerOrder from "./AddCustomerOrder";
 
 const AdminAddTicket = (props) => {
   const [dataCustomer, setData] = useState();
-  const dateNow = moment(new Date()).format('DD-MM-YYYY hh:mm');
+  const dateNow = moment(new Date()).format("DD-MM-YYYY hh:mm");
+  const [orderCustomerList, setOrderCustomerList] = useState([]);
+  const [filterParams, setFilterParams] = useState(null);
+  const [customerList, setCustomerList] = useState([]);
+  const [showAddCustomer, setShowAddCustomer] = useState(false);
+  const [disabled, setDisabled] = useState(true);
+  const [searchValue, setSearchValue] = useState();
+  const debouncedSearch = useDebounce(searchValue, 500);
+
+  const handelCustomerList = async () => {
+    try {
+      const orderApi = new OrderApi();
+      const res = await orderApi.searchCustomer({ ...filterParams });
+      setOrderCustomerList(res?.data)
+    } catch (error) {}
+  };
+  useEffect(() => {
+    handelCustomerList();
+  }, [filterParams]);
+
+  useEffect(() => {
+    setFilterParams({ ...filterParams, key: debouncedSearch?.data });
+  }, [debouncedSearch?.data]);
+
+  useEffect(() => {
+    if (!isEmpty(orderCustomerList?.data)) {
+      let customer = [...orderCustomerList?.data];
+      customer?.unshift({ id: 0, name: "", phone: "" });
+      setCustomerList(customer);
+    } else {
+      let customer = [];
+      customer?.unshift({ id: 0, name: "", phone: "" });
+      setCustomerList(customer);
+    }
+  }, [orderCustomerList]);
+  const onChangeCustomer = (data) => {
+    setSearchValue({
+      data,
+    });
+  };
+
+  const customerForm = (dataCus) => {
+    setData(dataCus);
+    setDisabled(false);
+  };
+
   const defaultValues = useMemo(
     () => ({
-      province: dataCustomer?.citiesId || '',
-      email: dataCustomer?.email || '',
-      address: dataCustomer?.address || '',
-      phone: dataCustomer?.phone || '',
-      district: dataCustomer?.districtId || '',
-      customer: dataCustomer || '',
-      note: '',
-      price: '',
+      province: dataCustomer?.citiesId || "",
+      email: dataCustomer?.email || "",
+      address: dataCustomer?.address || "",
+      phone: dataCustomer?.phone || "",
+      district: dataCustomer?.districtId || "",
+      customer: dataCustomer || "",
+      note: "",
+      price: "",
       createdDate: dateNow,
-      placePickOrder: '',
-      branch: '',
-      userReview: '',
+      placePickOrder: "",
+      branch: "",
+      userReview: "",
       paymentTime: dateNow,
-      paymentPrice: '',
+      paymentPrice: "",
     }),
-    [dataCustomer],
+    [dataCustomer]
   );
   const schema = yup.object().shape({
-    customer: yup.object().typeError('Vui lòng chọn khách hàng').required('Vui lòng chọn khách hàng'),
-    phone: yup.string().required('Vui lòng nhập số điện thoại'),
-    address: yup.string().required('Vui lòng nhập địa chỉ'),
-    branch: yup.object().typeError('Vui lòng chọn chi nhánh').required('Vui lòng chọn chi nhánh'),
+    customer: yup
+      .object()
+      .typeError("Vui lòng chọn khách hàng")
+      .required("Vui lòng chọn khách hàng"),
+    phone: yup.string().required("Vui lòng nhập số điện thoại"),
+    address: yup.string().required("Vui lòng nhập địa chỉ"),
+    branch: yup
+      .object()
+      .typeError("Vui lòng chọn chi nhánh")
+      .required("Vui lòng chọn chi nhánh"),
   });
   const methods = useForm({
-    mode: 'onSubmit',
+    mode: "onSubmit",
     defaultValues,
     resolver: yupResolver(schema),
   });
 
-  const { formState, watch, setValue, handleSubmit, reset, getValues } = methods;
+  const { formState, watch, setValue, handleSubmit, reset, getValues } =
+    methods;
+  const { errors } = formState;
+
+  const customerWatch = watch("customer");
+  useEffect(() => {
+    reset({ ...defaultValues });
+  }, [dataCustomer]);
+  useEffect(() => {
+    setValue("email", customerWatch?.email);
+    setValue("address", customerWatch?.address);
+    setValue("phone", customerWatch?.phone);
+    setValue("province", customerWatch?.cities);
+    setValue("district", customerWatch?.district);
+
+    if (!isEmpty(customerWatch)) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  }, [customerWatch]);
+
+  const a = useCallback(
+    (option, props, state) => {
+      const checkBackground = () => {
+        if (state?.index % 2 !== 0) {
+          return { background: "#f5f7fa" };
+        } else {
+          return { background: "white" };
+        }
+      };
+      return (
+        <>
+          {option.id === 0 && (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Button
+                className="btn-tertiary-disable"
+                style={{ width: "100%" }}
+                onClick={() => setShowAddCustomer(true)}
+              >
+                <AddOutlinedIcon style={{ fontSize: "16px" }} />
+                <span>Thêm khách hàng </span>
+              </Button>
+            </div>
+          )}
+          {option.id === 0 ? (
+            <></>
+          ) : (
+            <div
+              style={
+                option.id === 0
+                  ? {}
+                  : {
+                      paddingTop: "3px",
+                      paddingBottom: "3px",
+                      backgroundColor: checkBackground().background,
+                    }
+              }
+            >
+              <div
+                style={{
+                  padding: "3px",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+                {...props}
+              >
+                <div
+                  style={{
+                    width: "200px",
+                    display: "flex",
+                    justifyContent: "left",
+                  }}
+                >
+                  <span> {option.fullName}</span>
+                </div>
+
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <span>{option.phone}</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
+      );
+    },
+    [undefined]
+  );
+
+  const buildOptionSelect = (option, props) => {
+    const checkBackground = () => {
+      if (option?.id % 2 == 0) {
+        return { background: "#f5f7fa" };
+      } else {
+        return { background: "white" };
+      }
+    };
+    return (
+      <>
+        {option.id === 0 && (
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <Button
+              className="btn-tertiary-disable"
+              style={{ width: "100%" }}
+              onClick={() => setShowAddCustomer(true)}
+            >
+              <AddOutlinedIcon style={{ fontSize: "16px" }} />
+              <span>Thêm khách hàng </span>
+            </Button>
+          </div>
+        )}
+        {option.id === 0 ? (
+          <></>
+        ) : (
+          <div
+            style={
+              option.id === 0
+                ? {}
+                : {
+                    paddingTop: "3px",
+                    paddingBottom: "3px",
+                    backgroundColor: checkBackground().background,
+                  }
+            }
+          >
+            <div
+              style={{
+                padding: "3px",
+                display: "flex",
+                justifyContent: "space-around",
+              }}
+              {...props}
+            >
+              <span> {option.fullName}</span>
+              <span>{option.phone}</span>
+            </div>
+          </div>
+        )}
+
+        {/* <Divider /> */}
+      </>
+    );
+  };
   return (
-    <div className={"page-layout-blank"} style={{ width:'100%'}}>
-    <Helmet>
+    <div className={"page-layout-blank"} style={{ width: "100%" }}>
+      <Helmet>
         <title> PDBus - Đặt vé cho khách hàng</title>
       </Helmet>
       <Grid container spacing={1}>
@@ -70,38 +268,39 @@ const AdminAddTicket = (props) => {
                   <Grid container spacing={2}>
                     <Grid item xs={6}>
                       <FormControlCustom
-                        label={'Khách hàng*'}
+                        label={"Khách hàng*"}
                         classNameLabel={
-                          'flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title'
+                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
                         }
-                        className={'flex-direction-row'}
+                        className={"flex-direction-row"}
                         fullWidth
                       >
                         <AutocompleteCustom
-                          style={{ width: '100%' }}
-                          name={'customer'}
-                          placeholder={'Chọn khách hàng'}
-                        
-                          optionLabelKey={'name'}
+                          style={{ width: "100%" }}
+                          name={"customer"}
+                          placeholder={"Chọn khách hàng"}
+                          error={Boolean(errors?.customer)}
+                          options={customerList || []}
+                          renderOption={a}
+                          onChangeValue={onChangeCustomer}
+                          optionLabelKey={"fullName"}
                         />
                       </FormControlCustom>
                     </Grid>
 
                     <Grid item xs={6}>
                       <FormControlCustom
-                        label={'Địa chỉ'}
+                        label={"Địa chỉ"}
                         classNameLabel={
-                          'flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title'
+                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
                         }
-                        className={'flex-direction-row'}
+                        className={"flex-direction-row"}
                         fullWidth
                       >
                         <InputField
-                         
-                          style={{ width: '100%' }}
-                          name={'address'}
-                          placeholder={''}
-                         
+                          style={{ width: "100%" }}
+                          name={"address"}
+                          placeholder={""}
                         />
                       </FormControlCustom>
                     </Grid>
@@ -109,39 +308,34 @@ const AdminAddTicket = (props) => {
                     <Grid item xs={6}>
                       <FormControlCustom
                         classNameLabel={
-                          'flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title'
+                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
                         }
-                        className={'flex-direction-row'}
-                        label={'Điện thoại'}
+                        className={"flex-direction-row"}
+                        label={"Điện thoại"}
                         fullWidth
                       >
                         <InputField
-                          
-                          style={{ width: '100%' }}
-                          name={'phone'}
-                          helperText={''}
-                          placeholder={''}
-                          
+                          style={{ width: "100%" }}
+                          name={"phone"}
+                          helperText={""}
+                          placeholder={""}
                         />
                       </FormControlCustom>
                     </Grid>
                     <Grid item xs={6}>
                       <FormControlCustom
                         classNameLabel={
-                          'flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title'
+                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
                         }
-                        className={'flex-direction-row'}
-                        label={'Tỉnh thành'}
+                        className={"flex-direction-row"}
+                        label={"Tỉnh thành"}
                         fullWidth
                       >
                         <SelectCustom
-                          
-                          style={{ width: '100%' }}
-                          name={'province'}
-                          placeholder={''}
-                          
-                          optionLabelKey={'name'}
-                          
+                          style={{ width: "100%" }}
+                          name={"province"}
+                          placeholder={""}
+                          optionLabelKey={"name"}
                         />
                       </FormControlCustom>
                     </Grid>
@@ -149,39 +343,34 @@ const AdminAddTicket = (props) => {
                     <Grid item xs={6}>
                       <FormControlCustom
                         classNameLabel={
-                          'flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title'
+                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
                         }
-                        className={'flex-direction-row'}
-                        label={'Email'}
+                        className={"flex-direction-row"}
+                        label={"Email"}
                         fullWidth
                       >
                         <InputField
-                         
-                          style={{ width: '100%' }}
-                          name={'email'}
-                          helperText={''}
-                          placeholder={''}
-                          
+                          style={{ width: "100%" }}
+                          name={"email"}
+                          helperText={""}
+                          placeholder={""}
                         />
                       </FormControlCustom>
                     </Grid>
                     <Grid item xs={6}>
                       <FormControlCustom
                         classNameLabel={
-                          'flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title'
+                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
                         }
-                        className={'flex-direction-row'}
-                        label={'Quận huyện'}
+                        className={"flex-direction-row"}
+                        label={"Quận huyện"}
                         fullWidth
                       >
                         <SelectCustom
-                         
-                          style={{ width: '100%' }}
-                          name={'district'}
-                          placeholder={''}
-                          
-                          optionLabelKey={'name'}
-                          
+                          style={{ width: "100%" }}
+                          name={"district"}
+                          placeholder={""}
+                          optionLabelKey={"name"}
                         />
                       </FormControlCustom>
                     </Grid>
@@ -211,20 +400,17 @@ const AdminAddTicket = (props) => {
                           "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
                         }
                         className={"flex-direction-row"}
-                        label={"Ngày tạo"}
+                        label={"Phường/Thị xã"}
                         fullWidth
                       >
-                        <InputField
-                        disabled
+                        <SelectCustom
                           style={{ width: "100%" }}
-                          name={"createdDate"}
-                          placeholder={"Nhập ngày tạo bảng giá"}
-                          helperText={""}
+                          name={"province"}
+                          placeholder={""}
+                          optionLabelKey={"name"}
                         />
                       </FormControlCustom>
                     </Grid>
-
-                    
                   </Grid>
                 </div>
               </form>
@@ -236,7 +422,10 @@ const AdminAddTicket = (props) => {
               <Grid md={7}>
                 <h2 className={"txt-title"}>DANH SÁCH VÉ</h2>
               </Grid>
-              <div className="item-btn-right" style={{ float: "right", marginBottom:20 }}>
+              <div
+                className="item-btn-right"
+                style={{ float: "right", marginBottom: 20 }}
+              >
                 <Button
                   className={"btn-create"}
                   variant="outlined"
@@ -249,31 +438,37 @@ const AdminAddTicket = (props) => {
             </Grid>
             <PriceList />
             <Grid
-                  container
-                  spacing={2}
-                  className={`mt-1`}
-                  justifyContent="space-between"
+              container
+              spacing={2}
+              className={`mt-1`}
+              justifyContent="space-between"
+            >
+              <Grid item xs={7}></Grid>
+              <Grid item xs={5}>
+                <div
+                  className="item-btn-right"
+                  style={{ float: "right", marginBottom: 20 }}
                 >
-                  <Grid item xs={7}></Grid>
-                  <Grid item xs={5}>
-                  <div className="item-btn-right" style={{ float: "right", marginBottom:20 }}>
-                    <Button
-                      variant="contained"
-                      size="medium"
-                      className={`btn-tertiary-normal`}
-                      style={{ height: "2rem" }}
-                      type="submit"
-                    >
-                      Tạo hóa đơn
-                    </Button>
-                    </div>
-                  </Grid>
-                </Grid>
+                  <Button
+                    variant="contained"
+                    size="medium"
+                    className={`btn-tertiary-normal`}
+                    style={{ height: "2rem" }}
+                    type="submit"
+                  >
+                    Tạo hóa đơn
+                  </Button>
+                </div>
+              </Grid>
+            </Grid>
           </div>
         </Grid>
-        
       </Grid>
-
+      <AddCustomerOrder
+      setShowDrawer={setShowAddCustomer}
+      showDrawer={showAddCustomer}
+      customerCreateForm={customerForm}
+    />
       <div></div>
     </div>
   );

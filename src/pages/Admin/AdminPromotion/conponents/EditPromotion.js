@@ -226,7 +226,7 @@ const EditPromotion = (props) => {
       setShowDrawer(false);
       reset();
     } catch (error) {
-      customToast.error(error.response.data.message);
+      customToast.error(error.response.data.error);
     }
   };
 

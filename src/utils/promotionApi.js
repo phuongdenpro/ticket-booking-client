@@ -40,7 +40,7 @@ class PromotionApi {
   }
 
   deleteById(id, params) {
-    const url = `promotion/${id}`;
+    const url = `promotion/id/${id}`;
     const res = axiosClient.delete(url, params);
     return res;
   }
