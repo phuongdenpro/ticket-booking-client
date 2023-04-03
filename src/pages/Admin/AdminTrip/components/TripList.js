@@ -59,7 +59,7 @@ const TripList = (props) => {
     {
       field: "code",
       headerName: "Mã",
-      flex: 50,
+      flex: 30,
       headerAlign: "center",
       contentAlign: "center",
       headerClassName: "theme",
@@ -68,7 +68,7 @@ const TripList = (props) => {
     {
       field: "name",
       headerName: "Tên chuyến",
-      flex: 200,
+      flex: 190,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
@@ -76,7 +76,7 @@ const TripList = (props) => {
 
     {
       field: "fromStation",
-      flex: 150,
+      flex: 140,
       headerName: "Nơi đi",
       headerAlign: "center",
       headerClassName: "theme",
@@ -91,7 +91,7 @@ const TripList = (props) => {
     {
       field: "toStation",
       headerName: "Nơi đến",
-      flex: 200,
+      flex: 150,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
@@ -163,7 +163,7 @@ const TripList = (props) => {
     {
       field: "TripDetails",
       headerName: "Chuyến chi tiết",
-      flex: 140,
+      flex: 150,
       headerAlign: "center",
       headerClassName: "theme",
       contentAlign: "center",
@@ -181,7 +181,7 @@ const TripList = (props) => {
     {
       field: "action",
       headerName: "Thao tác",
-      flex: 70,
+      flex: 100,
       headerAlign: "center",
       contentAlign: "center",
       headerClassName: "theme",
