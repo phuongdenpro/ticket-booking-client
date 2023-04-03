@@ -35,7 +35,7 @@ const AdminAddTicket = (props) => {
     try {
       const orderApi = new OrderApi();
       const res = await orderApi.searchCustomer({ ...filterParams });
-      setOrderCustomerList(res?.data)
+      setOrderCustomerList(res?.data);
     } catch (error) {}
   };
   useEffect(() => {
@@ -70,20 +70,15 @@ const AdminAddTicket = (props) => {
 
   const defaultValues = useMemo(
     () => ({
-      province: dataCustomer?.citiesId || "",
+      province: dataCustomer?.ward?.district?.province?.name || "",
       email: dataCustomer?.email || "",
-      address: dataCustomer?.address || "",
+      ward: dataCustomer?.ward?.name || "",
+      address: dataCustomer?.fullAddress || "",
       phone: dataCustomer?.phone || "",
-      district: dataCustomer?.districtId || "",
+      district: dataCustomer?.ward?.district?.name || "",
       customer: dataCustomer || "",
+      createAt:dateNow,
       note: "",
-      price: "",
-      createdDate: dateNow,
-      placePickOrder: "",
-      branch: "",
-      userReview: "",
-      paymentTime: dateNow,
-      paymentPrice: "",
     }),
     [dataCustomer]
   );
@@ -110,20 +105,24 @@ const AdminAddTicket = (props) => {
   const { errors } = formState;
 
   const customerWatch = watch("customer");
+  console.log(customerWatch);
   useEffect(() => {
     reset({ ...defaultValues });
   }, [dataCustomer]);
+
   useEffect(() => {
     setValue("email", customerWatch?.email);
-    setValue("address", customerWatch?.address);
+    setValue("address", customerWatch?.fullAddress);
     setValue("phone", customerWatch?.phone);
-    setValue("province", customerWatch?.cities);
-    setValue("district", customerWatch?.district);
+    setValue("province", customerWatch?.ward?.district?.province?.name);
+    setValue("district", customerWatch?.ward?.district?.name);
+    setValue("ward", customerWatch?.ward?.name);
 
     if (!isEmpty(customerWatch)) {
       setDisabled(false);
     } else {
       setDisabled(true);
+      setValue("ward", "");
     }
   }, [customerWatch]);
 
@@ -258,7 +257,7 @@ const AdminAddTicket = (props) => {
           <div className={"page-layout"}>
             <Grid className={"align-items-center header_title"}>
               <Grid md={7}>
-                <h2 className={"txt-title"}>THÔNG TIN KHÁCH HÀNG</h2>
+                <h2 className={"txt-title"}>THÔNG TIN ĐẶT VÉ</h2>
               </Grid>
             </Grid>
             <Divider />
@@ -298,6 +297,8 @@ const AdminAddTicket = (props) => {
                         fullWidth
                       >
                         <InputField
+                          disabled
+                          className={"disabled-field"}
                           style={{ width: "100%" }}
                           name={"address"}
                           placeholder={""}
@@ -315,27 +316,12 @@ const AdminAddTicket = (props) => {
                         fullWidth
                       >
                         <InputField
+                          disabled
+                          className={"disabled-field"}
                           style={{ width: "100%" }}
                           name={"phone"}
                           helperText={""}
                           placeholder={""}
-                        />
-                      </FormControlCustom>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <FormControlCustom
-                        classNameLabel={
-                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
-                        }
-                        className={"flex-direction-row"}
-                        label={"Tỉnh thành"}
-                        fullWidth
-                      >
-                        <SelectCustom
-                          style={{ width: "100%" }}
-                          name={"province"}
-                          placeholder={""}
-                          optionLabelKey={"name"}
                         />
                       </FormControlCustom>
                     </Grid>
@@ -350,6 +336,8 @@ const AdminAddTicket = (props) => {
                         fullWidth
                       >
                         <InputField
+                          className={"disabled-field"}
+                          disabled
                           style={{ width: "100%" }}
                           name={"email"}
                           helperText={""}
@@ -363,14 +351,69 @@ const AdminAddTicket = (props) => {
                           "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
                         }
                         className={"flex-direction-row"}
-                        label={"Quận huyện"}
+                        label={"Tổng tiền vé"}
                         fullWidth
                       >
-                        <SelectCustom
+                        <InputField
+                          disabled
                           style={{ width: "100%" }}
-                          name={"district"}
+                          name={"total"}
+                          helperText={""}
                           placeholder={""}
-                          optionLabelKey={"name"}
+                        />
+                      </FormControlCustom>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <FormControlCustom
+                        classNameLabel={
+                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
+                        }
+                        className={"flex-direction-row"}
+                        label={"Số tiền giảm"}
+                        fullWidth
+                      >
+                        <InputField
+                          disabled
+                          style={{ width: "100%" }}
+                          name={"total"}
+                          helperText={""}
+                          placeholder={""}
+                        />
+                      </FormControlCustom>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <FormControlCustom
+                        classNameLabel={
+                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
+                        }
+                        className={"flex-direction-row"}
+                        label={"Thành tiền"}
+                        fullWidth
+                      >
+                        <InputField
+                          disabled
+                          style={{ width: "100%" }}
+                          name={"total"}
+                          helperText={""}
+                          placeholder={""}
+                        />
+                      </FormControlCustom>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <FormControlCustom
+                        classNameLabel={
+                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
+                        }
+                        className={"flex-direction-row"}
+                        label={"Ngày tạo"}
+                        fullWidth
+                      >
+                        <InputField
+                          disabled
+                          style={{ width: "100%" }}
+                          name={"createAt"}
+                          helperText={""}
+                          placeholder={""}
                         />
                       </FormControlCustom>
                     </Grid>
@@ -391,23 +434,6 @@ const AdminAddTicket = (props) => {
                           name={"note"}
                           placeholder={"Nhập ghi chú"}
                           helperText={""}
-                        />
-                      </FormControlCustom>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <FormControlCustom
-                        classNameLabel={
-                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
-                        }
-                        className={"flex-direction-row"}
-                        label={"Phường/Thị xã"}
-                        fullWidth
-                      >
-                        <SelectCustom
-                          style={{ width: "100%" }}
-                          name={"province"}
-                          placeholder={""}
-                          optionLabelKey={"name"}
                         />
                       </FormControlCustom>
                     </Grid>
@@ -465,10 +491,10 @@ const AdminAddTicket = (props) => {
         </Grid>
       </Grid>
       <AddCustomerOrder
-      setShowDrawer={setShowAddCustomer}
-      showDrawer={showAddCustomer}
-      customerCreateForm={customerForm}
-    />
+        setShowDrawer={setShowAddCustomer}
+        showDrawer={showAddCustomer}
+        customerCreateForm={customerForm}
+      />
       <div></div>
     </div>
   );

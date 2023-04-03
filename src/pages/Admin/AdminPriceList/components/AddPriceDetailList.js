@@ -242,7 +242,7 @@ const CreatePriceListDetail = (props) => {
                   </FormControlCustom>
                 </Grid>
                 <Grid item xs={6}>
-                  <FormControlCustom label={"Ngày áp dụng"} fullWidth>
+                  <FormControlCustom label={"Ngày tạo"} fullWidth>
                     <InputField
                       name={"createdAt"}
                       helperText={errors?.createdAt?.message}

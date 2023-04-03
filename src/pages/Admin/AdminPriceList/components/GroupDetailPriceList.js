@@ -136,7 +136,7 @@ const GroupTicketPriceList = (props) => {
     },
     {
       field: "createdAt",
-      headerName: "Ngày áp dụng",
+      headerName: "Ngày tạo",
       contentAlign: "center",
       flex: 70,
       headerAlign: "center",
