@@ -33,6 +33,10 @@ import AddTripDetail from "./AddTripDetail";
 import FormControlCustom from "../../../../components/FormControl";
 import SelectCustom from "../../../../components/SelectCustom";
 import EditTripDetail from "./EditTripDetail";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dayjs from "dayjs";
 
 const useStyles = makeStyles((theme) => ({
   dialogRoot: {
@@ -42,7 +46,6 @@ const useStyles = makeStyles((theme) => ({
     position: "fixed",
     top: "25%",
     left: "25%",
-
     transform: "translate(-25%, -25%)",
   },
   dialogContent: {
@@ -64,6 +67,14 @@ const TripDetail = (props) => {
   const [showDrawerEdit, setShowDrawerEdit] = useState(false);
   const [idTripDetail, setIdTripDetail] = useState(null);
   const [dataTripDetail, setDataTripDetail] = useState("");
+  const currentYear = new Date().getFullYear();
+  const firstDay = new Date(currentYear, 0, 1);
+  const lastDay = new Date(currentYear, 11, 31);
+  const [disable, setDisable] = useState(true);
+  const [selectedDate, setSelectedDate] = useState({
+    startDate: firstDay,
+    endDate: lastDay,
+  });
   const filterStatus = [
     {
       id: 1,
@@ -89,6 +100,19 @@ const TripDetail = (props) => {
       id: 5,
       code: "Đã xuất phát",
       name: "Đã xuất phát",
+    },
+  ];
+
+  const filterDateTime = [
+    {
+      id: 1,
+      code: "ALL",
+      name: "Tất cả",
+    },
+    {
+      id: 2,
+      code: "option",
+      name: "Tùy chọn",
     },
   ];
 
@@ -129,14 +153,42 @@ const TripDetail = (props) => {
   });
   const { handleSubmit, reset, watch, setValue } = methods;
   const watchStatus = watch("status");
+  const watchTime = watch("time");
 
   useEffect(() => {
     const params = {
       ...filterParams,
       status: watchStatus?.code,
+      minDepartureTime: new Date(selectedDate?.startDate),
+      maxDepartureTime: new Date(selectedDate?.endDate),
     };
     setFilterParams(params);
-  }, [watchStatus]);
+  }, [watchStatus, watchTime, selectedDate?.startDate, selectedDate?.endDate]);
+
+  useEffect(() => {
+    const now = new Date();
+
+    if (watchTime?.code === "option") {
+      // setSelectedDate({ ...selectedDate, dateFrom: '', dateTo: '' });
+    } else {
+      const currentYear = new Date().getFullYear();
+      const firstDay = new Date(currentYear, 0, 1);
+      const lastDay = new Date(currentYear, 11, 31);
+
+      setSelectedDate({
+        ...selectedDate,
+        startDate: firstDay,
+        endDate: lastDay,
+      });
+    }
+  }, [watchTime]);
+  useEffect(() => {
+    if (watchTime?.code === "option") {
+      setDisable(false);
+    } else {
+      setDisable(true);
+    }
+  }, [watchTime]);
 
   const handelShowDetail = (id) => {
     setShowDrawerEdit(true);
@@ -219,17 +271,65 @@ const TripDetail = (props) => {
         <DialogContent className={classes.dialogContent}>
           <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
             <div className="row" style={{ marginBottom: 20 }}>
-              <div className="col-3">
+              <div className="col-7">
                 <FormProvider {...methods}>
-                  <FormControlCustom label="Trạng thái" fullWidth>
-                    <div className="view-input">
-                      <SelectCustom
-                        placeholder={"Tất cả"}
-                        name={"status"}
-                        options={filterStatus}
-                      />
-                    </div>
-                  </FormControlCustom>
+                  <div style={{display:'flex', flexDirection:'row'}}>
+                    <FormControlCustom label="Thời gian" fullWidth>
+                      <div className="view-input" style={{ marginRight: 10 }}>
+                        <SelectCustom
+                          options={filterDateTime}
+                          placeholder={"Tất cả"}
+                          name={"time"}
+                        />
+                      </div>
+                    </FormControlCustom>
+                    <FormControlCustom label="Ngày khởi hành" fullWidth>
+                      <div className="view-input" style={{ marginRight: 10 }}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker
+                            disabled={disable}
+                            value={dayjs(selectedDate?.startDate)}
+                            onChange={(e) => {
+                              setSelectedDate({
+                                ...selectedDate,
+                                startDate: new Date(e),
+                              });
+                            }}
+                            className={"date-picker"}
+                            renderInput={(params) => <TextField {...params} />}
+                          />
+                        </LocalizationProvider>
+                      </div>
+                    </FormControlCustom>
+
+                    <FormControlCustom label="Ngày đến" fullWidth>
+                      <div className="view-input" style={{ marginRight: 10 }}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker
+                            disabled={disable}
+                            value={dayjs(selectedDate?.endDate)}
+                            onChange={(e) => {
+                              setSelectedDate({
+                                ...selectedDate,
+                                endDate: new Date(e),
+                              });
+                            }}
+                            className={"date-picker"}
+                            renderInput={(params) => <TextField {...params} />}
+                          />
+                        </LocalizationProvider>
+                      </div>
+                    </FormControlCustom>
+                    <FormControlCustom label="Trạng thái" fullWidth>
+                      <div className="view-input">
+                        <SelectCustom
+                          placeholder={"Tất cả"}
+                          name={"status"}
+                          options={filterStatus}
+                        />
+                      </div>
+                    </FormControlCustom>
+                  </div>
                 </FormProvider>
               </div>
             </div>

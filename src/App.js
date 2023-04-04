@@ -24,6 +24,7 @@ import AdminTrip from "./pages/Admin/AdminTrip/AdminTrip";
 import AdminUser from "./pages/Admin/AdminUser/AdminUser";
 import AdminVehicle from "./pages/Admin/AdminVehicle/AdminVehicle";
 import Home from "./pages/Home/Home";
+import SearchTrip from "./pages/Home/SearchTrip";
 
 export const history = createBrowserHistory();
 
@@ -37,16 +38,13 @@ function App() {
           <Route path="/admin/group-customer" element={<AdminGroupUser />} />
           <Route path="/admin/station" element={<AdminStation />} />
           <Route path="/admin/price-list">
-            <Route
-              path="/admin/price-list"
-              element={<AdminPriceList />}
-            />
+            <Route path="/admin/price-list" element={<AdminPriceList />} />
             <Route
               path="/admin/price-list/detail/:id"
               element={<DetailPriceList />}
             ></Route>
           </Route>
-         
+
           <Route path="/admin/create-ticket" element={<AdminAddTicket />} />
           <Route path="/admin/trip" element={<AdminTrip />} />
           <Route path="/admin/promotion">
@@ -80,7 +78,14 @@ function App() {
           />
         </Route>
         <Route path="/admin/login" element={<Login />} />
-        <Route path="/" element={<Home />} />
+        <Route path="/">
+          <Route path="/" element={<Home />} />
+          <Route
+            path="/trip/from/:fromProvinceName/:codeProvinceFrom/to/:toProvinceName/:codeProvinceTo/:startDate"
+            element={<SearchTrip />}
+          />
+        </Route>
+
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>

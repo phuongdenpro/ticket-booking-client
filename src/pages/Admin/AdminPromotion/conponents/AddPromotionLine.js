@@ -236,18 +236,17 @@ const AddPromotionLine = (props) => {
       type: value.type.name,
       promotionCode: codePromotion,
       productDiscountPercent: {
-        quantityBuy: value.quantityBuy,
         purchaseAmount: numberFormat(value.purchaseAmount),
         percentDiscount: value.percentDiscount,
         maxReductionAmount: numberFormat(value.maxReductionAmount),
       },
       productDiscount: {
-        quantityBuy: value.quantityBuy,
         purchaseAmount: numberFormat(value.purchaseAmount),
         reductionAmount: numberFormat(value.reductionAmount),
         maxReductionAmount: numberFormat(value.maxReductionAmount),
       },
     };
+    console.log(params);
 
     try {
       const promotionApi = new PromotionApi();
