@@ -17,11 +17,34 @@ import "slick-carousel/slick/slick-theme.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import { TripApi } from "../../utils/tripApi";
+import { useNavigate } from "react-router-dom";
+import moment from "moment";
+import { PromotionApi } from "../../utils/promotionApi";
 
 const Home = (props) => {
   const [optionsProvince, setOptionsProvince] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [fromProvince, setFromProvince] = useState(null);
+  const [toProvince, setToProvince] = useState(null);
   const [startDate, setStartDate] = useState(new Date());
+  const navigate = useNavigate();
+  const [dataPromotion, setDataPromotion] = useState([]);
+  console.log(dataPromotion);
+
+  const handleGetDataPromotion = async () => {
+    try {
+      const promotionApi = new PromotionApi();
+      const response = await promotionApi.getAll({
+        page: 1,
+        pageSize: 5,
+      });
+      setDataPromotion(response?.data?.data);
+    } catch (error) {
+      customToast.error(error.response.data.message);
+    }
+  };
+
   const getDataProvince = async () => {
     try {
       setLoading(true);
@@ -34,10 +57,40 @@ const Home = (props) => {
   };
   useEffect(() => {
     getDataProvince();
+    handleGetDataPromotion();
   }, []);
 
+  const handleChangeFromProvince = (event, newValue) => {
+    setFromProvince(newValue);
+  };
+  const handleChangeToProvince = (event, newValue) => {
+    setToProvince(newValue);
+  };
+
   const onClickSearch = async () => {
-    customToast.warning("Comming soon...");
+    if (fromProvince == null) {
+      customToast.warning("Vui lòng chọn nơi xuất phát");
+      return;
+    }
+    if (toProvince == null) {
+      customToast.warning("Vui lòng chọn nơi đến");
+      return;
+    }
+    if (startDate == null) {
+      customToast.warning("Vui lòng chọn ngày đi");
+      return;
+    }
+
+    const fromProvinceName = fromProvince.name;
+    const codeProvinceFrom = fromProvince.code;
+    const toProvinceName = toProvince.name;
+    const codeProvinceTo = toProvince.code;
+    const departureTime = moment(startDate).format("DD/MM/YYYY");
+    setTimeout(function () {
+      navigate(
+        `/trip/from/${fromProvinceName}/${codeProvinceFrom}/to/${toProvinceName}/${codeProvinceTo}/${startDate}`
+      );
+    }, 1000);
   };
 
   const settings = {
@@ -52,32 +105,32 @@ const Home = (props) => {
   const dataTestTrip = [
     {
       id: "1",
-      title: "Hà Nội - Sài Gòn",
+      title: "Sài Gòn - Đà Nẵng",
       price: "330.000",
-      image: require("../../assets/trip1.jpg"),
+      image: require("../../assets/9860-1661919962-da-nang-du-lich.jpg"),
     },
     {
       id: "2",
-      title: "Sài Gòn - Đà Lạt",
-      price: "500.000",
+      title: "Sài Gòn - Cần Thơ",
+      price: "170.000",
       image: require("../../assets/trip2.jpg"),
     },
     {
       id: "3",
       title: "Sài Gòn - Bình Định",
-      price: "700.000",
-      image: require("../../assets/trip3.jpg"),
+      price: "500.000",
+      image: require("../../assets/Binh_Dinh_-_1_copy.jpg"),
     },
     {
       id: "4",
-      title: "Vũng Tàu - Phú Quốc",
-      price: "800.000",
-      image: require("../../assets/trip4.jpg"),
+      title: "Sài Gòn - Cà Mau",
+      price: "200.000",
+      image: require("../../assets/R637096778929414583.png"),
     },
     {
       id: "5",
-      title: "Bình Định - Phú Yên",
-      price: "100.000",
+      title: "Đà Nẵng - Hà Nội",
+      price: "350.000",
       image: require("../../assets/trip5.jpg"),
     },
   ];
@@ -198,6 +251,7 @@ const Home = (props) => {
                   id="country-select-demo"
                   options={optionsProvince}
                   sx={{ width: 220 }}
+                  onChange={handleChangeFromProvince}
                   autoHighlight
                   isOptionEqualToValue={(option, value) =>
                     option.name === value.name
@@ -238,6 +292,7 @@ const Home = (props) => {
                   id="country-select-demo"
                   options={optionsProvince}
                   sx={{ width: 220 }}
+                  onChange={handleChangeToProvince}
                   autoHighlight
                   getOptionLabel={(option) => option?.name}
                   renderInput={(params) => (
@@ -310,7 +365,7 @@ const Home = (props) => {
                     <h1>{item.title}</h1>
                   </div>
                   <div className="card-bottom">
-                    <h3>{item.price} VND</h3>
+                    <h3>Từ {item.price} VND</h3>
                     <span className="category">{item.category}</span>
                   </div>
                 </div>
@@ -322,18 +377,18 @@ const Home = (props) => {
           <h2 className="home_slide_title">Ưu đãi nổi bật</h2>
           <div className="card-promotion" style={{ padding: 20 }}>
             <Slider {...settings}>
-              {dataTestPromotion.map((item) => (
+              {dataPromotion.map((item) => (
                 <div className="card-trip">
                   <div className="card-top">
                     <img
-                      src={item.image}
-                      alt={item.title}
+                      src={item?.image}
+                      alt={item?.name}
                       style={{ width: "100%" }}
                     />
                   </div>
                   <div className="card-bottom">
-                    <h3>{item.title}</h3>
-                    <span className="category">{item.category}</span>
+                    <h3>{item?.name}</h3>
+                    <span className="category">{item?.description}</span>
                   </div>
                 </div>
               ))}
