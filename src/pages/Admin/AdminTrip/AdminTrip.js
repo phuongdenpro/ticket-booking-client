@@ -237,15 +237,6 @@ const AdminTrip = (props) => {
               <span className={"txt"}>Làm mới</span>
             </Button>
             <Button
-              className={"btn-create"}
-              style={{ marginTop: 20, marginRight: 20 }}
-              variant="contained"
-              color="success"
-              startIcon={<DownloadOutlinedIcon />}
-            >
-              <span className={"txt"}>Xuất danh sách</span>
-            </Button>
-            <Button
               variant="contained"
               color="warning"
               className={"btn-create"}
@@ -290,6 +281,7 @@ const AdminTrip = (props) => {
                       value={dayjs(startDate)}
                       className={"date-picker"}
                       renderInput={(params) => <TextField {...params} />}
+                      format="DD/MM/YYYY"
                     />
                   </LocalizationProvider>
                 </div>
@@ -305,6 +297,7 @@ const AdminTrip = (props) => {
                       }}
                       className={"date-picker"}
                       renderInput={(params) => <TextField {...params} />}
+                      format="DD/MM/YYYY"
                     />
                   </LocalizationProvider>
                 </div>

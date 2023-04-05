@@ -332,6 +332,7 @@ const AddPromotionLine = (props) => {
                           });
                         }}
                         className={"date-picker"}
+                        format="DD/MM/YYYY"
                         renderInput={(params) => (
                           <InputField
                             name={"startDate"}
@@ -356,6 +357,7 @@ const AddPromotionLine = (props) => {
                         }}
                         className={"date-picker"}
                         renderInput={(params) => <TextField {...params} />}
+                        format="DD/MM/YYYY"
                       />
                     </LocalizationProvider>
                   </FormControlCustom>

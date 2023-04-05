@@ -243,6 +243,7 @@ const AdminPriceList = (props) => {
                       }}
                       className={"date-picker"}
                       renderInput={(params) => <TextField {...params} />}
+                      format="DD/MM/YYYY"
                     />
                   </LocalizationProvider>
                 </div>
@@ -262,6 +263,7 @@ const AdminPriceList = (props) => {
                       }}
                       className={"date-picker"}
                       renderInput={(params) => <TextField {...params} />}
+                      format="DD/MM/YYYY"
                     />
                   </LocalizationProvider>
                 </div>

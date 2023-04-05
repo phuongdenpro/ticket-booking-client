@@ -21,6 +21,7 @@ const SearchTrip = (props) => {
   const params = useParams();
   const [dataTrip, setDataTrip] = useState([]);
   const [price, setPrice] = useState([]);
+  console.log(dataTrip);
 
   const searchTripAll = async () => {
     const tripApi = new TripApi();
@@ -210,7 +211,7 @@ const SearchTrip = (props) => {
                     >
                       <img
                         src={
-                          "https://upload-ticket-booking.s3.ap-southeast-1.amazonaws.com/images/1679589621118-cho-thue-xe-giuong-nam-viptrip_29-09-2022_762406374.jpg"
+                          item?.vehicle?.images[0]?.url
                         }
                         alt=""
                         style={{

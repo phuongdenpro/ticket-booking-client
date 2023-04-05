@@ -154,15 +154,6 @@ const AdminVehicle = (props) => {
             flexDirection={{ xs: "column", md: "row" }}
           >
             <Button
-              className={"btn-create"}
-              style={{ marginTop: 20, marginRight: 20 }}
-              variant="contained"
-              color="success"
-              startIcon={<DownloadOutlinedIcon />}
-            >
-              <span className={"txt"}>Xuất danh sách</span>
-            </Button>
-            <Button
               variant="contained"
               color="warning"
               className={"btn-create"}

@@ -19,6 +19,7 @@ import { OrderApi } from "../../../utils/orderApi";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import useDebounce from "../../../components/debounce";
 import AddCustomerOrder from "./AddCustomerOrder";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
 
 const AdminAddTicket = (props) => {
   const [dataCustomer, setData] = useState();
@@ -77,7 +78,7 @@ const AdminAddTicket = (props) => {
       phone: dataCustomer?.phone || "",
       district: dataCustomer?.ward?.district?.name || "",
       customer: dataCustomer || "",
-      createAt:dateNow,
+      createAt: dateNow,
       note: "",
     }),
     [dataCustomer]
@@ -445,7 +446,7 @@ const AdminAddTicket = (props) => {
 
           <div className={"page-layout"} style={{ marginTop: 50 }}>
             <Grid className={"align-items-center header_title"}>
-              <Grid md={7}>
+              <Grid md={7} style={{ display: "flex", flexDirection: "row" }}>
                 <h2 className={"txt-title"}>DANH SÁCH VÉ</h2>
               </Grid>
               <div
