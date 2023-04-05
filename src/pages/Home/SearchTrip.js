@@ -12,29 +12,45 @@ import AdjustIcon from "@mui/icons-material/Adjust";
 import PlaceIcon from "@mui/icons-material/Place";
 import { Button } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import { PriceListApi } from "../../utils/priceListApi";
+import { convertCurrency } from "../../data/curren";
 moment.locale("vi");
 
 const SearchTrip = (props) => {
   const navigate = useNavigate();
   const params = useParams();
   const [dataTrip, setDataTrip] = useState([]);
-  console.log(dataTrip);
+  const [price, setPrice] = useState([]);
 
   const searchTripAll = async () => {
-    const paramsSearch = {
+    const tripApi = new TripApi();
+    const response = await tripApi.getTripDetail({
+      isAll: true,
       fromProvinceCode: params?.codeProvinceFrom,
       toProvinceCode: params?.codeProvinceTo,
       departureTime: params?.startDate,
-    };
+    });
 
-    try {
-      const tripApi = new TripApi();
-      const response = await tripApi.getTripDetail({
-        isAll: true,
-        ...paramsSearch,
-      });
-      setDataTrip(response?.data?.data);
-    } catch (error) {}
+    const priceApi = new PriceListApi();
+    const data = response?.data?.data;
+
+    const updatedData = await Promise.all(
+      data.map(async (item) => {
+        const response1 = await priceApi.getPrice({
+          applyDate: new Date(),
+          tripDetailCode: item?.code,
+          seatType: item?.vehicle?.type,
+        });
+
+       
+          item.price = response1?.data?.data?.price;
+        
+
+        return item;
+      })
+    );
+
+    setDataTrip(updatedData);
   };
 
   useEffect(() => {
@@ -141,7 +157,7 @@ const SearchTrip = (props) => {
                       justifyContent: "center",
                     }}
                   >
-                    <span>300.000 VND</span>
+                    <span>{item?.price ? `${convertCurrency(item?.price)} VND` : "Chưa có giá"}</span>
                     <CircleIcon style={{ height: 10 }} />
                     <span>{item?.vehicle.type}</span>
                     <CircleIcon style={{ height: 10 }} />

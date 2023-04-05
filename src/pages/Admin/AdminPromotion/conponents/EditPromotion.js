@@ -32,6 +32,7 @@ const EditPromotion = (props) => {
     dataPromotion,
     getDetailPromotion,
   } = props;
+  const now = new Date();
   const currentYear = new Date().getFullYear();
   const firstDay = new Date(dataPromotion?.startDate);
   const lastDay = new Date(dataPromotion?.endDate);
@@ -214,13 +215,17 @@ const EditPromotion = (props) => {
       name: value.name,
       status: value.status,
       description: value?.description,
-      startDate: new Date(selectedDate?.startDate),
+      startDate:
+        firstDay <= now
+          ? undefined
+          : new Date(selectedDate?.startDate),
       endDate: new Date(selectedDate?.endDate),
       image: urlImage,
     };
+    console.log(params);
     try {
       const promotionApi = new PromotionApi();
-      const res = await promotionApi.updateById(dataPromotion?.id,params);
+      const res = await promotionApi.updateById(dataPromotion?.id, params);
       customToast.success("Cập nhật thành công");
       getDetailPromotion();
       setShowDrawer(false);
@@ -285,6 +290,7 @@ const EditPromotion = (props) => {
                   <FormControlCustom label="Ngày bắt đầu" fullWidth isMarked>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
+                        disabled={firstDay <= now ? true : false}
                         value={dayjs(selectedDate?.startDate)}
                         onChange={handleDateChangeStartDate}
                         className={"date-picker"}

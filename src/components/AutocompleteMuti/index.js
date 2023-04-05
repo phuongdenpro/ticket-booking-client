@@ -32,7 +32,7 @@ const AutocompleteMulti = (props) => {
   } = props;
   const { control } = useFormContext();
   const newListOption = [
-    { name: "Tất cả các chuyến", code: "ALL" },
+    {id:'all', name: "Tất cả các chuyến", code: "ALL_TRIP" },
     ...listOption,
   ];
   const [selectAll, setSelectAll] = useState(false);
@@ -65,7 +65,7 @@ const AutocompleteMulti = (props) => {
             multiple={multiple}
             options={
               selectAll
-                ? [{ name: "Tất cả các chuyến", code: "ALL" }]
+                ? [{ name: "Tất cả các chuyến", code: "ALL_TRIP" }]
                 : multiple
                 ? filterData(newListOption, value)
                 : newListOption
@@ -86,7 +86,7 @@ const AutocompleteMulti = (props) => {
               return option?.name || option?.fullName || "";
             }}
             onChange={(event, newValue) => {
-              if (newValue.some((option) => option.code === "ALL")) {
+              if (newValue.some((option) => option.code === "ALL_TRIP")) {
                 onChange(newValue);
                 setSelectAll(true);
               } else {

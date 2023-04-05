@@ -16,6 +16,7 @@ import GroupDetailPriceList from "../../AdminPriceList/components/GroupDetailPri
 import AddPromotionLine from "./AddPromotionLine";
 import EditPromotion from "./EditPromotion";
 import PromotionDetailList from "./PromotionDetailList";
+import EditPromotionLine from "./EditPromotionLine";
 
 const DetailPromotion = (props) => {
   const [dataCustomer, setData] = useState();
@@ -25,8 +26,31 @@ const DetailPromotion = (props) => {
   const [detailPromotion, setDetailPromotion] = useState({});
   const [showDrawer, setShowDrawer] = useState(false);
   const [showDrawerAdd, setShowDrawerAdd] = useState(false);
+  const [showDrawerEdit, setShowDrawerEdit] = useState(false);
+  const [idPromotionLine, setIdPromotionLine] = useState(null);
+  const [detailPromotionLine, setDetailPromotionLine] = useState("");
 
   const [promotionLine, setPromotionLine] = useState([]);
+
+  const handleShowDetail = (id) => {
+    setShowDrawerEdit(true);
+    setIdPromotionLine(id);
+  };
+  useEffect(() => {
+    if (!showDrawerEdit) {
+      setIdPromotionLine("");
+    }
+  }, [showDrawerEdit]);
+
+  const getDetailPromotionLine = async (id) => {
+    if (!id) return;
+    const promotionApi = new PromotionApi();
+    const response = await promotionApi.getPromotionLineById(id);
+    setDetailPromotionLine(response.data.data);
+  };
+  useEffect(() => {
+    getDetailPromotionLine(idPromotionLine);
+  }, [idPromotionLine]);
 
   const getDetailPromotion = async () => {
     try {
@@ -226,7 +250,7 @@ const DetailPromotion = (props) => {
                           placeholder={""}
                           className={"input-detail"}
                           disabled
-                          value={detailPromotion?.startDate}
+                          value={moment(detailPromotion?.startDate).format("DD-MM-YYYY") }
                         />
                       </FormControlCustom>
                     </Grid>
@@ -246,7 +270,7 @@ const DetailPromotion = (props) => {
                           placeholder={""}
                           className={"input-detail"}
                           disabled
-                          value={detailPromotion?.endDate}
+                          value={moment(detailPromotion?.endDate).format("DD-MM-YYYY")}
                         />
                       </FormControlCustom>
                     </Grid>
@@ -323,6 +347,7 @@ const DetailPromotion = (props) => {
             <PromotionDetailList
               data={promotionLine}
               getPromotionLine={getPromotionLine}
+              handleShowDetail={handleShowDetail}
             />
           </div>
         </Grid>
@@ -339,6 +364,13 @@ const DetailPromotion = (props) => {
         codePromotion={detailPromotion.code}
         getPromotionLine={getPromotionLine}
       ></AddPromotionLine>
+
+      <EditPromotionLine
+        setShowDrawer={setShowDrawerEdit}
+        showDrawer={showDrawerEdit}
+        detailPromotionLine={detailPromotionLine}
+        getPromotionLine={getPromotionLine}
+      ></EditPromotionLine>
     </div>
   );
 };

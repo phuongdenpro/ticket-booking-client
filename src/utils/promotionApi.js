@@ -66,5 +66,21 @@ class PromotionApi {
     const res = axiosClient.delete(url);
     return res;
   }
+
+  getPromotionLineById(id, params) {
+    const url = `promotion-line/id/${id}`;
+    const res = axiosClient.get(url, {
+      ...params,
+    });
+    return res;
+  }
+
+  updatePromotionLineById(code, params) {
+    const url = `promotion-line/id/${code}`;
+    const res = axiosClient.patch(url, {
+      ...params,
+    });
+    return res;
+  }
 }
 export { PromotionApi };

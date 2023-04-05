@@ -1,6 +1,6 @@
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { Button, Divider, Drawer, Grid, TextField } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import AutocompleteCustom from "../../../../components/AutocompleteCustom";
 import "../../../../assets/scss/default.scss";
@@ -26,14 +26,15 @@ import { PromotionApi } from "../../../../utils/promotionApi";
 import { disabled } from "glamor";
 import AutocompleteMulti from "../../../../components/AutocompleteMuti";
 
-const AddPromotionLine = (props) => {
-  const date = new Date();
-  const { setShowDrawer, showDrawer, codePromotion, getPromotionLine } = props;
+const EditPromotionLine = (props) => {
+  const now = new Date();
+  const { setShowDrawer, showDrawer, detailPromotionLine, getPromotionLine } =
+    props;
   const [dataTrip, setDataTrip] = useState([]);
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth();
-  const firstDay = new Date();
-  const lastDay = new Date(currentYear, currentMonth, 31);
+  const firstDay = new Date(detailPromotionLine?.startDate);
+  const lastDay = new Date(detailPromotionLine?.endDate);
   const [disabledMoney, setDisabledMoney] = useState(true);
   const [disabledPercent, setDisabledPercent] = useState(true);
   const [selectedDate, setSelectedDate] = useState({
@@ -51,6 +52,8 @@ const AddPromotionLine = (props) => {
       name: "Giảm giá tiền trực tiếp",
     },
   ];
+
+  console.log(detailPromotionLine);
 
   const handleGetData = async () => {
     try {
@@ -117,21 +120,45 @@ const AddPromotionLine = (props) => {
       .required("Vui lòng nhập số tiền giảm tối đa"),
   });
 
-  const defaultValues = {
-    code: "",
-    title: "",
-    couponCode: "",
-    description: "",
-    type: "",
-    note:"",
-    maxBudget: "",
-    maxQuantity: "",
-    tripCodes: [],
-    purchaseAmount: "",
-    reductionAmount: "",
-    percentDiscount: "",
-    maxReductionAmount: "",
-  };
+  const defaultValues = useMemo(
+    () => ({
+      code: detailPromotionLine.code || "",
+      title: detailPromotionLine.title || "",
+      couponCode: detailPromotionLine.couponCode || "",
+      description: detailPromotionLine.description || "",
+      type:
+        detailPromotionLine.type == "Giảm giá phần trăm"
+          ? {
+              id: 1,
+              name: "Giảm giá phần trăm",
+            }
+          : {
+              id: 2,
+              name: "Giảm giá tiền trực tiếp",
+            },
+      maxBudget: detailPromotionLine.maxBudget || "",
+      maxQuantity: detailPromotionLine.maxQuantity || "",
+      note: detailPromotionLine.note || "",
+      tripCodes: detailPromotionLine.applyAll
+        ? [{ id: "all", name: "Tất cả các chuyến", code: "ALL_TRIP" }]
+        : [
+            {
+              id: detailPromotionLine?.promotionDetail?.trip?.id,
+              code: detailPromotionLine?.promotionDetail?.trip?.code,
+              name: detailPromotionLine?.promotionDetail?.trip?.name,
+            },
+          ],
+      purchaseAmount:
+        detailPromotionLine?.promotionDetail?.purchaseAmount || "",
+      reductionAmount:
+        detailPromotionLine?.promotionDetail?.reductionAmount || "",
+      percentDiscount:
+        detailPromotionLine?.promotionDetail?.percentDiscount || "",
+      maxReductionAmount:
+        detailPromotionLine?.promotionDetail?.maxReductionAmount || "",
+    }),
+    [detailPromotionLine]
+  );
 
   const methods = useForm({
     mode: "onSubmit",
@@ -142,7 +169,9 @@ const AddPromotionLine = (props) => {
   const { handleSubmit, reset, formState, setValue, watch } = methods;
   const { errors } = formState;
   const watchType = watch("type");
+
   const watchPurchaseAmount = watch("purchaseAmount");
+  console.log(watchPurchaseAmount);
   const watchMaxBudget = watch("maxBudget");
 
   const watchReductionAmount = watch("reductionAmount");
@@ -153,39 +182,49 @@ const AddPromotionLine = (props) => {
       setDisabledPercent(false);
       setDisabledMoney(true);
       setValue("reductionAmount", "0");
-      setValue("percentDiscount", "");
+      setValue(
+        "percentDiscount",
+        detailPromotionLine?.promotionDetail?.percentDiscount || "0"
+      );
     } else if (watchType?.id == 2) {
       setDisabledPercent(true);
       setDisabledMoney(false);
       setValue("percentDiscount", "0");
-      setValue("reductionAmount", "");
+      setValue(
+        "reductionAmount",
+        detailPromotionLine?.promotionDetail?.reductionAmount || "0"
+      );
     } else {
       setValue("reductionAmount", "0");
       setValue("percentDiscount", "0");
     }
   }, [watchType]);
 
-  useEffect(() => {
-    setValue("maxBudget", currencyMark(watchMaxBudget));
-  }, [watchMaxBudget]);
-  useEffect(() => {
-    setValue("purchaseAmount", currencyMark(watchPurchaseAmount));
-  }, [watchPurchaseAmount]);
-  useEffect(() => {
-    setValue("reductionAmount", currencyMark(watchReductionAmount));
-  }, [watchReductionAmount]);
-  useEffect(() => {
-    setValue("maxReductionAmount", currencyMark(watchMaxReductionAmount));
-  }, [watchMaxReductionAmount]);
+  //   useEffect(() => {
+  //     if (watchMaxBudget !== undefined) {
+  //       setValue("maxBudget", currencyMark(watchMaxBudget));
+  //     }
+  //   }, [watchMaxBudget]);
+  //   useEffect(() => {
+  //     if (watchPurchaseAmount !== undefined)
+  //       setValue("purchaseAmount", currencyMark(watchPurchaseAmount));
+  //   }, [watchPurchaseAmount]);
+  //   useEffect(() => {
+  //     if (watchReductionAmount !== undefined)
+  //       setValue("reductionAmount", currencyMark(watchReductionAmount));
+  //   }, [watchReductionAmount]);
+  //   useEffect(() => {
+  //     if (watchMaxReductionAmount !== undefined)
+  //       setValue("maxReductionAmount", currencyMark(watchMaxReductionAmount));
+  //   }, [watchMaxReductionAmount]);
 
   useEffect(() => {
-    reset();
+    reset({ ...defaultValues });
     setSelectedDate({
-      ...selectedDate,
-      startDate: firstDay,
-      endDate: lastDay,
+      startDate: new Date(detailPromotionLine?.startDate),
+      endDate: new Date(detailPromotionLine?.endDate),
     });
-  }, [showDrawer]);
+  }, [detailPromotionLine]);
 
   const goBack = () => {
     reset();
@@ -218,18 +257,23 @@ const AddPromotionLine = (props) => {
     console.log("vào");
     console.log(value);
     const params = {
-      code: value.code,
       title: value.title,
       description: value.description,
       note: value?.note,
-      couponCode: value.couponCode,
-      tripCodes: value.tripCodes?.map(item => item.code),
-      startDate: new Date(selectedDate?.startDate),
+      tripCodes: value.tripCodes?.map((item) => item.code),
+      startDate:
+        firstDay <= now
+          ? undefined
+          : detailPromotionLine?.promotion?.status == "Đang hoạt động" &&
+            new Date(detailPromotionLine?.promotion?.startDate) <= now &&
+            new Date(detailPromotionLine?.promotion?.endDate) >= now
+          ? undefined
+          : new Date(selectedDate?.startDate),
+
       endDate: new Date(selectedDate?.endDate),
       maxQuantity: value.maxQuantity,
       maxBudget: numberFormat(value.maxBudget),
       type: value.type.name,
-      promotionCode: codePromotion,
       productDiscountPercent: {
         purchaseAmount: numberFormat(value.purchaseAmount),
         percentDiscount: value.percentDiscount,
@@ -245,8 +289,11 @@ const AddPromotionLine = (props) => {
 
     try {
       const promotionApi = new PromotionApi();
-      const response = await promotionApi.createPromotionLine(params);
-      customToast.success("Thêm thành công");
+      const response = await promotionApi.updatePromotionLineById(
+        detailPromotionLine.id,
+        params
+      );
+      customToast.success("Cập nhật thành công");
       setShowDrawer(false);
       getPromotionLine();
     } catch (error) {
@@ -272,7 +319,7 @@ const AddPromotionLine = (props) => {
               <ArrowBackIosIcon className="icon-back" />
             </div>
             <div>
-              <span>Thêm khuyến mãi</span>
+              <span>Thông tin khuyến mãi</span>
             </div>
           </div>
           <div className="content-drawer">
@@ -284,6 +331,7 @@ const AddPromotionLine = (props) => {
                 <Grid item xs={6}>
                   <FormControlCustom label={"Mã"} fullWidth isMarked>
                     <InputField
+                      disabled
                       name={"code"}
                       placeholder={"Nhập mã"}
                       error={Boolean(errors.code)}
@@ -304,6 +352,7 @@ const AddPromotionLine = (props) => {
                 <Grid item xs={6}>
                   <FormControlCustom label={"Mã giảm giá"} fullWidth>
                     <InputField
+                      disabled
                       name={"couponCode"}
                       helperText={errors?.couponCode?.message}
                       error={Boolean(errors.couponCode)}
@@ -324,6 +373,18 @@ const AddPromotionLine = (props) => {
                   <FormControlCustom label="Ngày bắt đầu" fullWidth isMarked>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
+                        disabled={
+                          firstDay <= now
+                            ? true
+                            : new Date(
+                                detailPromotionLine?.promotion?.startDate
+                              ) <= now &&
+                              new Date(
+                                detailPromotionLine?.promotion?.endDate
+                              ) >= now
+                            ? true
+                            : false
+                        }
                         value={dayjs(selectedDate?.startDate)}
                         onChange={(e) => {
                           setSelectedDate({
@@ -368,6 +429,7 @@ const AddPromotionLine = (props) => {
                     isMarked
                   >
                     <SelectCustom
+                      disabled
                       name={"type"}
                       placeholder={"Chọn loại khuyến mãi"}
                       error={Boolean(errors?.type)}
@@ -384,6 +446,7 @@ const AddPromotionLine = (props) => {
                     isMarked
                   >
                     <InputField
+                      disabled={firstDay <= now ? true : false}
                       name={"maxBudget"}
                       helperText={errors?.maxBudget?.message}
                       error={Boolean(errors.maxBudget)}
@@ -399,6 +462,7 @@ const AddPromotionLine = (props) => {
                     isMarked
                   >
                     <InputField
+                      disabled={firstDay <= now ? true : false}
                       name={"maxQuantity"}
                       helperText={errors?.maxQuantity?.message}
                       placeholder="0"
@@ -406,7 +470,7 @@ const AddPromotionLine = (props) => {
                     />
                   </FormControlCustom>
                 </Grid>
-                
+
                 <Grid item xs={12}>
                   <FormControlCustom label={"Ghi chú"} fullWidth>
                     <InputField
@@ -432,6 +496,7 @@ const AddPromotionLine = (props) => {
                     isMarked
                   >
                     <AutocompleteMulti
+                      disabled
                       multiple={true}
                       name={"tripCodes"}
                       placeholder={"Chọn mã tuyến xe áp dụng"}
@@ -443,8 +508,13 @@ const AddPromotionLine = (props) => {
                 </Grid>
 
                 <Grid item xs={6}>
-                  <FormControlCustom label={"Mức tiền hóa đơn"} fullWidth isMarked>
+                  <FormControlCustom
+                    label={"Mứa tiền hóa đơn"}
+                    fullWidth
+                    isMarked
+                  >
                     <InputField
+                      disabled
                       name={"purchaseAmount"}
                       placeholder="0"
                       error={Boolean(errors.purchaseAmount)}
@@ -460,7 +530,7 @@ const AddPromotionLine = (props) => {
                       isMarked
                     >
                       <InputField
-                        disabled={disabledMoney}
+                        disabled
                         placeholder={"0"}
                         name={"reductionAmount"}
                         error={Boolean(errors.reductionAmount)}
@@ -477,7 +547,7 @@ const AddPromotionLine = (props) => {
                       isMarked
                     >
                       <InputField
-                        disabled={disabledPercent}
+                        disabled
                         type={"number"}
                         placeholder={"0"}
                         inputProps={{
@@ -505,6 +575,7 @@ const AddPromotionLine = (props) => {
                     isMarked
                   >
                     <InputField
+                      disabled
                       name={"maxReductionAmount"}
                       placeholder="0"
                       error={Boolean(errors.maxReductionAmount)}
@@ -556,4 +627,4 @@ const AddPromotionLine = (props) => {
   );
 };
 
-export default AddPromotionLine;
+export default EditPromotionLine;
