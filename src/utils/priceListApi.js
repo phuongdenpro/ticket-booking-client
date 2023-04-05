@@ -76,5 +76,16 @@ class PriceListApi {
     });
     return res;
   }
+
+  getPrice(params){
+    const url = `price-list/price-detail/booking`;
+    const res = axiosClient.get(url, {
+      params: {
+        sort: "ASC",
+        ...params,
+      },
+    });
+    return res;
+  }
 }
 export { PriceListApi };

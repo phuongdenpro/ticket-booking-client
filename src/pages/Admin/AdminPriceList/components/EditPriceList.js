@@ -221,6 +221,7 @@ const EditPriceList = (props) => {
                         value={dayjs(selectedDate?.startDate)}
                         onChange={handleDateChangeStartDate}
                         className={"date-picker"}
+                        format="DD/MM/YYYY"
                         renderInput={(params) => (
                           <InputField
                             {...params}
@@ -241,6 +242,7 @@ const EditPriceList = (props) => {
                         value={dayjs(selectedDate?.endDate)}
                         onChange={handleDateChangeEndDate}
                         className={"date-picker"}
+                        format="DD/MM/YYYY"
                         renderInput={(params) => (
                           <InputField
                             {...params}

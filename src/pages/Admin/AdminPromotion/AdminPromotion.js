@@ -223,6 +223,7 @@ const AdminPromotion = (props) => {
                     value={dayjs(startDate)}
                     className={"date-picker"}
                     renderInput={(params) => <TextField {...params} />}
+                    format="DD/MM/YYYY"
                     />
                   </LocalizationProvider>
                 </div>
@@ -239,6 +240,7 @@ const AdminPromotion = (props) => {
                     }}
                     className={"date-picker"}
                     renderInput={(params) => <TextField {...params} />}
+                    format="DD/MM/YYYY"
                     />
                   </LocalizationProvider>
                 </div>

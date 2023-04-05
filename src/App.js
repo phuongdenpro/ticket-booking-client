@@ -25,6 +25,7 @@ import AdminUser from "./pages/Admin/AdminUser/AdminUser";
 import AdminVehicle from "./pages/Admin/AdminVehicle/AdminVehicle";
 import Home from "./pages/Home/Home";
 import SearchTrip from "./pages/Home/SearchTrip";
+import AdminSearchTrip from "./pages/Admin/AdminAddTicket/AdminSearchTrip";
 
 export const history = createBrowserHistory();
 
@@ -45,7 +46,10 @@ function App() {
             ></Route>
           </Route>
 
-          <Route path="/admin/create-ticket" element={<AdminAddTicket />} />
+          <Route path="/admin/booking-trip" >
+          <Route path="/admin/booking-trip" element={<AdminSearchTrip />}></Route>
+          <Route path="/admin/booking-trip/create-ticket" element={<AdminAddTicket />} ></Route>
+          </Route>
           <Route path="/admin/trip" element={<AdminTrip />} />
           <Route path="/admin/promotion">
             DetailPromotion

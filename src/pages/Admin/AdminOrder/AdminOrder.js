@@ -196,6 +196,8 @@ const AdminOrder = (props) => {
                       }}
                       className={"date-picker"}
                       renderInput={(params) => <TextField {...params} />}
+                      format="DD/MM/YYYY"
+                      
                     />
                   </LocalizationProvider>
                 </div>
@@ -215,6 +217,7 @@ const AdminOrder = (props) => {
                       }}
                       className={"date-picker"}
                       renderInput={(params) => <TextField {...params} />}
+                      format="DD/MM/YYYY"
                     />
                   </LocalizationProvider>
                 </div>

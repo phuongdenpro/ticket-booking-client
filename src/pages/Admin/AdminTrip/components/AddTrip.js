@@ -212,6 +212,7 @@ const AddTrip = (props) => {
                         }}
                         className={"date-picker"}
                         renderInput={(params) => <TextField {...params} />}
+                        format="DD/MM/YYYY"
                       />
                     </LocalizationProvider>
                   </FormControlCustom>
@@ -229,6 +230,7 @@ const AddTrip = (props) => {
                         }}
                         className={"date-picker"}
                         renderInput={(params) => <TextField {...params} />}
+                        format="DD/MM/YYYY"
                       />
                     </LocalizationProvider>
                   </FormControlCustom>
