@@ -48,7 +48,7 @@ function App() {
 
           <Route path="/admin/booking-trip" >
           <Route path="/admin/booking-trip" element={<AdminSearchTrip />}></Route>
-          <Route path="/admin/booking-trip/create-ticket" element={<AdminAddTicket />} ></Route>
+          <Route path="/admin/booking-trip/create-ticket/:code" element={<AdminAddTicket />} ></Route>
           </Route>
           <Route path="/admin/trip" element={<AdminTrip />} />
           <Route path="/admin/promotion">

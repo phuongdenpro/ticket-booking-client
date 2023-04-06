@@ -9,29 +9,29 @@ const DetailVehicle = (props) => {
   const { setShowDrawerDetail, showDrawerDetail, dataVehicle, handleGetData } =
     props;
 
-  // const [seatsFloor1, setSeatsFloor1] = useState([]);
-  // const [seatsFloor2, setSeatsFloor2] = useState([]);
+  const [seatsFloor1, setSeatsFloor1] = useState([]);
+  const [seatsFloor2, setSeatsFloor2] = useState([]);
   const [showDrawerEdit, setShowDrawerEdit] = useState(false);
 
-  // const handleSeat = async () => {
-  //   const seat1 = [];
-  //   const seat2 = [];
-  //   if (dataVehicle.seats) {
-  //     for (let i = 0; i < dataVehicle.seats.length; i++) {
-  //       if (dataVehicle.seats[i].floor == 1) {
-  //         seat1.push(dataVehicle.seats[i]);
-  //       } else {
-  //         seat2.push(dataVehicle.seats[i]);
-  //       }
-  //     }
-  //   }
-  //   setSeatsFloor1(seat1);
-  //   setSeatsFloor2(seat2);
-  // };
+  const handleSeat = async () => {
+    const seat1 = [];
+    const seat2 = [];
+    if (dataVehicle.seats) {
+      for (let i = 0; i < dataVehicle.seats.length; i++) {
+        if (dataVehicle.seats[i].floor == 1) {
+          seat1.push(dataVehicle.seats[i]);
+        } else {
+          seat2.push(dataVehicle.seats[i]);
+        }
+      }
+    }
+    setSeatsFloor1(seat1);
+    setSeatsFloor2(seat2);
+  };
 
-  // useEffect(() => {
-  //   handleSeat();
-  // }, [dataVehicle]);
+  useEffect(() => {
+    handleSeat();
+  }, [dataVehicle]);
 
   return (
     <Drawer
@@ -171,7 +171,58 @@ const DetailVehicle = (props) => {
 
         <div className="col-12"></div>
       </div>
-      
+      <div className="content-drawer" style={{ marginTop: 50 }}>
+        <div className="title-group">
+          <span>Thông tin ghế</span>
+        </div>
+        <Grid container spacing={2} style={{ marginTop: 10 }}>
+          <Grid item xs={3}></Grid>
+          <Grid item xs={3}>
+            {seatsFloor1.map((seat) => (
+              <div
+                className={`seat seat-${
+                  seat.type == "trống"
+                    ? "empty"
+                    : seat.type == "Đã bán"
+                    ? "not-empty"
+                    : "pending"
+                }`}
+              >
+                <span>{seat.name}</span>
+              </div>
+            ))}
+          </Grid>
+          <Grid item xs={3}>
+            {seatsFloor2.map((seat) => (
+              <div
+                className={`seat seat-${
+                  seat.type == "trống"
+                    ? "empty"
+                    : seat.type == "Đã bán"
+                    ? "not-empty"
+                    : "pending"
+                }`}
+              >
+                <span>{seat.name}</span>
+              </div>
+            ))}
+          </Grid>
+          <Grid item xs={3}>
+            <div>
+              <span>Chú thích:</span>
+            </div>
+            <div className={"seat seat-empty"}>
+              <span>trống</span>
+            </div>
+            <div className={"seat seat-not-empty"}>
+              <span>Đã đặt</span>
+            </div>
+            <div className={"seat seat-pending"}>
+              <span>Chờ xác nhận</span>
+            </div>
+          </Grid>
+        </Grid>
+      </div>
       <EditVehicle
         setShowDrawer={setShowDrawerEdit}
         showDrawer={showDrawerEdit}

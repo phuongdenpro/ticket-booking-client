@@ -20,6 +20,14 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import useDebounce from "../../../components/debounce";
 import AddCustomerOrder from "./AddCustomerOrder";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+import { useNavigate, useParams } from "react-router-dom";
+import { TripApi } from "../../../utils/tripApi";
+import { TicketApi } from "../../../utils/ticketApi";
+import { AdfScanner } from "@mui/icons-material";
+import ListTicketDetail from "./ListTicketDetail";
+import TicketBookingList from "./TicketBookingList";
+import { PriceListApi } from "../../../utils/priceListApi";
+import customToast from "../../../components/ToastCustom";
 
 const AdminAddTicket = (props) => {
   const [dataCustomer, setData] = useState();
@@ -31,6 +39,70 @@ const AdminAddTicket = (props) => {
   const [disabled, setDisabled] = useState(true);
   const [searchValue, setSearchValue] = useState();
   const debouncedSearch = useDebounce(searchValue, 500);
+  const navigate = useNavigate();
+  const codeTrip = useParams();
+  const [dataTripDetail, setDataTripDetail] = useState();
+  const [dataTicket, setDataTicket] = useState([]);
+  const [showAddTicket, setShowAddTicket] = useState(false);
+  const [idsSelected, setIdsSelected] = useState([]); //
+  const [itemTickets, setItemTickets] = useState([]);
+  const [price, setPrice] = useState();
+
+  const filterItem = async () => {
+    const newArray = dataTicket.filter((item) =>
+      idsSelected.includes(item?.id)
+    );
+    const priceApi = new PriceListApi();
+    const updatedData = await Promise.all(
+      newArray.map(async (item) => {
+        const response1 = await priceApi.getPrice({
+          applyDate: new Date(),
+          tripDetailCode: dataTripDetail?.code,
+          seatType: dataTripDetail?.vehicle?.type,
+        });
+
+        item.price = response1?.data?.data?.price;
+        item.startDate = dataTripDetail?.departureTime;
+        item.vehicleName = dataTripDetail?.vehicle?.name;
+        item.vehicleLicensePlate = dataTripDetail?.vehicle?.licensePlate;
+
+        return item;
+      })
+    );
+    setItemTickets(updatedData);
+  };
+
+  useEffect(() => {
+    filterItem();
+  }, [idsSelected]);
+
+  const handelDataTripDetail = async () => {
+    try {
+      const tripApi = new TripApi();
+      const res = await tripApi.getTripDetailByCode(codeTrip?.code);
+      setDataTripDetail(res?.data?.data);
+    } catch (error) {}
+  };
+
+  const handleDataTicket = async () => {
+    try {
+      const ticketApi = new TicketApi();
+      const res = await ticketApi.findAllTicket({
+        sort: "ASC",
+        tripDetailCode: codeTrip?.code,
+        isAll: true,
+      });
+      res?.data?.data.map((item, index) => {
+        item.price = price;
+      });
+      setDataTicket(res?.data?.data);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    handelDataTripDetail();
+    handleDataTicket();
+  }, [codeTrip]);
 
   const handelCustomerList = async () => {
     try {
@@ -71,12 +143,9 @@ const AdminAddTicket = (props) => {
 
   const defaultValues = useMemo(
     () => ({
-      province: dataCustomer?.ward?.district?.province?.name || "",
       email: dataCustomer?.email || "",
-      ward: dataCustomer?.ward?.name || "",
       address: dataCustomer?.fullAddress || "",
       phone: dataCustomer?.phone || "",
-      district: dataCustomer?.ward?.district?.name || "",
       customer: dataCustomer || "",
       createAt: dateNow,
       note: "",
@@ -88,12 +157,6 @@ const AdminAddTicket = (props) => {
       .object()
       .typeError("Vui lòng chọn khách hàng")
       .required("Vui lòng chọn khách hàng"),
-    phone: yup.string().required("Vui lòng nhập số điện thoại"),
-    address: yup.string().required("Vui lòng nhập địa chỉ"),
-    branch: yup
-      .object()
-      .typeError("Vui lòng chọn chi nhánh")
-      .required("Vui lòng chọn chi nhánh"),
   });
   const methods = useForm({
     mode: "onSubmit",
@@ -106,7 +169,7 @@ const AdminAddTicket = (props) => {
   const { errors } = formState;
 
   const customerWatch = watch("customer");
-  console.log(customerWatch);
+
   useEffect(() => {
     reset({ ...defaultValues });
   }, [dataCustomer]);
@@ -115,17 +178,34 @@ const AdminAddTicket = (props) => {
     setValue("email", customerWatch?.email);
     setValue("address", customerWatch?.fullAddress);
     setValue("phone", customerWatch?.phone);
-    setValue("province", customerWatch?.ward?.district?.province?.name);
-    setValue("district", customerWatch?.ward?.district?.name);
-    setValue("ward", customerWatch?.ward?.name);
 
     if (!isEmpty(customerWatch)) {
       setDisabled(false);
     } else {
       setDisabled(true);
-      setValue("ward", "");
     }
   }, [customerWatch]);
+  const onSubmit = async (value) => {
+    console.log("vào");
+    console.log(itemTickets);
+    if (itemTickets.length != 0) {
+      const params = {
+        customerId: customerWatch?.id || dataCustomer?.id,
+        seatCodes: itemTickets.map((item) => item?.seat?.code),
+        tripDetailCode: dataTripDetail?.code,
+      };
+      try {
+        const orderApi = new OrderApi();
+        const res = await orderApi.createOrder(params);
+        customToast.success("Tạo đơn thành công");
+      } catch (error) {
+        customToast.error(error.response.data.message);
+      }
+    } else {
+      console.log("vào");
+      customToast.warning("Bạn chưa chọn vé nào");
+    }
+  };
 
   const a = useCallback(
     (option, props, state) => {
@@ -257,13 +337,24 @@ const AdminAddTicket = (props) => {
         <Grid md={12}>
           <div className={"page-layout"}>
             <Grid className={"align-items-center header_title"}>
-              <Grid md={7}>
-                <h2 className={"txt-title"}>THÔNG TIN ĐẶT VÉ</h2>
+              <Grid md={12}>
+                <h2 className={"txt-title"}>
+                  THÔNG TIN ĐẶT VÉ TUYẾN #
+                  <span>
+                    <span style={{ color: "blue", marginRight: 10 }}>
+                      {codeTrip?.code}
+                    </span>
+                    ({dataTripDetail?.trip?.fromStation?.name} -{" "}
+                    {dataTripDetail?.trip?.toStation?.name},
+                    {moment(dataTripDetail?.departureTime).format("DD/MM/YYYY")}
+                    )
+                  </span>
+                </h2>
               </Grid>
             </Grid>
             <Divider />
             <FormProvider {...methods}>
-              <form>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="content mt-2">
                   <Grid container spacing={2}>
                     <Grid item xs={6}>
@@ -370,6 +461,24 @@ const AdminAddTicket = (props) => {
                           "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
                         }
                         className={"flex-direction-row"}
+                        label={"Khuyến mãi"}
+                        fullWidth
+                      >
+                        <InputField
+                          disabled
+                          style={{ width: "100%" }}
+                          name={"total"}
+                          helperText={""}
+                          placeholder={""}
+                        />
+                      </FormControlCustom>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <FormControlCustom
+                        classNameLabel={
+                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
+                        }
+                        className={"flex-direction-row"}
                         label={"Số tiền giảm"}
                         fullWidth
                       >
@@ -400,24 +509,6 @@ const AdminAddTicket = (props) => {
                         />
                       </FormControlCustom>
                     </Grid>
-                    <Grid item xs={6}>
-                      <FormControlCustom
-                        classNameLabel={
-                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
-                        }
-                        className={"flex-direction-row"}
-                        label={"Ngày tạo"}
-                        fullWidth
-                      >
-                        <InputField
-                          disabled
-                          style={{ width: "100%" }}
-                          name={"createAt"}
-                          helperText={""}
-                          placeholder={""}
-                        />
-                      </FormControlCustom>
-                    </Grid>
 
                     <Grid item xs={6}>
                       <FormControlCustom
@@ -438,56 +529,77 @@ const AdminAddTicket = (props) => {
                         />
                       </FormControlCustom>
                     </Grid>
+                    <Grid item xs={6}>
+                      <FormControlCustom
+                        classNameLabel={
+                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
+                        }
+                        className={"flex-direction-row"}
+                        label={"Ngày tạo"}
+                        fullWidth
+                      >
+                        <InputField
+                          disabled
+                          style={{ width: "100%" }}
+                          name={"createAt"}
+                          helperText={""}
+                          placeholder={""}
+                        />
+                      </FormControlCustom>
+                    </Grid>
+                  </Grid>
+                </div>
+                <div className={"page-layout"} style={{ marginTop: 50 }}>
+                  <Grid className={"align-items-center header_title"}>
+                    <Grid
+                      md={7}
+                      style={{ display: "flex", flexDirection: "row" }}
+                    >
+                      <h2 className={"txt-title"}>DANH SÁCH VÉ</h2>
+                    </Grid>
+                    <div
+                      className="item-btn-right"
+                      style={{ float: "right", marginBottom: 20 }}
+                    >
+                      <Button
+                        className={"btn-create"}
+                        variant="outlined"
+                        size="medium"
+                        style={{ height: "2rem" }}
+                        onClick={() => setShowAddTicket(true)}
+                      >
+                        <span className={"txt"}>Thêm vé</span>
+                      </Button>
+                    </div>
+                  </Grid>
+                  <TicketBookingList data={itemTickets} />
+                  <Grid
+                    container
+                    spacing={2}
+                    className={`mt-1`}
+                    justifyContent="space-between"
+                  >
+                    <Grid item xs={7}></Grid>
+                    <Grid item xs={5}>
+                      <div
+                        className="item-btn-right"
+                        style={{ float: "right", marginBottom: 20 }}
+                      >
+                        <Button
+                          variant="contained"
+                          size="medium"
+                          className={`btn-tertiary-normal`}
+                          style={{ height: "2rem" }}
+                          type="submit"
+                        >
+                          Tạo đơn
+                        </Button>
+                      </div>
+                    </Grid>
                   </Grid>
                 </div>
               </form>
             </FormProvider>
-          </div>
-
-          <div className={"page-layout"} style={{ marginTop: 50 }}>
-            <Grid className={"align-items-center header_title"}>
-              <Grid md={7} style={{ display: "flex", flexDirection: "row" }}>
-                <h2 className={"txt-title"}>DANH SÁCH VÉ</h2>
-              </Grid>
-              <div
-                className="item-btn-right"
-                style={{ float: "right", marginBottom: 20 }}
-              >
-                <Button
-                  className={"btn-create"}
-                  variant="outlined"
-                  size="medium"
-                  style={{ height: "2rem" }}
-                >
-                  <span className={"txt"}>Thêm vé</span>
-                </Button>
-              </div>
-            </Grid>
-            <PriceList />
-            <Grid
-              container
-              spacing={2}
-              className={`mt-1`}
-              justifyContent="space-between"
-            >
-              <Grid item xs={7}></Grid>
-              <Grid item xs={5}>
-                <div
-                  className="item-btn-right"
-                  style={{ float: "right", marginBottom: 20 }}
-                >
-                  <Button
-                    variant="contained"
-                    size="medium"
-                    className={`btn-tertiary-normal`}
-                    style={{ height: "2rem" }}
-                    type="submit"
-                  >
-                    Tạo hóa đơn
-                  </Button>
-                </div>
-              </Grid>
-            </Grid>
           </div>
         </Grid>
       </Grid>
@@ -496,6 +608,13 @@ const AdminAddTicket = (props) => {
         showDrawer={showAddCustomer}
         customerCreateForm={customerForm}
       />
+      <ListTicketDetail
+        setShowDrawer={setShowAddTicket}
+        showDrawer={showAddTicket}
+        dataTicket={dataTicket}
+        dataTripDetail={dataTripDetail}
+        setIdsSelected={setIdsSelected}
+      ></ListTicketDetail>
       <div></div>
     </div>
   );

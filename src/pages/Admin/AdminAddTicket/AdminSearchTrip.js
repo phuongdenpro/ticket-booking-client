@@ -32,7 +32,7 @@ const AdminSearchTrip = (props) => {
   const navigate = useNavigate();
 
   const onBookingTrip = (code) => {
-    navigate(`/admin/booking-trip/create-ticket`);
+    navigate(`/admin/booking-trip/create-ticket/${code}`);
   };
 
   const getDataProvince = async () => {
