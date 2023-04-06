@@ -43,9 +43,7 @@ const SearchTrip = (props) => {
           seatType: item?.vehicle?.type,
         });
 
-       
-          item.price = response1?.data?.data?.price;
-        
+        item.price = response1?.data?.data?.price;
 
         return item;
       })
@@ -158,7 +156,11 @@ const SearchTrip = (props) => {
                       justifyContent: "center",
                     }}
                   >
-                    <span>{item?.price ? `${convertCurrency(item?.price)} VND` : "Chưa có giá"}</span>
+                    <span>
+                      {item?.price
+                        ? `${convertCurrency(item?.price)} VND`
+                        : "Chưa có giá"}
+                    </span>
                     <CircleIcon style={{ height: 10 }} />
                     <span>{item?.vehicle.type}</span>
                     <CircleIcon style={{ height: 10 }} />
@@ -210,9 +212,7 @@ const SearchTrip = (props) => {
                       }}
                     >
                       <img
-                        src={
-                          item?.vehicle?.images[0]?.url
-                        }
+                        src={item?.vehicle?.images[0]?.url}
                         alt=""
                         style={{
                           aspectRatio: 1,

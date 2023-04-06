@@ -91,6 +91,16 @@ class TripApi {
     return res;
   }
 
+  getTripDetailByCode(id, params) {
+    const url = `trip-detail/code/${id}`;
+    const res = axiosClient.get(url, {
+      params: {
+        ...params,
+      },
+    });
+    return res;
+  }
+
   updateTripDetail(id, params) {
     const url = `trip-detail/id/${id}`;
     const res = axiosClient.patch(url, {

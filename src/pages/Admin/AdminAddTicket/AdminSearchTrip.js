@@ -32,7 +32,7 @@ const AdminSearchTrip = (props) => {
   const navigate = useNavigate();
 
   const onBookingTrip = (code) => {
-    navigate(`/admin/booking-trip/create-ticket`);
+    navigate(`/admin/booking-trip/create-ticket/${code}`);
   };
 
   const getDataProvince = async () => {
@@ -100,12 +100,12 @@ const AdminSearchTrip = (props) => {
   return (
     <Box sx={{ height: "100%", width: "100%" }}>
       <Helmet>
-        <title> PDBus - Danh sách hóa đơn</title>
+        <title> PDBus - Đặt vé xe</title>
       </Helmet>
       <Grid container className={"align-items-center header_title"}>
         <Grid item md={7}>
           <h2 className={"txt-title"} style={{ marginTop: 10 }}>
-            ĐẶT VÉ KHÁCH HÀNG
+            ĐẶT VÉ XE KHÁCH HÀNG
           </h2>
         </Grid>
       </Grid>

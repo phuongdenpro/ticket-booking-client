@@ -12,5 +12,13 @@ class OrderApi {
     return res;
   }
 
+  createOrder(params){
+    const url = `order`;
+    const res = axiosClient.post(url, {
+      ...params,
+    });
+    return res;
+  }
+
 }
 export { OrderApi };
