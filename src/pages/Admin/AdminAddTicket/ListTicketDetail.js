@@ -73,6 +73,9 @@ const ListTicketDetail = (props) => {
     handleSeat();
   }, [dataTicket]);
 
+  console.log(seatsFloor1);
+  console.log(seatsFloor2);
+
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [selectedSeatNames, setSelectedSeatNames] = useState([]);
 
@@ -191,6 +194,12 @@ const ListTicketDetail = (props) => {
                           key={seat?.id}
                           className={`seat ${
                             selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
                           }`}
                           onClick={() => handleSeatClick(seat?.id)}
                         >
@@ -207,6 +216,12 @@ const ListTicketDetail = (props) => {
                           key={seat?.id}
                           className={`seat ${
                             selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
                           }`}
                           onClick={() => handleSeatClick(seat?.id)}
                         >
@@ -231,6 +246,12 @@ const ListTicketDetail = (props) => {
                           key={seat?.id}
                           className={`seat ${
                             selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
                           }`}
                           onClick={() => handleSeatClick(seat?.id)}
                         >
@@ -249,6 +270,12 @@ const ListTicketDetail = (props) => {
                           key={seat?.id}
                           className={`seat ${
                             selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
                           }`}
                           onClick={() => handleSeatClick(seat?.id)}
                         >
@@ -265,6 +292,12 @@ const ListTicketDetail = (props) => {
                           key={seat?.id}
                           className={`seat ${
                             selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
                           }`}
                           onClick={() => handleSeatClick(seat?.id)}
                         >
@@ -321,36 +354,33 @@ const ListTicketDetail = (props) => {
                   </div>
                 </div>
               </div>
-
-              <div
-                className="col-12"
-                style={{ display: "flex", flexDirection: "column" }}
-              >
-                <Divider />
-                <span>
-                  <span style={{ color: "#000" }}>Ghế đang chọn:</span>{" "}
-                  {selectedSeatNames.join(", ")}
-                </span>
-              </div>
             </div>
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button
-            variant="contained"
-            onClick={() => setShowDrawer(false)}
-            style={{ marginBottom: 1 }}
-          >
-            Quay lại
-          </Button>
-          <Button
-            variant="contained"
-            color="success"
-            onClick={onClickConfirm}
-            style={{ marginBottom: 1 }}
-          >
-            Xác nhận
-          </Button>
+        <DialogActions
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
+          <span>
+            <span style={{ color: "#000", float: "left" }}>Ghế đang chọn:</span>{" "}
+            {selectedSeatNames.join(", ")}
+          </span>
+          <div>
+            <Button
+              variant="contained"
+              onClick={() => setShowDrawer(false)}
+              style={{ marginBottom: 1, marginRight:5 }}
+            >
+              Quay lại
+            </Button>
+            <Button
+              variant="contained"
+              color="success"
+              onClick={onClickConfirm}
+              style={{ marginBottom: 1 }}
+            >
+              Xác nhận
+            </Button>
+          </div>
         </DialogActions>
       </Dialog>
     </div>

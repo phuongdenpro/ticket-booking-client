@@ -82,5 +82,15 @@ class PromotionApi {
     });
     return res;
   }
+
+  getPromotionAvailable(params){
+    const url = "promotion-line/available";
+    const res = axiosClient.get(url, {
+      params: {
+        ...params,
+      },
+    });
+    return res;
+  }
 }
 export { PromotionApi };

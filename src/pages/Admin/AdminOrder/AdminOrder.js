@@ -15,6 +15,8 @@ import SelectCustom from "../../../components/SelectCustom";
 import customToast from "../../../components/ToastCustom";
 import "./AdminOrder";
 import OrderList from "./components/OrderList";
+import { OrderApi } from "../../../utils/orderApi";
+import { useNavigate } from "react-router-dom";
 
 const AdminOrder = (props) => {
   const [loadings, setLoadings] = useState([]);
@@ -27,10 +29,14 @@ const AdminOrder = (props) => {
   const [filterParams, setFilterParams] = useState(null);
   const [data, setData] = useState([]);
   const [selected, setSelected] = useState([]);
+  const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState({
     startDate: firstDay,
     endDate: lastDay,
   });
+  const onOrderDetail = (id) => {
+    navigate(`/admin/order/detail/${id}`);
+  };
   const filterDateTime = [
     {
       id: 1,
@@ -67,12 +73,27 @@ const AdminOrder = (props) => {
   ];
 
   const [disable, setDisable] = useState(true);
+  const handleGetData = async () => {
+    try {
+      const orderApi = new OrderApi();
+      const response = await orderApi.getListOrder({
+        page: page + 1,
+        pageSize: pageSize,
+        ...filterParams,
+      });
+      setData(response);
+    } catch (error) {
+      customToast.error(error.response.data.message);
+    }
+  };
 
   useEffect(() => {
     setFilterParams({ ...filterParams, keywords: searchValue });
   }, [searchValue]);
 
-  useEffect(() => {}, [page, pageSize, filterParams]);
+  useEffect(() => {
+    handleGetData()
+  }, [page, pageSize, filterParams]);
 
   const handleSearch = (e) => {
     setFilterParams({ keywords: searchValue || undefined });
@@ -273,7 +294,10 @@ const AdminOrder = (props) => {
       </Grid>
       <div style={{ display: "flex" }}>
         <div style={{ flexGrow: 1 }}>
-          <OrderList></OrderList>
+          <OrderList
+          data={data?.data?.data || []}
+          handleShowDetail={onOrderDetail}
+          ></OrderList>
         </div>
       </div>
     </Box>
