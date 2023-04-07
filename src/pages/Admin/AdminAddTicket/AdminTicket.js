@@ -28,7 +28,11 @@ import ListTicketDetail from "./ListTicketDetail";
 import TicketBookingList from "./TicketBookingList";
 import { PriceListApi } from "../../../utils/priceListApi";
 import customToast from "../../../components/ToastCustom";
-import { convertCurrency } from "../../../data/curren";
+import {
+  convertCurrency,
+  currencyMark,
+  numberFormat,
+} from "../../../data/curren";
 import { PromotionApi } from "../../../utils/promotionApi";
 import AutocompletePromotion from "../../../components/AutocompletePromotion";
 
@@ -51,6 +55,8 @@ const AdminAddTicket = (props) => {
   const [itemTickets, setItemTickets] = useState([]);
   const [price, setPrice] = useState();
   const [optionPromotion, setOptionPromotion] = useState([]);
+  const [promotionCodes, setPromotionCodes] = useState([]);
+  const [dataPromotionResults, setDataPromotionResults] = useState([]);
 
   const filterItem = async () => {
     const newArray = dataTicket.filter((item) =>
@@ -184,6 +190,59 @@ const AdminAddTicket = (props) => {
   const { errors } = formState;
 
   const customerWatch = watch("customer");
+  const promotionWatch = watch("promotionCodes");
+  const totalWatch = watch("total");
+  const reduceAmountWatch = watch("reduceAmount");
+
+  useEffect(() => {
+    setValue(
+      "finalTotal",
+      convertCurrency(
+        numberFormat(currencyMark(totalWatch)) -
+          numberFormat(currencyMark(reduceAmountWatch))
+      )
+    );
+  }, [totalWatch, reduceAmountWatch]);
+
+  useEffect(() => {
+    if (promotionWatch?.length > 0) {
+      setPromotionCodes(promotionWatch?.map((item) => item?.code));
+    } else {
+      setPromotionCodes([]);
+    }
+  }, [promotionWatch]);
+
+  const handlePromotionResult = async () => {
+    try {
+      let total = 0;
+      if (itemTickets.length > 0) {
+        itemTickets.forEach((ticket) => (total += ticket.price));
+      }
+      const promotionApi = new PromotionApi();
+      const res = await promotionApi.calculatePromotionLine({
+        total: total,
+        numOfTicket: itemTickets?.length || 0,
+        promotionLineCodes: promotionCodes,
+      });
+      setDataPromotionResults(res?.data?.data);
+    } catch (error) {
+      setDataPromotionResults([]);
+    }
+  };
+  console.log(dataPromotionResults);
+
+  useEffect(() => {
+    let total = 0;
+
+    if (dataPromotionResults.length > 0) {
+      dataPromotionResults.forEach((item) => (total -= item?.amount));
+    }
+    setValue("reduceAmount", convertCurrency(total));
+  }, [itemTickets, dataPromotionResults]);
+
+  useEffect(() => {
+    handlePromotionResult();
+  }, [itemTickets, promotionCodes]);
 
   useEffect(() => {
     reset({ ...defaultValues });
@@ -211,23 +270,24 @@ const AdminAddTicket = (props) => {
   }, [itemTickets]);
 
   const onSubmit = async (value) => {
-    console.log("vào");
-    console.log(itemTickets);
     if (itemTickets.length != 0) {
       const params = {
         customerId: customerWatch?.id || dataCustomer?.id,
         seatCodes: itemTickets.map((item) => item?.seat?.code),
         tripDetailCode: dataTripDetail?.code,
+        promotionLineCodes: value?.promotionCodes.map((item) => item?.code),
+        note: value?.note,
       };
+
       try {
         const orderApi = new OrderApi();
         const res = await orderApi.createOrder(params);
         customToast.success("Tạo đơn thành công");
+        navigate(`/admin/order/detail/${res.data.data.id}`);
       } catch (error) {
         customToast.error(error.response.data.message);
       }
     } else {
-      console.log("vào");
       customToast.warning("Bạn chưa chọn vé nào");
     }
   };
@@ -473,8 +533,8 @@ const AdminAddTicket = (props) => {
                       >
                         <InputField
                           disabled
-                          
                           style={{ width: "100%" }}
+                          className={"disabled-field"}
                           name={"total"}
                           helperText={""}
                           placeholder={""}
@@ -492,10 +552,10 @@ const AdminAddTicket = (props) => {
                       >
                         <AutocompletePromotion
                           multiple={true}
-                          name={"tripCodes"}
+                          name={"promotionCodes"}
                           placeholder={"Chọn khuyến mãi áp dụng"}
-                          error={Boolean(errors?.tripCodes)}
-                          helperText={errors?.tripCodes?.message}
+                          error={Boolean(errors?.promotionCodes)}
+                          helperText={errors?.promotionCodes?.message}
                           listOption={optionPromotion || []}
                         />
                       </FormControlCustom>
@@ -511,6 +571,7 @@ const AdminAddTicket = (props) => {
                       >
                         <InputField
                           disabled
+                          className={"disabled-field"}
                           style={{ width: "100%" }}
                           name={"reduceAmount"}
                           helperText={""}
@@ -529,6 +590,7 @@ const AdminAddTicket = (props) => {
                       >
                         <InputField
                           disabled
+                          className={"disabled-field"}
                           style={{ width: "100%" }}
                           name={"finalTotal"}
                           helperText={""}
@@ -567,6 +629,7 @@ const AdminAddTicket = (props) => {
                       >
                         <InputField
                           disabled
+                          className={"disabled-field"}
                           style={{ width: "100%" }}
                           name={"createAt"}
                           helperText={""}

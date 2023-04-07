@@ -30,6 +30,7 @@ import { useParams } from "react-router-dom";
 import { OrderApi } from "../../../utils/orderApi";
 import customToast from "../../../components/ToastCustom";
 import { CustomerApi } from "../../../utils/customerApi";
+import TicketOrderList from "./components/TicketOrderList";
 
 const OrderDetail = (props) => {
   const [orderDetail, setOrderDetail] = useState();
@@ -81,9 +82,9 @@ const OrderDetail = (props) => {
     setValueChange(newValue);
   };
 
-  const onClickCancel = ()=>{
+  const onClickCancel = () => {
     customToast.warning("Coming soon...");
-  }
+  };
 
   const checkPayment = () => {
     return (
@@ -217,7 +218,8 @@ const OrderDetail = (props) => {
                   size="medium"
                   className={`btn-tertiary-normal`}
                   style={{ height: "2rem" }}
-                  type="submit"
+                  //   type="submit"
+                  onClick={onClickCancel}
                 >
                   Thêm thanh toán
                 </Button>
@@ -230,36 +232,36 @@ const OrderDetail = (props) => {
       return (
         <FormProvider {...methods}>
           <form>
-            <div className="content mt-2">
+            <div className="content mt-2" style={{ width: 380 }}>
               <Grid container spacing={2}>
-                <Grid item xs={12} md={12}>
-                  <TableContainer className="datatable-v2" component={Paper}>
+                <Grid item xs={12}>
+                  <TableContainer component={Paper} style={{ width: '100%' }}>
                     <Table
                       size="small"
                       aria-label="a dense table"
                       padding="none"
-                      style={{ width: "100%" }}
+                      style={{ width: '100%' }}
                     >
                       <TableHead>
                         <TableRow>
                           <TableCell
                             align={"center"}
-                            padding="checkbox"
-                            style={{ width: "200px" }}
+                            padding="none"
+                            style={{ width: "100px" }}
                           >
                             Thời gian
                           </TableCell>
                           <TableCell
                             align={"center"}
-                            padding="checkbox"
-                            style={{ width: "200px" }}
+                            padding="none"
+                            style={{ width: "100px" }}
                           >
                             Nội dung
                           </TableCell>
                           <TableCell
                             align={"center"}
-                            padding="checkbox"
-                            style={{ width: "200px" }}
+                            padding="none"
+                            style={{ width: "100px" }}
                           >
                             Số tiền
                           </TableCell>
@@ -267,9 +269,11 @@ const OrderDetail = (props) => {
                       </TableHead>
                       <TableBody>
                         <TableRow>
-                          <TableCell align={"center"}>fff</TableCell>
-                          <TableCell align={"center"}>ffff</TableCell>
-                          <TableCell align={"center"}>fff</TableCell>
+                          <TableCell align={"center"}>30/04/2023</TableCell>
+                          <TableCell align={"center"}>
+                            Phương chuyển khoản
+                          </TableCell>
+                          <TableCell align={"center"}>330.000đ</TableCell>
                         </TableRow>
                       </TableBody>
                     </Table>
@@ -290,7 +294,7 @@ const OrderDetail = (props) => {
           className={"page-layout"}
           style={{
             marginLeft: "0px",
-            border: "2px solid #F5F5F5",
+            border: "3px solid #F5F5F5",
             padding: 10,
           }}
         >
@@ -304,14 +308,16 @@ const OrderDetail = (props) => {
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <span className={"order-custom-title"}>Tổng tiền VND</span>
               <span className={"order-field-value"}>
-                {convertCurrency(111111)}
+                {convertCurrency(dataOrder?.total)}
               </span>
             </div>
             <Divider style={{ borderStyle: "dashed", margin: "10px 0" }} />
-             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span className={'order-custom-title'}>Giảm giá</span>
-              <span className={'order-field-value'}>0%</span>
-            </div> 
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <span className={"order-custom-title"}>Giảm giá</span>
+              <span className={"order-field-value"}>
+                {convertCurrency(dataOrder?.total - dataOrder?.finalTotal)}
+              </span>
+            </div>
             <div
               style={{
                 display: "flex",
@@ -321,7 +327,7 @@ const OrderDetail = (props) => {
             >
               <span className={"order-custom-title"}>Thành tiền</span>
               <span className={"order-field-value"}>
-                {convertCurrency(111111)}
+                {convertCurrency(dataOrder?.finalTotal)}
               </span>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -339,7 +345,7 @@ const OrderDetail = (props) => {
                 Số tiền cần thanh toán -100%
               </span>
               <span className={"order-field-value"}>
-                {convertCurrency(111111)}
+                {convertCurrency(dataOrder?.total)}
               </span>
             </div>
           </div>
@@ -352,11 +358,14 @@ const OrderDetail = (props) => {
 
   return (
     <div className={"page-layout-blank"}>
+      <Helmet>
+        <title> PDBus - Chi tiết hóa đơn</title>
+      </Helmet>
       <Grid container spacing={1}>
-        <Grid item md={8.5}>
+        <Grid item md={8}>
           <div
             className={"page-layout"}
-            style={{ border: "2px solid #F5F5F5", padding: 10 }}
+            style={{ border: "3px solid #F5F5F5", padding: 10 }}
           >
             <Grid
               style={{
@@ -367,7 +376,7 @@ const OrderDetail = (props) => {
             >
               <div style={{ display: "flex", alignItems: "center" }}>
                 <div>
-                  <h2 className={"txt-title"}>Hóa đơn #{dataOrder?.code}</h2>
+                  <h2 className={"txt-title"}>HÓA ĐƠN #{dataOrder?.code}</h2>
                 </div>
                 <div style={{ padding: "2px 5px" }}>
                   <div
@@ -394,20 +403,20 @@ const OrderDetail = (props) => {
               <div>
                 <Button
                   style={{
-                    backgroundColor: '#27c24c',
-                    padding: '1px 4px',
-                    textTransform: 'none',
+                    backgroundColor: "#27c24c",
+                    padding: "1px 4px",
+                    textTransform: "none",
                   }}
                   onClick={onClickCancel}
                 >
                   <span
                     style={{
-                      color: 'white',
-                      fontSize: '0.7rem',
-                      fontWeight: '600',
-                      padding: '2px 5px',
-                      display: 'flex',
-                      alignItems: 'center',
+                      color: "white",
+                      fontSize: "0.7rem",
+                      fontWeight: "600",
+                      padding: "2px 5px",
+                      display: "flex",
+                      alignItems: "center",
                     }}
                   >
                     Hủy đơn hàng
@@ -432,10 +441,9 @@ const OrderDetail = (props) => {
                         fullWidth
                       >
                         <TextField
-                        className={"disabled-field input-detail"}
+                          className={"disabled-field input-detail"}
                           style={{ width: "100%" }}
                           disabled={disabled}
-                       
                           value={dataOrder?.customer?.fullName}
                         />
                       </FormControlCustom>
@@ -451,10 +459,9 @@ const OrderDetail = (props) => {
                         fullWidth
                       >
                         <TextField
-                        className={"disabled-field input-detail"}
+                          className={"disabled-field input-detail"}
                           style={{ width: "100%" }}
                           disabled={disabled}
-                        
                           value={dataOrder?.customer?.fullAddress}
                         />
                       </FormControlCustom>
@@ -470,14 +477,13 @@ const OrderDetail = (props) => {
                         fullWidth
                       >
                         <TextField
-                        className={"disabled-field input-detail"}
+                          className={"disabled-field input-detail"}
                           style={{ width: "100%" }}
                           disabled={disabled}
                           value={dataOrder?.customer?.phone}
                         />
                       </FormControlCustom>
                     </Grid>
-                    
 
                     <Grid item xs={6}>
                       <FormControlCustom
@@ -509,30 +515,30 @@ const OrderDetail = (props) => {
                           style={{ width: "100%" }}
                           disabled={disabled}
                           className={"disabled-field input-detail"}
-                          value={dataOrder?.promotionHistories?.map(item => item.promotionLineCode).join(", ")}
+                          value={dataOrder?.promotionHistories
+                            ?.map((item) => item.promotionLineCode)
+                            .join(", ")}
                         />
                       </FormControlCustom>
                     </Grid>
-                   
-                    
 
                     <Grid item xs={6}>
-                    <FormControlCustom
-                      classNameLabel={
-                        "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
-                      }
-                      className={"flex-direction-row"}
-                      label={"Nhân viên"}
-                      fullWidth
-                    >
-                      <TextField
-                        style={{ width: "100%" }}
-                        disabled={disabled}
-                        className={"disabled-field input-detail"}
-                        value={dataOrder?.staff?.fullName}
-                      />
-                    </FormControlCustom>
-                  </Grid>
+                      <FormControlCustom
+                        classNameLabel={
+                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
+                        }
+                        className={"flex-direction-row"}
+                        label={"Nhân viên"}
+                        fullWidth
+                      >
+                        <TextField
+                          style={{ width: "100%" }}
+                          disabled={disabled}
+                          className={"disabled-field input-detail"}
+                          value={dataOrder?.staff?.fullName}
+                        />
+                      </FormControlCustom>
+                    </Grid>
                     <Grid item xs={6}>
                       <FormControlCustom
                         classNameLabel={
@@ -556,7 +562,7 @@ const OrderDetail = (props) => {
                       <FormControlCustom
                         classNameLabel={
                           "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
-                        }   
+                        }
                         className={"flex-direction-row"}
                         label={"Thời gian"}
                         fullWidth
@@ -565,11 +571,12 @@ const OrderDetail = (props) => {
                           style={{ width: "100%" }}
                           disabled={disabled}
                           className={"disabled-field input-detail"}
-                          value={moment(dataOrder?.createdAt).format('DD/MM/YYYY HH:mm')}
+                          value={moment(dataOrder?.createdAt).format(
+                            "DD/MM/YYYY HH:mm"
+                          )}
                         />
                       </FormControlCustom>
                     </Grid>
-                    
                   </Grid>
                 </div>
               </form>
@@ -577,17 +584,20 @@ const OrderDetail = (props) => {
           </div>
           <div
             className={"page-layout"}
-            style={{ border: "2px solid #F5F5F5", padding: 10, marginTop: 20 }}
+            style={{ border: "3px solid #F5F5F5", padding: 10, marginTop: 20 }}
           >
             <Grid item className={"align-items-center header_title"}>
               <Grid item md={7}>
-                <h2 className={"txt-title"}>VÉ ĐÃ ĐẶT</h2>
+                <h2 className={"txt-title"}>DANH SÁCH VÉ ĐÃ ĐẶT</h2>
               </Grid>
             </Grid>
-            <TicketBookingList></TicketBookingList>
+            <TicketOrderList
+              data={dataOrder?.orderDetails || []}
+              onClickPrint={onClickCancel}
+            ></TicketOrderList>
           </div>
         </Grid>
-        <Grid item md={3.5}>
+        <Grid item md={4}>
           {checkPaymentOrder()}
         </Grid>
       </Grid>

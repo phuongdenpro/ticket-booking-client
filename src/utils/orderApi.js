@@ -37,6 +37,13 @@ class OrderApi {
     });
     return res;
   }
+  
+
+  getOrderStatus() {
+    const url = "order/status";
+    const res = axiosClient.get(url);
+    return res;
+  }
 
 }
 export { OrderApi };

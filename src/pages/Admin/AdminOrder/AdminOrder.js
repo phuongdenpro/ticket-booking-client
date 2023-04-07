@@ -1,22 +1,19 @@
-import AddIcon from "@mui/icons-material/Add";
-import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
-import { Box, Button, Divider, Grid, TextField } from "@mui/material";
+import { Box, Divider, Grid, TextField } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
-import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { FormProvider, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import FormControlCustom from "../../../components/FormControl";
 import SearchInput from "../../../components/InputSearch";
 import SelectCustom from "../../../components/SelectCustom";
 import customToast from "../../../components/ToastCustom";
+import { OrderApi } from "../../../utils/orderApi";
 import "./AdminOrder";
 import OrderList from "./components/OrderList";
-import { OrderApi } from "../../../utils/orderApi";
-import { useNavigate } from "react-router-dom";
 
 const AdminOrder = (props) => {
   const [loadings, setLoadings] = useState([]);
@@ -30,6 +27,9 @@ const AdminOrder = (props) => {
   const [data, setData] = useState([]);
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
+  const [orderStatus, setOrderStatus] = useState([]);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [selectedDate, setSelectedDate] = useState({
     startDate: firstDay,
     endDate: lastDay,
@@ -49,28 +49,19 @@ const AdminOrder = (props) => {
       name: "Tùy chọn",
     },
   ];
-  const orderStatus = [
-    {
-      id: 1,
-      code: 'IN_REVIEW',
-      name: 'Chờ duyệt',
-    },
-    {
-      id: 2,
-      code: 'IN_PROCESS',
-      name: 'Đang GD',
-    },
-    {
-      id: 3,
-      code: 'DONE',
-      name: 'Hoàn thành',
-    },
-    {
-      id: 4,
-      code: 'CANCEL',
-      name: 'Đã hủy',
-    },
-  ];
+
+  const handleDataStatus = async () => {
+    try {
+      const orderApi = new OrderApi();
+      const response = await orderApi.getOrderStatus();
+      setOrderStatus(response?.data?.data);
+    } catch (error) {
+      customToast.error(error.response.data.message);
+    }
+  };
+  useEffect(() => {
+    handleDataStatus();
+  }, []);
 
   const [disable, setDisable] = useState(true);
   const handleGetData = async () => {
@@ -92,7 +83,7 @@ const AdminOrder = (props) => {
   }, [searchValue]);
 
   useEffect(() => {
-    handleGetData()
+    handleGetData();
   }, [page, pageSize, filterParams]);
 
   const handleSearch = (e) => {
@@ -119,27 +110,20 @@ const AdminOrder = (props) => {
   const watchTime = watch("time");
   useEffect(() => {
     const params = {
-      status: watchStatus?.code,
-      startDate: new Date(selectedDate?.startDate),
-      endDate: new Date(selectedDate?.endDate),
+      status: watchStatus,
+      startDate: startDate ? new Date(startDate) : undefined,
+      endDate: endDate ? new Date(endDate) : undefined,
     };
     setFilterParams(params);
-  }, [watchStatus, watchTime, selectedDate?.startDate, selectedDate?.endDate]);
+  }, [watchStatus, watchTime, startDate, endDate]);
   useEffect(() => {
     const now = new Date();
 
     if (watchTime?.code === "option") {
       // setSelectedDate({ ...selectedDate, dateFrom: '', dateTo: '' });
     } else {
-      const currentYear = new Date().getFullYear();
-      const firstDay = new Date(currentYear, 0, 1);
-      const lastDay = new Date(currentYear, 11, 31);
-
-      setSelectedDate({
-        ...selectedDate,
-        startDate: firstDay,
-        endDate: lastDay,
-      });
+      setStartDate(null);
+      setEndDate(null);
     }
   }, [watchTime]);
   useEffect(() => {
@@ -149,26 +133,6 @@ const AdminOrder = (props) => {
       setDisable(true);
     }
   }, [watchTime]);
-  function getFirstDayOfWeek(d) {
-    const date = new Date(d);
-    const day = date.getDay(); // 👉️ get day of week
-
-    const diff = date.getDate() - day + (day === 0 ? -6 : 1);
-
-    return new Date(date.setDate(diff));
-  }
-  const resetFilterParams = () => {
-    // handleGetData()
-    setPage(0);
-    setPageSize(10);
-    setSearchValue("");
-    setSelectedDate({
-      ...selectedDate,
-      startDate: firstDay,
-      endDate: lastDay,
-    });
-    customToast.success("Làm mới dữ liệu thành công");
-  };
   return (
     <Box sx={{ height: "100%", width: "100%" }}>
       <Helmet>
@@ -180,7 +144,6 @@ const AdminOrder = (props) => {
             QUẢN LÝ HÓA ĐƠN
           </h2>
         </Grid>
-        
       </Grid>
       <Divider style={{ marginTop: 10 }} />
       <Grid
@@ -208,17 +171,13 @@ const AdminOrder = (props) => {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       disabled={disable}
-                      value={dayjs(selectedDate?.startDate)}
                       onChange={(e) => {
-                        setSelectedDate({
-                          ...selectedDate,
-                          startDate: new Date(e),
-                        });
+                        setStartDate(new Date(e));
                       }}
+                      value={dayjs(startDate)}
                       className={"date-picker"}
                       renderInput={(params) => <TextField {...params} />}
                       format="DD/MM/YYYY"
-                      
                     />
                   </LocalizationProvider>
                 </div>
@@ -229,13 +188,10 @@ const AdminOrder = (props) => {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       disabled={disable}
-                      value={dayjs(selectedDate?.endDate)}
                       onChange={(e) => {
-                        setSelectedDate({
-                          ...selectedDate,
-                          endDate: new Date(e),
-                        });
+                        setEndDate(new Date(e));
                       }}
+                      value={dayjs(endDate)}
                       className={"date-picker"}
                       renderInput={(params) => <TextField {...params} />}
                       format="DD/MM/YYYY"
@@ -295,8 +251,14 @@ const AdminOrder = (props) => {
       <div style={{ display: "flex" }}>
         <div style={{ flexGrow: 1 }}>
           <OrderList
-          data={data?.data?.data || []}
-          handleShowDetail={onOrderDetail}
+            data={data?.data?.data || []}
+            handleShowDetail={onOrderDetail}
+            handleChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+            total={data?.data?.pagination?.total}
+            handleGetData={handleGetData}
+            page={page}
+            pageSize={pageSize}
           ></OrderList>
         </div>
       </div>
