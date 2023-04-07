@@ -73,9 +73,6 @@ const ListTicketDetail = (props) => {
     handleSeat();
   }, [dataTicket]);
 
-  console.log(seatsFloor1);
-  console.log(seatsFloor2);
-
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [selectedSeatNames, setSelectedSeatNames] = useState([]);
 

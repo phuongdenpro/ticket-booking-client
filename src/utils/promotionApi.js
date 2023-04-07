@@ -92,5 +92,15 @@ class PromotionApi {
     });
     return res;
   }
+
+  calculatePromotionLine(params){
+    const url = "promotion-history/calculate-promotion-line";
+    const res = axiosClient.get(url, {
+      params: {
+        ...params,
+      },
+    });
+    return res;
+  }
 }
 export { PromotionApi };

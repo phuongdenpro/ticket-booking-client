@@ -71,7 +71,7 @@ const OrderList = (props) => {
     {
       field: "customer",
       headerName: "Khách hàng",
-      flex: 130,
+      flex: 150,
       headerAlign: "center",
       headerClassName: "theme",
       renderCell: (params) => {

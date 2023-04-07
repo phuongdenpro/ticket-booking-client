@@ -1,14 +1,16 @@
 import moment from "moment";
-import TableCustom from "../../../components/TableCustom";
-import { convertCurrency, numberFormat } from "../../../data/curren";
+import { convertCurrency } from "../../../../data/curren";
+import TableCustom from "../../../../components/TableCustom";
+import PrintIcon from "@mui/icons-material/Print";
 
-const TicketBookingList = (props) => {
+const TicketOrderList = (props) => {
   const {
     data,
     handleGetData,
     selectionModel,
     handleSelectionModeChange,
     handleShowDetail,
+    onClickPrint,
     handleClick,
     onChangeRowsPerPage,
     handleChangePage,
@@ -21,11 +23,18 @@ const TicketBookingList = (props) => {
     {
       field: "code",
       headerName: "Mã vé",
-      flex: 40,
+      flex: 90,
       headerAlign: "center",
       headerClassName: "theme",
       contentAlign: "center",
       sortable: false,
+      renderCell: (params) => {
+        return (
+          <div>
+            <span>{params.row?.ticketDetail?.code}</span>
+          </div>
+        );
+      },
     },
     {
       field: "name",
@@ -38,23 +47,7 @@ const TicketBookingList = (props) => {
       renderCell: (params) => {
         return (
           <div>
-            <span>{params.row?.seat?.code}</span>
-          </div>
-        );
-      },
-    },
-    {
-      field: "name",
-      headerName: "Tên ghế",
-      contentAlign: "center",
-      flex: 100,
-      headerAlign: "center",
-      headerClassName: "theme",
-      sortable: false,
-      renderCell: (params) => {
-        return (
-          <div>
-            <span>{params.row?.seat?.name}</span>
+            <span>{params.row?.ticketDetail?.seat?.code}</span>
           </div>
         );
       },
@@ -68,6 +61,13 @@ const TicketBookingList = (props) => {
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
+      renderCell: (params) => {
+        return (
+          <div>
+            <span>{params.row?.ticketDetail?.seat?.vehicle?.name}</span>
+          </div>
+        );
+      },
     },
     {
       field: "vehicleLicensePlate",
@@ -77,6 +77,13 @@ const TicketBookingList = (props) => {
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
+      renderCell: (params) => {
+        return (
+          <div>
+            <span>{params.row?.ticketDetail?.seat?.vehicle?.licensePlate}</span>
+          </div>
+        );
+      },
     },
     {
       field: "startDate",
@@ -89,14 +96,15 @@ const TicketBookingList = (props) => {
         return (
           <div>
             <span>
-              {moment(params.row.startDate).format("DD-MM-YYYY HH:MM")}
+              {moment(params.row?.ticketDetail?.ticket?.startDate).format("DD-MM-YYYY HH:MM")}
             </span>
           </div>
         );
       },
     },
+
     {
-      field: "price",
+      field: "total",
       headerName: "Gía vé",
       contentAlign: "center",
       flex: 100,
@@ -107,10 +115,26 @@ const TicketBookingList = (props) => {
         return (
           <div>
             <span>
-              {params.row?.price
-                ? convertCurrency(params.row?.price)
+              {params.row?.total
+                ? convertCurrency(params.row?.total)
                 : "chưa xác định"}
             </span>
+          </div>
+        );
+      },
+    },
+    {
+      field: "action",
+      headerName: "",
+      flex: 30,
+      headerAlign: "center",
+      contentAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <div onClick={onClickPrint}>
+            <PrintIcon color="primary"/>
           </div>
         );
       },
@@ -139,4 +163,4 @@ const TicketBookingList = (props) => {
   );
 };
 
-export default TicketBookingList;
+export default TicketOrderList;
