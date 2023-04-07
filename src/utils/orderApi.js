@@ -20,5 +20,23 @@ class OrderApi {
     return res;
   }
 
+  getListOrder(params){
+    const url = "order";
+    const res = axiosClient.get(url, {
+      params: {
+        ...params,
+      },
+    });
+    return res;
+  }
+
+  getOrderById(id,params){
+    const url = `order/id/${id}`;
+    const res = axiosClient.get(url, {
+      ...params,
+    });
+    return res;
+  }
+
 }
 export { OrderApi };

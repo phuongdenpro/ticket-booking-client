@@ -28,6 +28,9 @@ import ListTicketDetail from "./ListTicketDetail";
 import TicketBookingList from "./TicketBookingList";
 import { PriceListApi } from "../../../utils/priceListApi";
 import customToast from "../../../components/ToastCustom";
+import { convertCurrency } from "../../../data/curren";
+import { PromotionApi } from "../../../utils/promotionApi";
+import AutocompletePromotion from "../../../components/AutocompletePromotion";
 
 const AdminAddTicket = (props) => {
   const [dataCustomer, setData] = useState();
@@ -47,6 +50,7 @@ const AdminAddTicket = (props) => {
   const [idsSelected, setIdsSelected] = useState([]); //
   const [itemTickets, setItemTickets] = useState([]);
   const [price, setPrice] = useState();
+  const [optionPromotion, setOptionPromotion] = useState([]);
 
   const filterItem = async () => {
     const newArray = dataTicket.filter((item) =>
@@ -76,6 +80,16 @@ const AdminAddTicket = (props) => {
     filterItem();
   }, [idsSelected]);
 
+  const handlePromotion = async () => {
+    try {
+      const promotionApi = new PromotionApi();
+      const res = await promotionApi.getPromotionAvailable({
+        tripCode: codeTrip?.code,
+      });
+      setOptionPromotion(res?.data?.data);
+    } catch (error) {}
+  };
+
   const handelDataTripDetail = async () => {
     try {
       const tripApi = new TripApi();
@@ -102,6 +116,7 @@ const AdminAddTicket = (props) => {
   useEffect(() => {
     handelDataTripDetail();
     handleDataTicket();
+    handlePromotion();
   }, [codeTrip]);
 
   const handelCustomerList = async () => {
@@ -185,6 +200,16 @@ const AdminAddTicket = (props) => {
       setDisabled(true);
     }
   }, [customerWatch]);
+
+  useEffect(() => {
+    let total = 0;
+
+    if (itemTickets.length > 0) {
+      itemTickets.forEach((ticket) => (total += ticket.price));
+    }
+    setValue("total", convertCurrency(total));
+  }, [itemTickets]);
+
   const onSubmit = async (value) => {
     console.log("vào");
     console.log(itemTickets);
@@ -448,6 +473,7 @@ const AdminAddTicket = (props) => {
                       >
                         <InputField
                           disabled
+                          
                           style={{ width: "100%" }}
                           name={"total"}
                           helperText={""}
@@ -464,12 +490,13 @@ const AdminAddTicket = (props) => {
                         label={"Khuyến mãi"}
                         fullWidth
                       >
-                        <InputField
-                          disabled
-                          style={{ width: "100%" }}
-                          name={"total"}
-                          helperText={""}
-                          placeholder={""}
+                        <AutocompletePromotion
+                          multiple={true}
+                          name={"tripCodes"}
+                          placeholder={"Chọn khuyến mãi áp dụng"}
+                          error={Boolean(errors?.tripCodes)}
+                          helperText={errors?.tripCodes?.message}
+                          listOption={optionPromotion || []}
                         />
                       </FormControlCustom>
                     </Grid>
@@ -485,7 +512,7 @@ const AdminAddTicket = (props) => {
                         <InputField
                           disabled
                           style={{ width: "100%" }}
-                          name={"total"}
+                          name={"reduceAmount"}
                           helperText={""}
                           placeholder={""}
                         />
@@ -503,7 +530,7 @@ const AdminAddTicket = (props) => {
                         <InputField
                           disabled
                           style={{ width: "100%" }}
-                          name={"total"}
+                          name={"finalTotal"}
                           helperText={""}
                           placeholder={""}
                         />
