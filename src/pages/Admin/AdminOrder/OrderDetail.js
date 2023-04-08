@@ -440,7 +440,7 @@ const OrderDetail = (props) => {
                 <div style={{ padding: "2px 5px" }}>
                   <div
                     style={{
-                      backgroundColor: "blue",
+                      backgroundColor: "#ea6060",
                       borderRadius: "15px",
                     }}
                   >
