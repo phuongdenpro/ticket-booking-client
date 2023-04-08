@@ -24,9 +24,9 @@ import moment from "moment";
 import TicketBookingList from "../AdminAddTicket/TicketBookingList";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
-import { convertCurrency } from "../../../data/curren";
+import { convertCurrency, currencyMark, numberFormat } from "../../../data/curren";
 import "./AdminOrder.scss";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { OrderApi } from "../../../utils/orderApi";
 import customToast from "../../../components/ToastCustom";
 import { CustomerApi } from "../../../utils/customerApi";
@@ -39,6 +39,36 @@ const OrderDetail = (props) => {
   const [disabled, setDisabled] = useState(true);
   const idOrder = useParams();
   const [dataOrder, setDataOrder] = useState();
+  const navigate = useNavigate();
+  const bankData = [
+    {
+      id: 1,
+      name: "Thanh toán tiền mặt",
+    },
+    {
+      id: 2,
+      name: "Chuyển khoản ngân hàng",
+    },
+    {
+      id: 3,
+      name: "Thanh toán qua momo",
+    },
+  ];
+
+  const bankBanking = [
+    {
+      id: 1,
+      name: "Vietcombank Phan Đình Phương",
+    },
+    {
+      id: 2,
+      name: "Teckcombank Phan Đình Phương",
+    },
+    {
+      id: 3,
+      name: "Agribank Phan Đình Phương",
+    },
+  ];
   console.log(dataOrder);
 
   const getDetailOrder = async () => {
@@ -55,7 +85,20 @@ const OrderDetail = (props) => {
     getDetailOrder();
   }, [idOrder]);
 
-  const schema = yup.object().shape({});
+  const schema = yup.object().shape({
+    paymentPrice: yup
+      .string()
+      .typeError("Vui lòng nhập thành tiền")
+      .required("Vui lòng nhập thành tiền"),
+      paymentType: yup
+      .object()
+      .typeError("Vui lòng chọn phương thức thanh toán")
+      .required("Vui lòng chọn phương thức thanh toán"),
+      paymentBank: yup
+      .object()
+      .typeError("Vui lòng chọn phương thức thanh toán")
+      .required("Vui lòng chọn phương thức thanh toán"),
+  });
 
   const defaultValues = {
     note: "",
@@ -63,11 +106,6 @@ const OrderDetail = (props) => {
     createdDate: dateNow,
     paymentType: "",
     paymentBank: "",
-    branch: "",
-    resourceBank: "",
-    province: "",
-    district: "",
-    noteUpdate: "",
   };
 
   const methods = useForm({
@@ -78,6 +116,12 @@ const OrderDetail = (props) => {
 
   const { formState, watch, setValue, handleSubmit, reset } = methods;
   const { errors } = formState;
+  const paymentTypeWatch = watch("paymentType");
+  const watchPrice = watch("paymentPrice");
+
+  useEffect(() => {
+    setValue("paymentPrice", currencyMark(watchPrice));
+  }, [watchPrice]);
   const handleChange = (event, newValue) => {
     setValueChange(newValue);
   };
@@ -86,6 +130,15 @@ const OrderDetail = (props) => {
     customToast.warning("Coming soon...");
   };
 
+  const onSubmit = async (value) => {
+    const amount = numberFormat(value?.paymentPrice);
+    const note = value?.note;
+    if (paymentTypeWatch.id == 3) {
+      window.location.href = `https://momofree.apimienphi.com/api/QRCode?phone=0354043344&amount=${amount}&note=${note}`;
+    } else {
+      customToast.warning("Coming soon...");
+    }
+  };
   const checkPayment = () => {
     return (
       <div
@@ -110,7 +163,7 @@ const OrderDetail = (props) => {
     if (value === 0) {
       return (
         <FormProvider {...methods}>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="content mt-2">
               <Grid container spacing={2}>
                 <Grid item xs={12}>
@@ -145,7 +198,27 @@ const OrderDetail = (props) => {
                       style={{ width: "100%" }}
                       name={"paymentPrice"}
                       placeholder={"Nhập thành tiền"}
-                      error={Boolean(errors.amount)}
+                      error={Boolean(errors.paymentPrice)}
+                      helperText={""}
+                    />
+                  </FormControlCustom>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <FormControlCustom
+                    label={"PTTT"}
+                    classNameLabel={
+                      "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
+                    }
+                    className={"flex-direction-row"}
+                    fullWidth
+                  >
+                    <SelectCustom
+                      style={{ width: "100%" }}
+                      name={"paymentType"}
+                      placeholder={"Chọn PTTT"}
+                      options={bankData}
+                      error={Boolean(errors.paymentType)}
                       helperText={""}
                     />
                   </FormControlCustom>
@@ -164,22 +237,9 @@ const OrderDetail = (props) => {
                       style={{ width: "100%" }}
                       name={"paymentBank"}
                       placeholder={"Chọn bank"}
-                    />
-                  </FormControlCustom>
-                </Grid>
-                <Grid item xs={12}>
-                  <FormControlCustom
-                    label={"PTTT"}
-                    classNameLabel={
-                      "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
-                    }
-                    className={"flex-direction-row"}
-                    fullWidth
-                  >
-                    <SelectCustom
-                      style={{ width: "100%" }}
-                      name={"paymentType"}
-                      placeholder={"Chọn PTTT"}
+                      options={bankBanking}
+                      error={Boolean(errors.paymentBank)}
+                      helperText={""}
                     />
                   </FormControlCustom>
                 </Grid>
@@ -218,8 +278,7 @@ const OrderDetail = (props) => {
                   size="medium"
                   className={`btn-tertiary-normal`}
                   style={{ height: "2rem" }}
-                  //   type="submit"
-                  onClick={onClickCancel}
+                  type="submit"
                 >
                   Thêm thanh toán
                 </Button>
@@ -235,12 +294,12 @@ const OrderDetail = (props) => {
             <div className="content mt-2" style={{ width: 380 }}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <TableContainer component={Paper} style={{ width: '100%' }}>
+                  <TableContainer component={Paper} style={{ width: "100%" }}>
                     <Table
                       size="small"
                       aria-label="a dense table"
                       padding="none"
-                      style={{ width: '100%' }}
+                      style={{ width: "100%" }}
                     >
                       <TableHead>
                         <TableRow>
@@ -381,7 +440,7 @@ const OrderDetail = (props) => {
                 <div style={{ padding: "2px 5px" }}>
                   <div
                     style={{
-                      backgroundColor: "blue",
+                      backgroundColor: "#ea6060",
                       borderRadius: "15px",
                     }}
                   >
