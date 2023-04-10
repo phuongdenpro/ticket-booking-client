@@ -45,5 +45,15 @@ class OrderApi {
     return res;
   }
 
+  getListOrderBill(params){
+    const url = "order/bill";
+    const res = axiosClient.get(url, {
+      params: {
+        ...params,
+      },
+    });
+    return res;
+  }
+
 }
 export { OrderApi };

@@ -28,8 +28,10 @@ import { UploadApi } from "../../../../utils/uploadApi";
 const AddPromotion = (props) => {
   const { setShowDrawer, showDrawer, handleGetData } = props;
   const currentYear = new Date().getFullYear();
+  
+  const currentMonth = new Date().getMonth();
   const firstDay = new Date();
-  const lastDay = new Date(currentYear, 11, 31);
+  const lastDay = new Date(currentYear, currentMonth, 31);
   const [images, setImages] = useState([]);
   const [loadingUpload, setLoadingUpload] = useState(false);
   const [urlImage, setUrlImage] = useState([]);

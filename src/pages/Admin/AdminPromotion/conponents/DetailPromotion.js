@@ -363,6 +363,7 @@ const DetailPromotion = (props) => {
         showDrawer={showDrawerAdd}
         codePromotion={detailPromotion.code}
         getPromotionLine={getPromotionLine}
+        detailPromotion={detailPromotion}
       ></AddPromotionLine>
 
       <EditPromotionLine

@@ -12,10 +12,10 @@ import SearchInput from "../../../components/InputSearch";
 import SelectCustom from "../../../components/SelectCustom";
 import customToast from "../../../components/ToastCustom";
 import { OrderApi } from "../../../utils/orderApi";
-import "./AdminOrder";
-import OrderList from "./components/OrderList";
+import "./AdminTicketList.scss";
+import TicketList from "./components/TicketList";
 
-const AdminOrder = (props) => {
+const AdminTicketList = (props) => {
   const [loadings, setLoadings] = useState([]);
   const currentYear = new Date().getFullYear();
   const firstDay = new Date(currentYear, 0, 1);
@@ -35,7 +35,7 @@ const AdminOrder = (props) => {
     endDate: lastDay,
   });
   const onOrderDetail = (id) => {
-    navigate(`/admin/order/detail/${id}`);
+    navigate(`/admin/ticket-list/detail/${id}`);
   };
   const filterDateTime = [
     {
@@ -50,13 +50,13 @@ const AdminOrder = (props) => {
     },
   ];
 
-  const filterStatus = ["Đã thanh toán", "Đã trả vé"];
+  const filterStatus = ["Chưa thanh toán", "Đã hủy"];
 
   const [disable, setDisable] = useState(true);
   const handleGetData = async () => {
     try {
       const orderApi = new OrderApi();
-      const response = await orderApi.getListOrderBill({
+      const response = await orderApi.getListOrder({
         page: page + 1,
         pageSize: pageSize,
         ...filterParams,
@@ -125,12 +125,12 @@ const AdminOrder = (props) => {
   return (
     <Box sx={{ height: "100%", width: "100%" }}>
       <Helmet>
-        <title> PDBus - Danh sách hóa đơn</title>
+        <title> PDBus - Danh sách vé</title>
       </Helmet>
       <Grid container className={"align-items-center header_title"}>
         <Grid item md={7}>
           <h2 className={"txt-title"} style={{ marginTop: 10 }}>
-            QUẢN LÝ HÓA ĐƠN
+            QUẢN LÝ VÉ XE
           </h2>
         </Grid>
       </Grid>
@@ -239,7 +239,7 @@ const AdminOrder = (props) => {
       </Grid>
       <div style={{ display: "flex" }}>
         <div style={{ flexGrow: 1 }}>
-          <OrderList
+          <TicketList
             data={data?.data?.data || []}
             handleShowDetail={onOrderDetail}
             handleChangePage={handleChangePage}
@@ -248,11 +248,11 @@ const AdminOrder = (props) => {
             handleGetData={handleGetData}
             page={page}
             pageSize={pageSize}
-          ></OrderList>
+          ></TicketList>
         </div>
       </div>
     </Box>
   );
 };
 
-export default AdminOrder;
+export default AdminTicketList;

@@ -64,6 +64,7 @@ const Sidebar = (props) => {
     getItem("Khuyến Mãi", "promotion", <DollarCircleOutlined />),
     getItem("Đặt vé - Hóa đơn", "subOrder", <OrderedListOutlined />, [
       getChildItem("Đặt vé", "booking-trip"),
+      getChildItem("Quản lý vé xe", "ticket-list"),
       getChildItem("Hóa đơn đặt vé", "order/order-list"),
       getChildItem("Hóa đơn hoàn vé", "order-refund-list"),
     ]),

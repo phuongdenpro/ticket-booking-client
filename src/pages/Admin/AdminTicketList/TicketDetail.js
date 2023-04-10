@@ -29,14 +29,14 @@ import {
   currencyMark,
   numberFormat,
 } from "../../../data/curren";
-import "./AdminOrder.scss";
+import "./AdminTicketList.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import { OrderApi } from "../../../utils/orderApi";
 import customToast from "../../../components/ToastCustom";
 import { CustomerApi } from "../../../utils/customerApi";
-import TicketOrderList from "./components/TicketOrderList";
+import TicketListDetail from "./components/TicketListDetail";
 
-const OrderDetail = (props) => {
+const TicketDetail = (props) => {
   const [orderDetail, setOrderDetail] = useState();
   const dateNow = moment(new Date()).format("DD-MM-YYYY hh:mm");
   const [value, setValueChange] = useState(0);
@@ -152,7 +152,8 @@ const OrderDetail = (props) => {
         <Grid container overflow={"hidden"}>
           <Grid flexDirection={{ xs: "column", md: "row" }} item>
             <Tabs value={value} onChange={handleChange} textColor="primary">
-              <Tab label="Lịch sử" className="left-border" />
+              <Tab label="Thanh toán" className="left-border" />
+              <Tab label="Lịch sử" className="right-border" />
             </Tabs>
           </Grid>
         </Grid>
@@ -163,61 +164,191 @@ const OrderDetail = (props) => {
   };
 
   const tabPayment = () => {
-    return (
-      <FormProvider {...methods}>
-        <form>
-          <div className="content mt-2" style={{ width: 380 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TableContainer component={Paper} style={{ width: "100%" }}>
-                  <Table
-                    size="small"
-                    aria-label="a dense table"
-                    padding="none"
-                    style={{ width: "100%" }}
+    if (value === 0) {
+      return (
+        <FormProvider {...methods}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="content mt-2">
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <FormControlCustom
+                    classNameLabel={
+                      "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
+                    }
+                    className={"flex-direction-row"}
+                    label={"Thời gian"}
+                    fullWidth
                   >
-                    <TableHead>
-                      <TableRow>
-                        <TableCell
-                          align={"center"}
-                          padding="none"
-                          style={{ width: "100px" }}
-                        >
-                          Thời gian
-                        </TableCell>
-                        <TableCell
-                          align={"center"}
-                          padding="none"
-                          style={{ width: "100px" }}
-                        >
-                          Nội dung
-                        </TableCell>
-                        <TableCell
-                          align={"center"}
-                          padding="none"
-                          style={{ width: "100px" }}
-                        >
-                          Số tiền
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell align={"center"}>30/04/2023</TableCell>
-                        <TableCell align={"center"}>
-                          Phương chuyển khoản
-                        </TableCell>
-                        <TableCell align={"center"}>330.000đ</TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+                    <InputField
+                      style={{ width: "100%" }}
+                      name={"createdDate"}
+                      placeholder={"Nhập thời gian"}
+                      error={Boolean(errors.createdDate)}
+                      helperText={""}
+                    />
+                  </FormControlCustom>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <FormControlCustom
+                    classNameLabel={
+                      "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
+                    }
+                    className={"flex-direction-row"}
+                    label={"Số tiền"}
+                    fullWidth
+                  >
+                    <InputField
+                      style={{ width: "100%" }}
+                      name={"paymentPrice"}
+                      placeholder={"Nhập thành tiền"}
+                      error={Boolean(errors.paymentPrice)}
+                      helperText={""}
+                    />
+                  </FormControlCustom>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <FormControlCustom
+                    label={"PTTT"}
+                    classNameLabel={
+                      "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
+                    }
+                    className={"flex-direction-row"}
+                    fullWidth
+                  >
+                    <SelectCustom
+                      style={{ width: "100%" }}
+                      name={"paymentType"}
+                      placeholder={"Chọn PTTT"}
+                      options={bankData}
+                      error={Boolean(errors.paymentType)}
+                      helperText={""}
+                    />
+                  </FormControlCustom>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <FormControlCustom
+                    label={"Ngân hàng"}
+                    classNameLabel={
+                      "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
+                    }
+                    className={"flex-direction-row"}
+                    fullWidth
+                  >
+                    <SelectCustom
+                      style={{ width: "100%" }}
+                      name={"paymentBank"}
+                      placeholder={"Chọn bank"}
+                      options={bankBanking}
+                      error={Boolean(errors.paymentBank)}
+                      helperText={""}
+                    />
+                  </FormControlCustom>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <FormControlCustom
+                    classNameLabel={
+                      "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
+                    }
+                    className={"flex-direction-row"}
+                    label={"Ghi chú"}
+                    fullWidth
+                  >
+                    <InputField
+                      style={{ width: "100%" }}
+                      multiline
+                      rows={3}
+                      name={"note"}
+                      placeholder={"Nhập ghi chú"}
+                      error={Boolean(errors.note)}
+                      helperText={""}
+                    />
+                  </FormControlCustom>
+                </Grid>
+              </Grid>
+            </div>
+            <Grid
+              container
+              spacing={2}
+              className={`mt-1`}
+              justifyContent="center"
+            >
+              <Grid item xs={7}>
+                <Button
+                  variant="contained"
+                  size="medium"
+                  className={`btn-tertiary-normal`}
+                  style={{ height: "2rem" }}
+                  type="submit"
+                  disabled={dataOrder?.status == "Đã hủy" ? true : false}
+                >
+                  Thanh toán
+                </Button>
               </Grid>
             </Grid>
-          </div>
-        </form>
-      </FormProvider>
-    );
+          </form>
+        </FormProvider>
+      );
+    } else {
+      return (
+        <FormProvider {...methods}>
+          <form>
+            <div className="content mt-2" style={{ width: 380 }}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TableContainer component={Paper} style={{ width: "100%" }}>
+                    <Table
+                      size="small"
+                      aria-label="a dense table"
+                      padding="none"
+                      style={{ width: "100%" }}
+                    >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell
+                            align={"center"}
+                            padding="none"
+                            style={{ width: "100px" }}
+                          >
+                            Thời gian
+                          </TableCell>
+                          <TableCell
+                            align={"center"}
+                            padding="none"
+                            style={{ width: "100px" }}
+                          >
+                            Nội dung
+                          </TableCell>
+                          <TableCell
+                            align={"center"}
+                            padding="none"
+                            style={{ width: "100px" }}
+                          >
+                            Số tiền
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell align={"center"}>30/04/2023</TableCell>
+                          <TableCell align={"center"}>
+                            Phương chuyển khoản
+                          </TableCell>
+                          <TableCell align={"center"}>330.000đ</TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Grid>
+              </Grid>
+            </div>
+          </form>
+        </FormProvider>
+      );
+    }
   };
 
   const checkPaymentOrder = () => {
@@ -309,15 +440,15 @@ const OrderDetail = (props) => {
             >
               <div style={{ display: "flex", alignItems: "center" }}>
                 <div>
-                  <h2 className={"txt-title"}>HÓA ĐƠN #{dataOrder?.code}</h2>
+                  <h2 className={"txt-title"}>ĐƠN #{dataOrder?.code}</h2>
                 </div>
                 <div style={{ padding: "2px 5px" }}>
                   <div
                     style={{
                       backgroundColor:
-                        dataOrder?.status == "Đã thanh toán"
-                          ? "#0e9315"
-                          : "#ff7b00",
+                        dataOrder?.status == "Chưa thanh toán"
+                          ? "#949b36"
+                          : "#e54242",
                       borderRadius: "15px",
                     }}
                   >
@@ -336,11 +467,11 @@ const OrderDetail = (props) => {
                   </div>
                 </div>
               </div>
-              {dataOrder?.status == "Đã thanh toán" ? (
+              {dataOrder?.status == "Chưa thanh toán" ? (
                 <div>
                   <Button
                     style={{
-                      backgroundColor: "#2167f2",
+                      backgroundColor: "#27c24c",
                       padding: "1px 4px",
                       textTransform: "none",
                     }}
@@ -356,7 +487,7 @@ const OrderDetail = (props) => {
                         alignItems: "center",
                       }}
                     >
-                      Hoàn trả vé
+                      Hủy vé
                     </span>
                   </Button>
                 </div>
@@ -529,10 +660,10 @@ const OrderDetail = (props) => {
                 <h2 className={"txt-title"}>DANH SÁCH VÉ ĐÃ ĐẶT</h2>
               </Grid>
             </Grid>
-            <TicketOrderList
+            <TicketListDetail
               data={dataOrder?.orderDetails || []}
               onClickPrint={onClickCancel}
-            ></TicketOrderList>
+            ></TicketListDetail>
           </div>
         </Grid>
         <Grid item md={4}>
@@ -544,4 +675,4 @@ const OrderDetail = (props) => {
   );
 };
 
-export default OrderDetail;
+export default TicketDetail;

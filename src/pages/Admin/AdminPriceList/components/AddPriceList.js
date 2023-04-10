@@ -25,8 +25,10 @@ import { PriceListApi } from "../../../../utils/priceListApi";
 const AddPriceList = (props) => {
   const { setShowDrawer, showDrawer, handleGetData } = props;
   const currentYear = new Date().getFullYear();
-  const firstDay = new Date(currentYear, 0, 1);
-  const lastDay = new Date(currentYear, 11, 31);
+  
+  const currentMonth = new Date().getMonth();
+  const firstDay = new Date();
+  const lastDay = new Date(currentYear, currentMonth, 31);
   const [selectedDate, setSelectedDate] = useState({
     startDate: firstDay,
     endDate: lastDay,

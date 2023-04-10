@@ -28,12 +28,12 @@ import AutocompleteMulti from "../../../../components/AutocompleteMuti";
 
 const AddPromotionLine = (props) => {
   const date = new Date();
-  const { setShowDrawer, showDrawer, codePromotion, getPromotionLine } = props;
+  const { setShowDrawer, showDrawer, codePromotion, getPromotionLine,detailPromotion } = props;
   const [dataTrip, setDataTrip] = useState([]);
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth();
-  const firstDay = new Date();
-  const lastDay = new Date(currentYear, currentMonth, 31);
+  const firstDay = new Date(detailPromotion?.startDate);
+  const lastDay = new Date(detailPromotion?.endDate);
   const [disabledMoney, setDisabledMoney] = useState(true);
   const [disabledPercent, setDisabledPercent] = useState(true);
   const [selectedDate, setSelectedDate] = useState({

@@ -6,7 +6,7 @@ import "../../../../assets/scss/default.scss";
 import TableCustom from "../../../../components/TableCustom";
 import { convertCurrency } from "../../../../data/curren";
 
-const OrderList = (props) => {
+const TicketList = (props) => {
   const {
     data,
     handleGetData,
@@ -24,7 +24,7 @@ const OrderList = (props) => {
   const columns = [
     {
       field: "createdAt",
-      headerName: "Ngày tạo đơn",
+      headerName: "Ngày tạo",
       flex: 100,
       headerAlign: "center",
       contentAlign: "center",
@@ -110,9 +110,9 @@ const OrderList = (props) => {
                 borderRadius: "15px",
                 padding: "2px 5px",
                 backgroundColor:
-                  params?.row?.status == "Đã thanh toán"
-                    ? "#0e9315"
-                    : "#ff7b00",
+                  params?.row?.status == "Chưa thanh toán"
+                    ? "#949b36"
+                    : "#e54242",
                 alignItems: "center",
                 justifyContent: "center",
                 display: "flex",
@@ -214,4 +214,4 @@ const OrderList = (props) => {
   );
 };
 
-export default OrderList;
+export default TicketList;
