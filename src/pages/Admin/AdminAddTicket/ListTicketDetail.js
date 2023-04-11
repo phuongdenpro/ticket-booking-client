@@ -180,6 +180,7 @@ const ListTicketDetail = (props) => {
                         </div>
                       ))}
                   </div>
+                  
                   <div>
                     {seatsFloor1
                       .slice(
