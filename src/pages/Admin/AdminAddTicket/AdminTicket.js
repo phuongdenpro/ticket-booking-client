@@ -283,7 +283,7 @@ const AdminAddTicket = (props) => {
         const orderApi = new OrderApi();
         const res = await orderApi.createOrder(params);
         customToast.success("Tạo đơn thành công");
-        navigate(`/admin/order/detail/${res.data.data.id}`);
+        navigate(`/admin/ticket-list/detail/${res.data.data.id}`);
       } catch (error) {
         customToast.error(error.response.data.message);
       }

@@ -406,7 +406,7 @@ const TicketDetail = (props) => {
               }}
             >
               <span className={"order-custom-title"}>
-                Số tiền cần thanh toán -100%
+                Số tiền cần thanh toán
               </span>
               <span className={"order-field-value"}>
                 {convertCurrency(dataOrder?.total)}
