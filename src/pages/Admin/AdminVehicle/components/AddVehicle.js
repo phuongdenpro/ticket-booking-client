@@ -76,9 +76,9 @@ const AddVehicle = ({ setShowDrawer, showDrawer, handleGetData }) => {
       .typeError("Loại xe không được phép bỏ trống")
       .required("Loại xe không được phép bỏ trống"),
     floorNumber: yup
-      .object()
-      .typeError("Số tầng không được phép bỏ trống")
-      .required("Số tầng không được phép bỏ trống"),
+    .number()
+    .typeError("Vui lòng điền đúng định dạng")
+    .required("Vui lòng nhập số tầng"),
     totalSeat: yup
       .number()
       .typeError("Vui lòng điền đúng định dạng")
@@ -98,15 +98,19 @@ const AddVehicle = ({ setShowDrawer, showDrawer, handleGetData }) => {
 
   useEffect(() => {
     if (watchType?.code === "OTHER") {
+      
       setValue("totalSeat", "");
       setDisabled(false);
     } else if (watchType?.code === "LIMOUSINE") {
+      setValue("floorNumber", 2);
       setValue("totalSeat", 34);
       setDisabled(true);
     } else if (watchType?.code === "SLEEPER_BUS") {
+      setValue("floorNumber", 2);
       setValue("totalSeat", 44);
       setDisabled(true);
     } else if (watchType?.code === "SEAT_BUS") {
+      setValue("floorNumber", 1);
       setValue("totalSeat", 28);
       setDisabled(true);
     }
@@ -177,7 +181,7 @@ const AddVehicle = ({ setShowDrawer, showDrawer, handleGetData }) => {
       description: value?.description,
       type: value.type?.name,
       licensePlate: value.licensePlate,
-      floorNumber: value.floorNumber.id,
+      floorNumber: value.floorNumber,
       totalSeat: value.totalSeat,
       images: [
         {
@@ -186,16 +190,18 @@ const AddVehicle = ({ setShowDrawer, showDrawer, handleGetData }) => {
       ],
     };
 
-    try {
-      const vehicleApi = new VehicleApi();
-      const res = await vehicleApi.createVehicle(params);
-      customToast.success("Thêm mới thành công");
-      handleGetData();
-      setShowDrawer(false);
-    } catch (error) {
-      customToast.error(error.response.data.message);
-    }
-    handleGetData();
+    console.log(params);
+
+    // try {
+    //   const vehicleApi = new VehicleApi();
+    //   const res = await vehicleApi.createVehicle(params);
+    //   customToast.success("Thêm mới thành công");
+    //   handleGetData();
+    //   setShowDrawer(false);
+    // } catch (error) {
+    //   customToast.error(error.response.data.message);
+    // }
+    // handleGetData();
   };
 
   const goBack = () => {
@@ -276,12 +282,13 @@ const AddVehicle = ({ setShowDrawer, showDrawer, handleGetData }) => {
                 </Grid>
                 <Grid item xs={6}>
                   <FormControlCustom label={"Số tầng"} fullWidth isMarked>
-                    <SelectCustom
+            
+                    <InputField
+                      disabled={disabled}
                       name={"floorNumber"}
-                      placeholder={"Chọn số tầng"}
-                      error={Boolean(errors?.floorNumber)}
+                      placeholder={"Nhập số tầng"}
+                      error={Boolean(errors.floorNumber)}
                       helperText={errors?.floorNumber?.message}
-                      options={floorNumberFilter}
                     />
                   </FormControlCustom>
                 </Grid>
