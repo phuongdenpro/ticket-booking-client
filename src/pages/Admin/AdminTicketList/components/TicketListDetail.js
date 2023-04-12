@@ -96,7 +96,7 @@ const TicketListDetail = (props) => {
         return (
           <div>
             <span>
-              {moment(params.row?.ticketDetail?.ticket?.startDate).format("DD-MM-YYYY HH:MM")}
+            {moment(params.row?.ticketDetail?.ticket?.tripDetail?.departureTime).format("DD-MM-YYYY HH:MM")}
             </span>
           </div>
         );

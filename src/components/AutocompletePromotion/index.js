@@ -65,7 +65,7 @@ const AutocompletePromotion = (props) => {
             filterSelectedOptions={multiple}
             noOptionsText={"Không có dữ liệu"}
             isOptionEqualToValue={isOptionEqualToValue}
-            className={`autocomplete ${
+            className={`autocompletePromotion ${
               multiple && value?.length ? "multiple" : ""
             }`}
             getOptionLabel={(option) => {
