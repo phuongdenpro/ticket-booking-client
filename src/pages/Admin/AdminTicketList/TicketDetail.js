@@ -12,7 +12,7 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
 import FormControlCustom from "../../../components/FormControl";
 import SelectCustom from "../../../components/SelectCustom";
@@ -35,6 +35,7 @@ import { OrderApi } from "../../../utils/orderApi";
 import customToast from "../../../components/ToastCustom";
 import { CustomerApi } from "../../../utils/customerApi";
 import TicketListDetail from "./components/TicketListDetail";
+import ModalAlert from "../../../components/Modal";
 
 const TicketDetail = (props) => {
   const [orderDetail, setOrderDetail] = useState();
@@ -44,10 +45,20 @@ const TicketDetail = (props) => {
   const idOrder = useParams();
   const [dataOrder, setDataOrder] = useState();
   const navigate = useNavigate();
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+
   const bankData = [
     {
       id: 1,
-      name: "Thanh toán tiền mặt",
+      name: "tiền mặt",
     },
     {
       id: 2,
@@ -55,7 +66,11 @@ const TicketDetail = (props) => {
     },
     {
       id: 3,
-      name: "Thanh toán qua momo",
+      name: "Momo",
+    },
+    {
+      id: 4,
+      name: "ZaloPay",
     },
   ];
 
@@ -104,13 +119,16 @@ const TicketDetail = (props) => {
       .required("Vui lòng chọn phương thức thanh toán"),
   });
 
-  const defaultValues = {
-    note: "",
-    paymentPrice: "",
-    createdDate: dateNow,
-    paymentType: "",
-    paymentBank: "",
-  };
+  const defaultValues = useMemo(
+    () => ({
+      note: "",
+      paymentPrice: dataOrder?.finalTotal,
+      createdDate: dateNow,
+      paymentType: "",
+      paymentBank: "",
+    }),
+    [dataOrder]
+  );
 
   const methods = useForm({
     mode: "onSubmit",
@@ -124,8 +142,9 @@ const TicketDetail = (props) => {
   const watchPrice = watch("paymentPrice");
 
   useEffect(() => {
-    setValue("paymentPrice", currencyMark(watchPrice));
-  }, [watchPrice]);
+    setValue("paymentPrice", convertCurrency(dataOrder?.finalTotal));
+  }, [dataOrder]);
+
   const handleChange = (event, newValue) => {
     setValueChange(newValue);
   };
@@ -140,7 +159,34 @@ const TicketDetail = (props) => {
     if (paymentTypeWatch.id == 3) {
       window.location.href = `https://momofree.apimienphi.com/api/QRCode?phone=0354043344&amount=${amount}&note=${note}`;
     } else {
-      customToast.warning("Coming soon...");
+      try {
+        const params = {
+          orderCode: dataOrder?.code,
+          paymentMethod: paymentTypeWatch?.name,
+        };
+
+        const orderApi = new OrderApi();
+        const response = await orderApi.payment(params);
+        customToast.success("Thanh toán thành công");
+        navigate(`/admin/order/detail/${response.data.data.id}`);
+      } catch (error) {
+        customToast.error(error.response.data.message);
+      }
+    }
+  };
+
+  const onClickUpdateStatus = async () => {
+    try {
+      const orderApi = new OrderApi();
+      const res = await orderApi.updateStatusOrder(dataOrder?.code, {
+        status: "Hủy đặt vé",
+      });
+      customToast.success("Cập nhật thành công");
+      getDetailOrder();
+      setOpenModal(false);
+    } catch (error) {
+      console.log(error);
+      customToast.error(error.response.data.message);
     }
   };
   const checkPayment = () => {
@@ -180,6 +226,7 @@ const TicketDetail = (props) => {
                     fullWidth
                   >
                     <InputField
+                      disabled
                       style={{ width: "100%" }}
                       name={"createdDate"}
                       placeholder={"Nhập thời gian"}
@@ -199,6 +246,7 @@ const TicketDetail = (props) => {
                     fullWidth
                   >
                     <InputField
+                      disabled
                       style={{ width: "100%" }}
                       name={"paymentPrice"}
                       placeholder={"Nhập thành tiền"}
@@ -475,7 +523,7 @@ const TicketDetail = (props) => {
                       padding: "1px 4px",
                       textTransform: "none",
                     }}
-                    onClick={onClickCancel}
+                    onClick={() => handleOpenModal()}
                   >
                     <span
                       style={{
@@ -670,7 +718,23 @@ const TicketDetail = (props) => {
           {checkPaymentOrder()}
         </Grid>
       </Grid>
-      <div></div>
+      <ModalAlert
+        open={openModal}
+        handleClose={() => handleCloseModal()}
+        handleCancel={() => handleCloseModal()}
+        handleConfirm={() => onClickUpdateStatus()}
+        title={"Xác nhận hủy"}
+        description={
+          "Thao tác sẽ không thể hoàn tác, bạn có chắc chắn muốn tiếp tục không?"
+        }
+        type={"error"}
+        icon={true}
+        renderContentModal={
+          <div className="view-input-discount">
+            <span>Mã đơn: {dataOrder?.code} </span>
+          </div>
+        }
+      />
     </div>
   );
 };

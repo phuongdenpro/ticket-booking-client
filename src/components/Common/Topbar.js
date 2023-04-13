@@ -207,22 +207,28 @@ const Topbar = (props) => {
                   style={{ flexDirection: "column", alignItems: "flex-start" }}
                 >
                   <div>
-                    <span>Tên đăng nhập: </span>
+                    <span style={{ fontWeight: "500" }}>Mã: </span>
                     <span style={{ fontSize: "15px", color: "#666666" }}>
-                      {'user?.userName'}
+                      {Cookies.get("code")}
+                    </span>
+                  </div>
+                  <div>
+                    <span style={{ fontWeight: "500" }}>Tên: </span>
+                    <span style={{ fontSize: "15px", color: "#666666" }}>
+                      {Cookies.get("fullName")}
+                    </span>
+                  </div>
+                  <div>
+                    <span>Email: </span>
+                    <span style={{ fontSize: "15px", color: "#666666" }}>
+                      {Cookies.get("email")}
                     </span>
                   </div>
 
                   <div>
-                    <span style={{ fontWeight: "500" }}>Tên: </span>
-                    <span style={{ fontSize: "15px", color: "#666666" }}>
-                      {'user?.name'}
-                    </span>
-                  </div>
-                  <div>
                     <span>Số điện thoại: </span>
                     <span style={{ fontSize: "15px", color: "#666666" }}>
-                      {''}
+                      {Cookies.get("phone")}
                     </span>
                   </div>
                 </div>
