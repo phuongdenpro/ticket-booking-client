@@ -46,6 +46,8 @@ const TicketDetail = (props) => {
   const [dataOrder, setDataOrder] = useState();
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
+  const [disabledPTTT, setDisabledPTTT] = useState(false);
+  const [optionPTTT, setOptionPTTT] = useState([]);
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -53,7 +55,6 @@ const TicketDetail = (props) => {
   const handleOpenModal = () => {
     setOpenModal(true);
   };
-
 
   const bankData = [
     {
@@ -88,6 +89,16 @@ const TicketDetail = (props) => {
       name: "Agribank Phan Đình Phương",
     },
   ];
+  const bankMoMo = [
+    {
+      id: 1,
+      name: "0354043344",
+    },
+    {
+      id: 2,
+      name: "04444444444",
+    },
+  ];
   console.log(dataOrder);
 
   const getDetailOrder = async () => {
@@ -113,10 +124,6 @@ const TicketDetail = (props) => {
       .object()
       .typeError("Vui lòng chọn phương thức thanh toán")
       .required("Vui lòng chọn phương thức thanh toán"),
-    paymentBank: yup
-      .object()
-      .typeError("Vui lòng chọn phương thức thanh toán")
-      .required("Vui lòng chọn phương thức thanh toán"),
   });
 
   const defaultValues = useMemo(
@@ -125,7 +132,6 @@ const TicketDetail = (props) => {
       paymentPrice: dataOrder?.finalTotal,
       createdDate: dateNow,
       paymentType: "",
-      paymentBank: "",
     }),
     [dataOrder]
   );
@@ -140,10 +146,23 @@ const TicketDetail = (props) => {
   const { errors } = formState;
   const paymentTypeWatch = watch("paymentType");
   const watchPrice = watch("paymentPrice");
+  const paymentBankWatch = watch("paymentBank");
 
   useEffect(() => {
     setValue("paymentPrice", convertCurrency(dataOrder?.finalTotal));
   }, [dataOrder]);
+
+  useEffect(() => {
+    if (paymentTypeWatch.id == 1) {
+      setDisabledPTTT(true);
+    } else if (paymentTypeWatch.id == 2) {
+      setOptionPTTT(bankBanking);
+      setDisabledPTTT(false);
+    } else if (paymentTypeWatch.id == 3 || paymentTypeWatch.id == 4) {
+      setOptionPTTT(bankMoMo);
+      setDisabledPTTT(false);
+    }
+  }, [paymentTypeWatch]);
 
   const handleChange = (event, newValue) => {
     setValueChange(newValue);
@@ -158,7 +177,25 @@ const TicketDetail = (props) => {
     const note = value?.note;
     if (paymentTypeWatch.id == 3) {
       window.location.href = `https://momofree.apimienphi.com/api/QRCode?phone=0354043344&amount=${amount}&note=${note}`;
+    } else if (paymentTypeWatch.id == 1) {
+      try {
+        const params = {
+          orderCode: dataOrder?.code,
+          paymentMethod: paymentTypeWatch?.name,
+        };
+
+        const orderApi = new OrderApi();
+        const response = await orderApi.payment(params);
+        customToast.success("Thanh toán thành công");
+        navigate(`/admin/order/detail/${response.data.data.id}`);
+      } catch (error) {
+        customToast.error(error.response.data.message);
+      }
     } else {
+      if (paymentBankWatch == null) {
+        customToast.warning("Vui lòng chọn bank");
+        return;
+      }
       try {
         const params = {
           orderCode: dataOrder?.code,
@@ -276,25 +313,25 @@ const TicketDetail = (props) => {
                   </FormControlCustom>
                 </Grid>
 
-                <Grid item xs={12}>
-                  <FormControlCustom
-                    label={"Ngân hàng"}
-                    classNameLabel={
-                      "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
-                    }
-                    className={"flex-direction-row"}
-                    fullWidth
-                  >
-                    <SelectCustom
-                      style={{ width: "100%" }}
-                      name={"paymentBank"}
-                      placeholder={"Chọn bank"}
-                      options={bankBanking}
-                      error={Boolean(errors.paymentBank)}
-                      helperText={""}
-                    />
-                  </FormControlCustom>
-                </Grid>
+                {disabledPTTT == false && (
+                  <Grid item xs={12}>
+                    <FormControlCustom
+                      label={"Ngân hàng"}
+                      classNameLabel={
+                        "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
+                      }
+                      className={"flex-direction-row"}
+                      fullWidth
+                    >
+                      <SelectCustom
+                        style={{ width: "100%" }}
+                        name={"paymentBank"}
+                        placeholder={"Chọn bank"}
+                        options={optionPTTT}
+                      />
+                    </FormControlCustom>
+                  </Grid>
+                )}
 
                 <Grid item xs={12}>
                   <FormControlCustom
@@ -457,7 +494,7 @@ const TicketDetail = (props) => {
                 Số tiền cần thanh toán
               </span>
               <span className={"order-field-value"}>
-                {convertCurrency(dataOrder?.total)}
+                {convertCurrency(dataOrder?.finalTotal)}
               </span>
             </div>
           </div>
