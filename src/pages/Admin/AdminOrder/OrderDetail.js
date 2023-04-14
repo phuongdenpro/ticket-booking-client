@@ -35,6 +35,7 @@ import { OrderApi } from "../../../utils/orderApi";
 import customToast from "../../../components/ToastCustom";
 import { CustomerApi } from "../../../utils/customerApi";
 import TicketOrderList from "./components/TicketOrderList";
+import ModalAlert from "../../../components/Modal";
 
 const OrderDetail = (props) => {
   const [orderDetail, setOrderDetail] = useState();
@@ -43,7 +44,15 @@ const OrderDetail = (props) => {
   const [disabled, setDisabled] = useState(true);
   const idOrder = useParams();
   const [dataOrder, setDataOrder] = useState();
+  const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+  
   const bankData = [
     {
       id: 1,
@@ -73,7 +82,6 @@ const OrderDetail = (props) => {
       name: "Agribank Phan Đình Phương",
     },
   ];
-  console.log(dataOrder);
 
   const getDetailOrder = async () => {
     try {
@@ -132,6 +140,19 @@ const OrderDetail = (props) => {
 
   const onClickCancel = () => {
     customToast.warning("Coming soon...");
+  };
+  const onClickUpdateStatus = async () => {
+    try {
+      const orderApi = new OrderApi();
+      const res = await orderApi.updateStatusOrder(dataOrder?.code, {
+        status: "Hoàn tiền trả vé",
+      });
+      customToast.success("Cập nhật thành công");
+      getDetailOrder();
+    } catch (error) {
+      console.log(error);
+      customToast.error(error.response.data.message);
+    }
   };
 
   const onSubmit = async (value) => {
@@ -275,7 +296,7 @@ const OrderDetail = (props) => {
               }}
             >
               <span className={"order-custom-title"}>
-                Số tiền cần thanh toán -100%
+                Số tiền cần thanh toán
               </span>
               <span className={"order-field-value"}>
                 {convertCurrency(dataOrder?.total)}
@@ -344,7 +365,7 @@ const OrderDetail = (props) => {
                       padding: "1px 4px",
                       textTransform: "none",
                     }}
-                    onClick={onClickCancel}
+                    onClick={()=>handleOpenModal()}
                   >
                     <span
                       style={{
@@ -539,7 +560,23 @@ const OrderDetail = (props) => {
           {checkPaymentOrder()}
         </Grid>
       </Grid>
-      <div></div>
+      <ModalAlert
+        open={openModal}
+        handleClose={() => handleCloseModal()}
+        handleCancel={() => handleCloseModal()}
+        handleConfirm={() => onClickUpdateStatus()}
+        title={"Xác nhận hoàn trả vé"}
+        description={
+          "Thao tác sẽ không thể hoàn tác, bạn có chắc chắn muốn tiếp tục không?"
+        }
+        type={"error"}
+        icon={true}
+        renderContentModal={
+          <div className="view-input-discount">
+            <span>Mã đơn: {dataOrder?.code} </span>
+          </div>
+        }
+      />
     </div>
   );
 };

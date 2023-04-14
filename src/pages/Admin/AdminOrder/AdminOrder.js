@@ -50,7 +50,7 @@ const AdminOrder = (props) => {
     },
   ];
 
-  const filterStatus = ["Đã thanh toán", "Đã trả vé"];
+  const filterStatus = ["Đã thanh toán", "Trả vé"];
 
   const [disable, setDisable] = useState(true);
   const handleGetData = async () => {

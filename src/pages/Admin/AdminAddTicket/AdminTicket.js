@@ -268,16 +268,19 @@ const AdminAddTicket = (props) => {
     }
     setValue("total", convertCurrency(total));
   }, [itemTickets]);
+  console.log(promotionCodes);
 
   const onSubmit = async (value) => {
+    console.log("vào");
     if (itemTickets.length != 0) {
       const params = {
         customerId: customerWatch?.id || dataCustomer?.id,
         seatCodes: itemTickets.map((item) => item?.seat?.code),
         tripDetailCode: dataTripDetail?.code,
-        promotionLineCodes: value?.promotionCodes.map((item) => item?.code),
+        promotionLineCodes: promotionCodes.length > 0 ? promotionCodes : undefined,
         note: value?.note,
       };
+      console.log(params);
 
       try {
         const orderApi = new OrderApi();
@@ -554,8 +557,6 @@ const AdminAddTicket = (props) => {
                           multiple={true}
                           name={"promotionCodes"}
                           placeholder={"Chọn khuyến mãi áp dụng"}
-                          error={Boolean(errors?.promotionCodes)}
-                          helperText={errors?.promotionCodes?.message}
                           listOption={optionPromotion || []}
                         />
                       </FormControlCustom>

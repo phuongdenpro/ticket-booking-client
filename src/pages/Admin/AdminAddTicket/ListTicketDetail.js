@@ -65,6 +65,42 @@ const ListTicketDetail = (props) => {
         }
       }
     }
+    seatsFloor1.sort((a, b) => {
+      // Tách phần không có số và phần có số của tên ghế
+      const aParts = a.seat.name.match(/([a-zA-Z]+)([0-9]+)/);
+      const bParts = b.seat.name.match(/([a-zA-Z]+)([0-9]+)/);
+
+      // So sánh phần không có số
+      if (aParts[1] < bParts[1]) {
+        return -1;
+      } else if (aParts[1] > bParts[1]) {
+        return 1;
+      } else {
+        // So sánh phần có số
+        const aNumber = parseInt(aParts[2], 10);
+        const bNumber = parseInt(bParts[2], 10);
+        return aNumber - bNumber;
+      }
+    });
+    if (seatsFloor2.length > 0) {
+      seatsFloor2.sort((a, b) => {
+        // Tách phần không có số và phần có số của tên ghế
+        const aParts = a.seat.name.match(/([a-zA-Z]+)([0-9]+)/);
+        const bParts = b.seat.name.match(/([a-zA-Z]+)([0-9]+)/);
+
+        // So sánh phần không có số
+        if (aParts[1] < bParts[1]) {
+          return -1;
+        } else if (aParts[1] > bParts[1]) {
+          return 1;
+        } else {
+          // So sánh phần có số
+          const aNumber = parseInt(aParts[2], 10);
+          const bNumber = parseInt(bParts[2], 10);
+          return aNumber - bNumber;
+        }
+      });
+    }
     setSeatsFloor1(seatsFloor1);
     setSeatsFloor2(seatsFloor2);
   };
