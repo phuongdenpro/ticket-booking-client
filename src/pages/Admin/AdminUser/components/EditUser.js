@@ -126,7 +126,6 @@ const EditUser = (props) => {
       .string()
       .typeError("Số điện thoại không được phép bỏ trống")
       .required("Số điện thoại không được phép bỏ trống"),
-    address: yup.string().required("Địa chỉ không được phép bỏ trống"),
     gender: yup
       .object()
       .typeError("Giới tính không được phép bỏ trống")
@@ -246,7 +245,7 @@ const EditUser = (props) => {
       gender: value?.gender.code,
       note: value?.note,
       customerGroupId: value?.customerGroupId.id,
-      status: value?.status
+      status: value?.status,
     };
     try {
       const customerApi = new CustomerApi();
@@ -304,6 +303,7 @@ const EditUser = (props) => {
                 <Grid item xs={6}>
                   <FormControlCustom label={"Số điện thoại"} fullWidth isMarked>
                     <InputField
+                      disabled
                       name={"phone"}
                       placeholder={"Nhập số điện thoại"}
                       helperText={errors?.phone?.message}
@@ -314,6 +314,7 @@ const EditUser = (props) => {
                 <Grid item xs={6}>
                   <FormControlCustom label={"Email"} fullWidth>
                     <InputField
+                      disabled
                       name={"email"}
                       placeholder={"Nhập email"}
                       helperText={errors?.email?.message}
