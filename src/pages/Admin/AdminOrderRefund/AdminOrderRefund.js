@@ -3,16 +3,17 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
-import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { FormProvider, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import FormControlCustom from "../../../components/FormControl";
 import SearchInput from "../../../components/InputSearch";
 import SelectCustom from "../../../components/SelectCustom";
 import customToast from "../../../components/ToastCustom";
+import { OrderApi } from "../../../utils/orderApi";
 import "./AdminOrderRefund.scss";
-import OrderRefundList from "./components/OrderRefundList";
+import OrderList from "../AdminOrder/components/OrderList";
 
 const AdminOrderRefund = (props) => {
   const [loadings, setLoadings] = useState([]);
@@ -25,10 +26,17 @@ const AdminOrderRefund = (props) => {
   const [filterParams, setFilterParams] = useState(null);
   const [data, setData] = useState([]);
   const [selected, setSelected] = useState([]);
+  const navigate = useNavigate();
+  const [orderStatus, setOrderStatus] = useState([]);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [selectedDate, setSelectedDate] = useState({
     startDate: firstDay,
     endDate: lastDay,
   });
+  const onOrderDetail = (id) => {
+    navigate(`/admin/order/detail/${id}`);
+  };
   const filterDateTime = [
     {
       id: 1,
@@ -41,36 +49,30 @@ const AdminOrderRefund = (props) => {
       name: "Tùy chọn",
     },
   ];
-  const orderStatus = [
-    {
-      id: 1,
-      code: 'IN_REVIEW',
-      name: 'Chờ duyệt',
-    },
-    {
-      id: 2,
-      code: 'IN_PROCESS',
-      name: 'Đang GD',
-    },
-    {
-      id: 3,
-      code: 'DONE',
-      name: 'Hoàn thành',
-    },
-    {
-      id: 4,
-      code: 'CANCEL',
-      name: 'Đã hủy',
-    },
-  ];
 
   const [disable, setDisable] = useState(true);
+  const handleGetData = async () => {
+    try {
+      const orderApi = new OrderApi();
+      const response = await orderApi.getListOrderBill({
+        status: "Trả vé",
+        page: page + 1,
+        pageSize: pageSize,
+        ...filterParams,
+      });
+      setData(response);
+    } catch (error) {
+      customToast.error(error.response.data.message);
+    }
+  };
 
   useEffect(() => {
     setFilterParams({ ...filterParams, keywords: searchValue });
   }, [searchValue]);
 
-  useEffect(() => {}, [page, pageSize, filterParams]);
+  useEffect(() => {
+    handleGetData();
+  }, [page, pageSize, filterParams]);
 
   const handleSearch = (e) => {
     setFilterParams({ keywords: searchValue || undefined });
@@ -86,37 +88,27 @@ const AdminOrderRefund = (props) => {
   const defaultValues = {
     startDate: null,
     endDate: null,
-    status: null,
   };
   const methods = useForm({
     defaultValues,
   });
   const { handleSubmit, reset, watch } = methods;
-  const watchStatus = watch("status");
   const watchTime = watch("time");
   useEffect(() => {
     const params = {
-      status: watchStatus?.code,
-      startDate: new Date(selectedDate?.startDate),
-      endDate: new Date(selectedDate?.endDate),
+      startDate: startDate ? new Date(startDate) : undefined,
+      endDate: endDate ? new Date(endDate) : undefined,
     };
     setFilterParams(params);
-  }, [watchStatus, watchTime, selectedDate?.startDate, selectedDate?.endDate]);
+  }, [ watchTime, startDate, endDate]);
   useEffect(() => {
     const now = new Date();
 
     if (watchTime?.code === "option") {
       // setSelectedDate({ ...selectedDate, dateFrom: '', dateTo: '' });
     } else {
-      const currentYear = new Date().getFullYear();
-      const firstDay = new Date(currentYear, 0, 1);
-      const lastDay = new Date(currentYear, 11, 31);
-
-      setSelectedDate({
-        ...selectedDate,
-        startDate: firstDay,
-        endDate: lastDay,
-      });
+      setStartDate(null);
+      setEndDate(null);
     }
   }, [watchTime]);
   useEffect(() => {
@@ -126,30 +118,10 @@ const AdminOrderRefund = (props) => {
       setDisable(true);
     }
   }, [watchTime]);
-  function getFirstDayOfWeek(d) {
-    const date = new Date(d);
-    const day = date.getDay(); // 👉️ get day of week
-
-    const diff = date.getDate() - day + (day === 0 ? -6 : 1);
-
-    return new Date(date.setDate(diff));
-  }
-  const resetFilterParams = () => {
-    // handleGetData()
-    setPage(0);
-    setPageSize(10);
-    setSearchValue("");
-    setSelectedDate({
-      ...selectedDate,
-      startDate: firstDay,
-      endDate: lastDay,
-    });
-    customToast.success("Làm mới dữ liệu thành công");
-  };
   return (
     <Box sx={{ height: "100%", width: "100%" }}>
       <Helmet>
-        <title> PDBus - Danh sách hóa đơn hồi vé</title>
+        <title> PDBus - Hóa đơn hoàn trả</title>
       </Helmet>
       <Grid container className={"align-items-center header_title"}>
         <Grid item md={7}>
@@ -157,7 +129,6 @@ const AdminOrderRefund = (props) => {
             HÓA ĐƠN HOÀN TRẢ
           </h2>
         </Grid>
-        
       </Grid>
       <Divider style={{ marginTop: 10 }} />
       <Grid
@@ -185,13 +156,10 @@ const AdminOrderRefund = (props) => {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       disabled={disable}
-                      value={dayjs(selectedDate?.startDate)}
                       onChange={(e) => {
-                        setSelectedDate({
-                          ...selectedDate,
-                          startDate: new Date(e),
-                        });
+                        setStartDate(new Date(e));
                       }}
+                      value={dayjs(startDate)}
                       className={"date-picker"}
                       renderInput={(params) => <TextField {...params} />}
                       format="DD/MM/YYYY"
@@ -205,13 +173,10 @@ const AdminOrderRefund = (props) => {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       disabled={disable}
-                      value={dayjs(selectedDate?.endDate)}
                       onChange={(e) => {
-                        setSelectedDate({
-                          ...selectedDate,
-                          endDate: new Date(e),
-                        });
+                        setEndDate(new Date(e));
                       }}
+                      value={dayjs(endDate)}
                       className={"date-picker"}
                       renderInput={(params) => <TextField {...params} />}
                       format="DD/MM/YYYY"
@@ -220,15 +185,6 @@ const AdminOrderRefund = (props) => {
                 </div>
               </FormControlCustom>
 
-              <FormControlCustom label="Trạng thái" fullWidth>
-                <div className="view-input">
-                  <SelectCustom
-                    placeholder={"Tất cả"}
-                    name={"status"}
-                    options={orderStatus}
-                  />
-                </div>
-              </FormControlCustom>
             </Box>
           </Grid>
           <Grid item md={4} style={{ marginTop: 3 }}>
@@ -270,7 +226,16 @@ const AdminOrderRefund = (props) => {
       </Grid>
       <div style={{ display: "flex" }}>
         <div style={{ flexGrow: 1 }}>
-          <OrderRefundList></OrderRefundList>
+          <OrderList
+            data={data?.data?.data || []}
+            handleShowDetail={onOrderDetail}
+            handleChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+            total={data?.data?.pagination?.total}
+            handleGetData={handleGetData}
+            page={page}
+            pageSize={pageSize}
+          ></OrderList>
         </div>
       </div>
     </Box>
