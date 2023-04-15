@@ -299,7 +299,7 @@ const OrderDetail = (props) => {
                 Số tiền cần thanh toán
               </span>
               <span className={"order-field-value"}>
-                {convertCurrency(dataOrder?.total)}
+                {convertCurrency(dataOrder?.finalTotal)}
               </span>
             </div>
           </div>

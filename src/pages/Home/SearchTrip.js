@@ -21,7 +21,6 @@ const SearchTrip = (props) => {
   const params = useParams();
   const [dataTrip, setDataTrip] = useState([]);
   const [price, setPrice] = useState([]);
-  console.log(dataTrip);
 
   const searchTripAll = async () => {
     const tripApi = new TripApi();
@@ -31,26 +30,37 @@ const SearchTrip = (props) => {
       toProvinceCode: params?.codeProvinceTo,
       departureTime: params?.startDate,
     });
+    console.log(response);
 
     const priceApi = new PriceListApi();
     const data = response?.data?.data;
 
     const updatedData = await Promise.all(
       data.map(async (item) => {
-        const response1 = await priceApi.getPrice({
+        const response = await tripApi.getTripDetailById(item.id);
+        item.trip = response?.data?.data?.trip;
+        item.vehicle = response?.data?.data?.vehicle;
+        return item;
+      })
+    );
+    
+    // Gọi API để lấy giá cho từng chuyến đi
+    await Promise.all(
+      updatedData.map(async (item) => {
+        const response = await priceApi.getPrice({
           applyDate: new Date(),
           tripDetailCode: item?.code,
           seatType: item?.vehicle?.type,
         });
-
-        item.price = response1?.data?.data?.price;
-
-        return item;
+    
+        item.price = response?.data?.data?.price;
       })
     );
-
+      console.log(updatedData);
     setDataTrip(updatedData);
   };
+
+  console.log(dataTrip);
 
   useEffect(() => {
     searchTripAll();
