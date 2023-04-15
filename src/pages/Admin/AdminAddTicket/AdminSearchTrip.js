@@ -28,6 +28,7 @@ const AdminSearchTrip = (props) => {
   const [filterParams, setFilterParams] = useState(null);
   const [data, setData] = useState([]);
   const [page, setPage] = useState(0);
+  const [total, setTotal] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const navigate = useNavigate();
 
@@ -59,7 +60,21 @@ const AdminSearchTrip = (props) => {
         departureTime: new Date(startDate),
         ...filterParams,
       });
-      setData(response);
+
+      const data = response?.data?.data;
+      setTotal(response?.data?.pagination?.total)
+      const updatedData = await Promise.all(
+        data.map(async (item) => {
+          const response1 = await tripApi.getTripDetailById(item.id);
+  
+          item.trip = response1?.data?.data?.trip;
+          item.vehicle =response1?.data?.data?.vehicle;
+  
+          return item;
+        })
+      );
+      setData(updatedData);
+
     } catch (error) {
       customToast.error(error.response.data.message);
     }
@@ -176,18 +191,18 @@ const AdminSearchTrip = (props) => {
             fontWeight: "bold",
           }}
         >
-          Tổng số chuyến: {data?.data?.pagination?.total}
+          Tổng số chuyến: {total}
         </span>
         <span className="txt-price"> </span>
       </Grid>
       <div style={{ display: "flex" }}>
         <div style={{ flexGrow: 1 }}>
           <TripDetailList
-            data={data?.data?.data || []}
+            data={data || []}
             handleChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
             handleShowDetail={onBookingTrip}
-            total={data?.data?.pagination?.total}
+            total={total}
             handleGetData={handleGetData}
             page={page}
             pageSize={pageSize}

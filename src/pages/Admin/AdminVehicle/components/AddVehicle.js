@@ -192,16 +192,16 @@ const AddVehicle = ({ setShowDrawer, showDrawer, handleGetData }) => {
 
     console.log(params);
 
-    // try {
-    //   const vehicleApi = new VehicleApi();
-    //   const res = await vehicleApi.createVehicle(params);
-    //   customToast.success("Thêm mới thành công");
-    //   handleGetData();
-    //   setShowDrawer(false);
-    // } catch (error) {
-    //   customToast.error(error.response.data.message);
-    // }
-    // handleGetData();
+    try {
+      const vehicleApi = new VehicleApi();
+      const res = await vehicleApi.createVehicle(params);
+      customToast.success("Thêm mới thành công");
+      handleGetData();
+      setShowDrawer(false);
+    } catch (error) {
+      customToast.error(error.response.data.message);
+    }
+    handleGetData();
   };
 
   const goBack = () => {

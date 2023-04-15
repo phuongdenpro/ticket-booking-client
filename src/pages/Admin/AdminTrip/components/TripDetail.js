@@ -71,6 +71,7 @@ const TripDetail = (props) => {
   const firstDay = new Date(currentYear, 0, 1);
   const lastDay = new Date(currentYear, 11, 31);
   const [disable, setDisable] = useState(true);
+  const [total, setTotal] = useState(0);
   const [selectedDate, setSelectedDate] = useState({
     startDate: firstDay,
     endDate: lastDay,
@@ -91,16 +92,7 @@ const TripDetail = (props) => {
       code: "Hết vé",
       name: "Hết vé",
     },
-    {
-      id: 4,
-      code: "Chưa xuất phát",
-      name: "Chưa xuất phát",
-    },
-    {
-      id: 5,
-      code: "Đã xuất phát",
-      name: "Đã xuất phát",
-    },
+    
   ];
 
   const filterDateTime = [
@@ -125,12 +117,26 @@ const TripDetail = (props) => {
         pageSize: pageSize,
         ...filterParams,
       });
-      setData(response);
+      const data = response?.data?.data;
+      setTotal(response?.data?.pagination?.total)
+      const updatedData = await Promise.all(
+        data.map(async (item) => {
+          const response1 = await tripApi.getTripDetailById(item.id);
+  
+          item.trip = response1?.data?.data?.trip;
+          item.vehicle =response1?.data?.data?.vehicle;
+  
+          return item;
+        })
+      );
+      setData(updatedData);
     } catch (error) {
       customToast.error(error.response.data.message);
     }
   };
 
+  console.log(data);
+  console.log(total);
   useEffect(() => {
     handleGetData(dataTrip?.id);
   }, [dataTrip, page, pageSize, filterParams]);
@@ -339,8 +345,8 @@ const TripDetail = (props) => {
             <Divider />
 
             <TripDetailList
-              data={data?.data?.data || []}
-              total={data?.data?.pagination?.total}
+              data={data || []}
+              total={total}
               handleGetData={handleGetData}
               handleChangePage={handleChangePage}
               handleShowDetail={handelShowDetail}
