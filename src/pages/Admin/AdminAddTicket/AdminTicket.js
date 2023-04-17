@@ -285,7 +285,7 @@ const AdminAddTicket = (props) => {
       try {
         const orderApi = new OrderApi();
         const res = await orderApi.createOrder(params);
-        customToast.success("Tạo đơn thành công");
+        customToast.success("Xác nhận đặt vé thành công");
         navigate(`/admin/ticket-list/detail/${res.data.data.id}`);
       } catch (error) {
         customToast.error(error.response.data.message);
@@ -683,7 +683,7 @@ const AdminAddTicket = (props) => {
                           style={{ height: "2rem" }}
                           type="submit"
                         >
-                          Tạo đơn
+                          Xác nhận
                         </Button>
                       </div>
                     </Grid>

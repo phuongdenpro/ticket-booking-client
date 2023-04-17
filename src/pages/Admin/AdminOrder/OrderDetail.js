@@ -12,7 +12,7 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet";
 import FormControlCustom from "../../../components/FormControl";
 import SelectCustom from "../../../components/SelectCustom";
@@ -24,6 +24,7 @@ import moment from "moment";
 import TicketBookingList from "../AdminAddTicket/TicketBookingList";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
+import PrintIcon from "@mui/icons-material/Print";
 import {
   convertCurrency,
   currencyMark,
@@ -36,6 +37,8 @@ import customToast from "../../../components/ToastCustom";
 import { CustomerApi } from "../../../utils/customerApi";
 import TicketOrderList from "./components/TicketOrderList";
 import ModalAlert from "../../../components/Modal";
+import ReactToPrint, { useReactToPrint } from "react-to-print";
+import PrintForm from "./components/PrintFrom";
 
 const OrderDetail = (props) => {
   const [orderDetail, setOrderDetail] = useState();
@@ -46,13 +49,46 @@ const OrderDetail = (props) => {
   const [dataOrder, setDataOrder] = useState();
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    pageStyle: `
+    @media all {
+      .page-break {
+        display: none;
+      }
+    }
+    
+    @media print {
+      html, body {
+        width: 80mm;
+        height: initial !important;
+        overflow: initial !important;
+        -webkit-print-color-adjust: exact;
+      }
+    }
+    
+    @media print {
+      .page-break {
+        margin-top: 1rem;
+        display: block;
+        page-break-before: none;
+      }
+    }
+    
+    @page {
+      size: 80mm auto;
+      margin: 20mm;
+    }
+    `,
+  });
   const handleCloseModal = () => {
     setOpenModal(false);
   };
   const handleOpenModal = () => {
     setOpenModal(true);
   };
-  
+
   const bankData = [
     {
       id: 1,
@@ -163,6 +199,9 @@ const OrderDetail = (props) => {
     } else {
       customToast.warning("Coming soon...");
     }
+  };
+  const handlePrintOrder = () => {
+    window.print();
   };
   const checkPayment = () => {
     return (
@@ -365,7 +404,7 @@ const OrderDetail = (props) => {
                       padding: "1px 4px",
                       textTransform: "none",
                     }}
-                    onClick={()=>handleOpenModal()}
+                    onClick={() => handleOpenModal()}
                   >
                     <span
                       style={{
@@ -378,6 +417,33 @@ const OrderDetail = (props) => {
                       }}
                     >
                       Hoàn trả vé
+                    </span>
+                  </Button>
+                  <Button
+                    style={{
+                      // backgroundColor: "#93ef6b",
+                      padding: "1px 4px",
+                      textTransform: "none",
+                      marginLeft: "10px",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                    variant="contained"
+                    color="success"
+                    onClick={() => handlePrint()}
+                    // startIcon={<PrintIcon style={{ color: "#000" }} />}
+                  >
+                    <span
+                      style={{
+                        color: "white",
+                        fontSize: "0.7rem",
+                        fontWeight: "600",
+                        padding: "2px 5px",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      Xuất hóa đơn
                     </span>
                   </Button>
                 </div>
@@ -560,6 +626,9 @@ const OrderDetail = (props) => {
           {checkPaymentOrder()}
         </Grid>
       </Grid>
+      <div style={{ display: "none" }}>
+        <PrintForm ref={componentRef} dataOrder={dataOrder}/>
+      </div>
       <ModalAlert
         open={openModal}
         handleClose={() => handleCloseModal()}

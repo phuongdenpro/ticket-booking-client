@@ -123,22 +123,7 @@ const TicketListDetail = (props) => {
         );
       },
     },
-    {
-      field: "action",
-      headerName: "",
-      flex: 30,
-      headerAlign: "center",
-      contentAlign: "center",
-      headerClassName: "theme",
-      sortable: false,
-      renderCell: (params) => {
-        return (
-          <div onClick={onClickPrint}>
-            <PrintIcon color="primary"/>
-          </div>
-        );
-      },
-    },
+    
   ];
 
   return (

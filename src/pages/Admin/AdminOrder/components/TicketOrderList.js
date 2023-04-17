@@ -96,7 +96,9 @@ const TicketOrderList = (props) => {
         return (
           <div>
             <span>
-              {moment(params.row?.ticketDetail?.ticket?.tripDetail?.departureTime).format("DD-MM-YYYY HH:MM")}
+              {moment(
+                params.row?.ticketDetail?.ticket?.tripDetail?.departureTime
+              ).format("DD-MM-YYYY HH:MM")}
             </span>
           </div>
         );
@@ -119,22 +121,6 @@ const TicketOrderList = (props) => {
                 ? convertCurrency(params.row?.total)
                 : "chưa xác định"}
             </span>
-          </div>
-        );
-      },
-    },
-    {
-      field: "action",
-      headerName: "",
-      flex: 30,
-      headerAlign: "center",
-      contentAlign: "center",
-      headerClassName: "theme",
-      sortable: false,
-      renderCell: (params) => {
-        return (
-          <div onClick={onClickPrint}>
-            <PrintIcon color="primary"/>
           </div>
         );
       },
