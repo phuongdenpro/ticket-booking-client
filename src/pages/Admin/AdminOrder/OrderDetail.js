@@ -61,7 +61,7 @@ const OrderDetail = (props) => {
     
     @media print {
       html, body {
-        width: 80mm;
+        // width: 200mm;
         height: initial !important;
         overflow: initial !important;
         -webkit-print-color-adjust: exact;
@@ -78,7 +78,7 @@ const OrderDetail = (props) => {
     
     @page {
       size: 80mm auto;
-      margin: 20mm;
+      margin: 10mm;
     }
     `,
   });
@@ -250,7 +250,7 @@ const OrderDetail = (props) => {
                           padding="none"
                           style={{ width: "100px" }}
                         >
-                          Nội dung
+                          Phương thức
                         </TableCell>
                         <TableCell
                           align={"center"}
@@ -265,9 +265,11 @@ const OrderDetail = (props) => {
                       <TableRow>
                         <TableCell align={"center"}>30/04/2023</TableCell>
                         <TableCell align={"center"}>
-                          Phương chuyển khoản
+                          {dataOrder?.paymentMethod}
                         </TableCell>
-                        <TableCell align={"center"}>330.000đ</TableCell>
+                        <TableCell align={"center"}>
+                          {convertCurrency(dataOrder?.finalTotal)}
+                        </TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>
@@ -323,10 +325,7 @@ const OrderDetail = (props) => {
                 {convertCurrency(dataOrder?.finalTotal)}
               </span>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span className={"order-custom-title"}>Đã thanh toán</span>
-              <span className={"order-field-value"}>0</span>
-            </div>
+            
             <div
               style={{
                 display: "flex",
@@ -626,9 +625,7 @@ const OrderDetail = (props) => {
           {checkPaymentOrder()}
         </Grid>
       </Grid>
-      <div style={{ display: "none" }}>
-        <PrintForm ref={componentRef} dataOrder={dataOrder}/>
-      </div>
+
       <ModalAlert
         open={openModal}
         handleClose={() => handleCloseModal()}
@@ -646,6 +643,9 @@ const OrderDetail = (props) => {
           </div>
         }
       />
+      <div style={{ display: "none", width: "100%" }}>
+        <PrintForm ref={componentRef} dataOrder={dataOrder} />
+      </div>
     </div>
   );
 };

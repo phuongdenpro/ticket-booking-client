@@ -73,7 +73,7 @@ const TicketOrderList = (props) => {
       field: "vehicleLicensePlate",
       headerName: "Biển số",
       contentAlign: "center",
-      flex: 100,
+      flex: 90,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
@@ -87,7 +87,7 @@ const TicketOrderList = (props) => {
     },
     {
       field: "startDate",
-      flex: 130,
+      flex: 120,
       headerName: "Thời gian đi",
       contentAlign: "center",
       headerAlign: "center",
