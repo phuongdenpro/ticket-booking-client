@@ -67,10 +67,6 @@ const TicketDetail = (props) => {
     },
     {
       id: 3,
-      name: "Momo",
-    },
-    {
-      id: 4,
       name: "ZaloPay",
     },
   ];
@@ -89,7 +85,7 @@ const TicketDetail = (props) => {
       name: "Agribank Phan Đình Phương",
     },
   ];
-  const bankMoMo = [
+  const bankZalo = [
     {
       id: 1,
       name: "0354043344",
@@ -158,8 +154,8 @@ const TicketDetail = (props) => {
     } else if (paymentTypeWatch.id == 2) {
       setOptionPTTT(bankBanking);
       setDisabledPTTT(false);
-    } else if (paymentTypeWatch.id == 3 || paymentTypeWatch.id == 4) {
-      setOptionPTTT(bankMoMo);
+    } else if (paymentTypeWatch.id == 3 ) {
+      setOptionPTTT(bankZalo);
       setDisabledPTTT(false);
     }
   }, [paymentTypeWatch]);
@@ -187,7 +183,7 @@ const TicketDetail = (props) => {
         const orderApi = new OrderApi();
         const response = await orderApi.payment(params);
         customToast.success("Thanh toán thành công");
-        navigate(`/admin/order/detail/${response.data.data.id}`);
+        navigate(`/admin/order/detail/${response.data.data.order.id}`);
       } catch (error) {
         customToast.error(error.response.data.message);
       }
@@ -205,7 +201,7 @@ const TicketDetail = (props) => {
         const orderApi = new OrderApi();
         const response = await orderApi.payment(params);
         customToast.success("Thanh toán thành công");
-        navigate(`/admin/order/detail/${response.data.data.id}`);
+        navigate(`/admin/order/detail/${response.data.data.order.id}`);
       } catch (error) {
         customToast.error(error.response.data.message);
       }
@@ -236,7 +232,7 @@ const TicketDetail = (props) => {
           <Grid flexDirection={{ xs: "column", md: "row" }} item>
             <Tabs value={value} onChange={handleChange} textColor="primary">
               <Tab label="Thanh toán" className="left-border" />
-              <Tab label="Lịch sử" className="right-border" />
+              
             </Tabs>
           </Grid>
         </Grid>

@@ -345,11 +345,11 @@ const ListTicketDetail = (props) => {
                       style={{
                         display: "flex",
                         flexDirection: "row",
-                        justifyContent: "center",
+                       
                         alignItems: "center",
                       }}
                     >
-                      <div className={`seat`}></div>
+                      <div className={`seat-2`}></div>
                       <span>Trống</span>
                     </div>
                     <div
@@ -360,29 +360,29 @@ const ListTicketDetail = (props) => {
                         alignItems: "center",
                       }}
                     >
-                      <div className={`seat selected`}></div>
+                      <div className={`seat-2 selected`}></div>
                       <span>Đang chọn</span>
                     </div>
                     <div
                       style={{
                         display: "flex",
                         flexDirection: "row",
-                        justifyContent: "center",
+                        
                         alignItems: "center",
                       }}
                     >
-                      <div className={`seat disabled-sale`}></div>
+                      <div className={`seat-2 disabled-sale`}></div>
                       <span>Đã đặt</span>
                     </div>
                     <div
                       style={{
                         display: "flex",
                         flexDirection: "row",
-                        justifyContent: "center",
+                        
                         alignItems: "center",
                       }}
                     >
-                      <div className={`seat disabled-pending`}></div>
+                      <div className={`seat-2 disabled-pending`}></div>
                       <span>Chờ xác nhận</span>
                     </div>
                   </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import statusCards from "../../../assets/JsonData/status-card-data.json";
 import StatusCard from "../../../components/StatusCard";
 import Chart from "react-apexcharts";
@@ -6,15 +6,60 @@ import { Link } from "react-router-dom";
 import TableDashboard from "../../../components/TableDashboard";
 import Badge from "../../../components/Badge";
 import { Helmet } from "react-helmet";
+import { OrderApi } from "../../../utils/orderApi";
+import customToast from "../../../components/ToastCustom";
+import moment from "moment";
+import { convertCurrency } from "../../../data/curren";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { StatisticsApi } from "../../../utils/statisticsApi";
 const AdminDashboard = (props) => {
+  const [dataOrder, setDataOrder] = useState([]);
+  const [statistics, setStatistics] = useState();
+  var now = new Date(); // Lấy ngày giờ hiện tại
+  var sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // Lấy ngày 7 ngày trước đó
+
+  // In ra ngày 7 ngày trước đó, ví dụ: "12/4/2023"
+  const handleGetData = async () => {
+    try {
+      const orderApi = new OrderApi();
+      const response = await orderApi.getListOrderBill({
+        page: 1,
+        pageSize: 5,
+      });
+      setDataOrder(response?.data?.data);
+    } catch (error) {
+      customToast.error(error.response.data.message);
+    }
+  };
+  const handleGetStatistics = async () => {
+    try {
+      const statisticApi = new StatisticsApi();
+      const response = await statisticApi.statistics();
+      setStatistics(response?.data?.data);
+    } catch (error) {
+      customToast.error(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    handleGetData();
+    handleGetStatistics();
+  }, []);
+  console.log(statistics);
   const chartOptions = {
     series: [
       {
-        name: "Online Customers",
+        name: "Doanh số đặt vé",
         data: [40, 70, 20, 90, 36, 80, 30, 91, 60],
       },
       {
-        name: "Store Customers",
+        name: "Doanh số hoàn vé",
         data: [40, 30, 70, 80, 40, 16, 40, 20, 51, 10],
       },
     ],
@@ -52,7 +97,7 @@ const AdminDashboard = (props) => {
   };
 
   const topCustomers = {
-    head: ["user", "Tổng đơn đặt", "Tổng chi"],
+    head: ["Khách hàng", "Tổng đơn đặt", "Tổng chi"],
     body: [
       {
         username: "john doe",
@@ -92,102 +137,76 @@ const AdminDashboard = (props) => {
     </tr>
   );
 
-  const latestOrders = {
-    header: ["order id", "user", "total price", "date", "status"],
-    body: [
-      {
-        id: "#OD1711",
-        user: "john doe",
-        date: "17 Jun 2021",
-        price: "$900",
-        status: "shipping",
-      },
-      {
-        id: "#OD1712",
-        user: "frank iva",
-        date: "1 Jun 2021",
-        price: "$400",
-        status: "paid",
-      },
-      {
-        id: "#OD1713",
-        user: "anthony baker",
-        date: "27 Jun 2021",
-        price: "$200",
-        status: "pending",
-      },
-      {
-        id: "#OD1712",
-        user: "frank iva",
-        date: "1 Jun 2021",
-        price: "$400",
-        status: "paid",
-      },
-      {
-        id: "#OD1713",
-        user: "anthony baker",
-        date: "27 Jun 2021",
-        price: "$200",
-        status: "refund",
-      },
-    ],
-  };
-
-  const orderStatus = {
-    shipping: "primary",
-    pending: "warning",
-    paid: "success",
-    refund: "danger",
-  };
-
-  const renderOrderHead = (item, index) => <th key={index}>{item}</th>;
-
   const renderOrderBody = (item, index) => (
-    <tr key={index}>
-      <td>{item.id}</td>
-      <td>{item.user}</td>
-      <td>{item.price}</td>
-      <td>{item.date}</td>
-      <td>
-        <Badge type={orderStatus[item.status]} content={item.status} />
-      </td>
+    <tr key={item?.id}>
+      <td>{item?.code}</td>
+      <td>{item?.customer?.fullName}</td>
+      <td>{item?.finalTotal}</td>
+      <td>{moment(item?.createdAt).format("DD/MM/YYYY")}</td>
+      <td>{item.status}</td>
     </tr>
   );
+
   return (
-    <div >
+    <div>
       <Helmet>
         <title> PDBus - Dashboard</title>
       </Helmet>
-      <h2 className="page-header">Dashboard</h2>
-      <div className="row" >
+      <div style={{marginBottom:20}}>
+        <h2>Dashboard</h2>
+        <span>(Từ ngày {moment(sevenDaysAgo).format("DD/MM/YYYY")} đến ngày {moment(now).format("DD/MM/YYYY")})</span>
+      </div>
+
+      <div className="row">
         <div className="col-6">
           <div className="row">
-            {statusCards.map((item, index) => (
-              <div className="col-6" key={index}>
-                <StatusCard
-                  icon={item.icon}
-                  count={item.count}
-                  title={item.title}
-                />
-              </div>
-            ))}
+            <div className="col-6">
+              <StatusCard
+                icon={"bx bx-shopping-bag"}
+                count={"2000"}
+                title={"Vé bán"}
+              />
+            </div>
+            <div className="col-6">
+              <StatusCard
+                icon={"bx bx-cart"}
+                count={"2000"}
+                title={"Khách hàng"}
+              />
+            </div>
+            <div className="col-6">
+              <StatusCard
+                icon={"bx bx-dollar-circle"}
+                count={convertCurrency(statistics?.totalRevenue)}
+                title={"Tổng doanh thu"}
+              />
+            </div>
+            <div className="col-6">
+              <StatusCard
+                icon={"bx bx-receipt"}
+                count={statistics?.totalOrders}
+                title={"Hóa đơn"}
+              />
+            </div>
           </div>
         </div>
         <div className="col-6">
-          <div className="card full-height" style={{backgroundColor:'#baf4f2'}}>
+          <div
+            className="card full-height"
+            style={{ backgroundColor: "#baf4f2" }}
+          >
             <Chart
               options={chartOptions.options}
               series={chartOptions.series}
               type="bar"
               height="100%"
-              
             />
           </div>
         </div>
-        <div className="col-5" >
+        <div className="col-5">
           <div className="card">
             <div className="card__header">
-              <h3>Top custom</h3>
+              <h3>Top khách hàng đặt vé</h3>
             </div>
             <div className="card__body">
               <TableDashboard
@@ -205,18 +224,70 @@ const AdminDashboard = (props) => {
         <div className="col-7">
           <div className="card">
             <div className="card__header">
-              <h3>latest orders</h3>
+              <h3>Đơn đặt vé mới nhất</h3>
             </div>
             <div className="card__body">
-              <TableDashboard
-                headData={latestOrders.header}
-                renderHead={(item, index) => renderOrderHead(item, index)}
-                bodyData={latestOrders.body}
-                renderBody={(item, index) => renderOrderBody(item, index)}
-              />
+              <TableContainer component={Paper} style={{ marginTop: 20 }}>
+                <Table sx={{ minWidth: 500 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell style={{ width: 50 }}>Mã hóa đơn</TableCell>
+                      <TableCell align="center" style={{ width: 150 }}>
+                        Khách hàng
+                      </TableCell>
+                      <TableCell style={{ width: 100 }} align="right">
+                        Tổng tiền
+                      </TableCell>
+                      <TableCell align="right" style={{ width: 110 }}>
+                        Ngày tạo
+                      </TableCell>
+                      <TableCell align="right" style={{ width: 140 }}>
+                        Trạng thái
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {dataOrder.map((row) => (
+                      <TableRow
+                        key={row.name}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {row?.code}
+                        </TableCell>
+                        <TableCell align="right">
+                          {row?.customer?.fullName}
+                        </TableCell>
+                        <TableCell align="right">
+                          {convertCurrency(row?.finalTotal)}
+                        </TableCell>
+                        <TableCell align="right">
+                          {moment(row?.createdAt).format("DD-MM-YYYY")}
+                        </TableCell>
+                        <TableCell align="right">
+                          <Badge
+                            type={
+                              row?.status == "Đã thanh toán"
+                                ? "success"
+                                : "danger"
+                            }
+                            content={
+                              row?.status == "Đã thanh toán"
+                                ? "Thành công"
+                                : "Trả vé"
+                            }
+                          />{" "}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </div>
             <div className="card__footer">
-              <Link to="/">view all</Link>
+              <Link to="/admin/order/order-list">view all</Link>
             </div>
           </div>
         </div>

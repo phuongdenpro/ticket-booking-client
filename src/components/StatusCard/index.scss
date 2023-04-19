@@ -27,6 +27,9 @@
     text-align: center;
     z-index: 1;
     text-transform: capitalize;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
 }
 
 .status-card__info > h4 {
