@@ -183,7 +183,7 @@ const TicketDetail = (props) => {
         const orderApi = new OrderApi();
         const response = await orderApi.payment(params);
         customToast.success("Thanh toán thành công");
-        navigate(`/admin/order/detail/${response.data.data.id}`);
+        navigate(`/admin/order/detail/${response.data.data.order.id}`);
       } catch (error) {
         customToast.error(error.response.data.message);
       }
@@ -201,7 +201,7 @@ const TicketDetail = (props) => {
         const orderApi = new OrderApi();
         const response = await orderApi.payment(params);
         customToast.success("Thanh toán thành công");
-        navigate(`/admin/order/detail/${response.data.data.id}`);
+        navigate(`/admin/order/detail/${response.data.data.order.id}`);
       } catch (error) {
         customToast.error(error.response.data.message);
       }
