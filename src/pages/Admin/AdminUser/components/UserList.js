@@ -34,8 +34,8 @@ const UserList = (props) => {
     {
       field: "fullName",
       headerName: "Tên khách hàng",
-      contentAlign:'center',
-      flex: 100,
+      // contentAlign:'center',
+      flex: 150,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
@@ -43,9 +43,9 @@ const UserList = (props) => {
 
     {
       field: "email",
-      flex: 130,
+      flex: 100,
       headerName: "Email",
-      contentAlign:'center',
+      // contentAlign:'center',
       headerAlign: "center",
       headerClassName: "theme",
     },
@@ -84,7 +84,7 @@ const UserList = (props) => {
       field: "status",
       headerName: "Trạng thái",
       contentAlign:'center',
-      flex: 110,
+      flex: 130,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,

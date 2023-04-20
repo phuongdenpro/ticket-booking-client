@@ -21,10 +21,43 @@ import { StatisticsApi } from "../../../utils/statisticsApi";
 const AdminDashboard = (props) => {
   const [dataOrder, setDataOrder] = useState([]);
   const [statistics, setStatistics] = useState();
-  var now = new Date(); // Lấy ngày giờ hiện tại
-  var sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // Lấy ngày 7 ngày trước đó
+  const [topCustomer, setTopCustomer] = useState([]);
+  var now = new Date();
+  var sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const [dataRevenue, setDataRevenue] = useState([]);
 
-  // In ra ngày 7 ngày trước đó, ví dụ: "12/4/2023"
+  const [total, setTotal] = useState([]);
+  var dates = [];
+  for (var i = 0; i < 7; i++) {
+    var now = new Date();
+    var day = now.getDate() - i;
+    var sevenDaysAgo = new Date(now.getFullYear(), now.getMonth(), day);
+    var data = moment(sevenDaysAgo).format("DD/MM/YYYY");
+    dates.push(data);
+  }
+  dates.reverse();
+
+  const handleTotalDate = () => {
+    var recentData = [];
+    for (var i = 0; i < dates.length; i++) {
+      var found = false;
+      for (var j = 0; j < dataRevenue.length; j++) {
+        var dataDate = moment(new Date(dataRevenue[j].day)).format(
+          "DD/MM/YYYY"
+        );
+        if (dates[i] === dataDate) {
+          recentData.push(dataRevenue[j].total);
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        recentData.push(0);
+      }
+    }
+    setTotal(recentData);
+  };
+
   const handleGetData = async () => {
     try {
       const orderApi = new OrderApi();
@@ -46,25 +79,45 @@ const AdminDashboard = (props) => {
       customToast.error(error.response.data.message);
     }
   };
+  const handleGetTopCustomer = async () => {
+    try {
+      const statisticApi = new StatisticsApi();
+      const response = await statisticApi.topCustomers();
+      setTopCustomer(response?.data?.data);
+    } catch (error) {
+      customToast.error(error.response.data.message);
+    }
+  };
+  const handleGetDataRevenue = async () => {
+    try {
+      const statisticApi = new StatisticsApi();
+      const response = await statisticApi.revenue();
+      setDataRevenue(response?.data?.data);
+    } catch (error) {
+      customToast.error(error.response.data.message);
+    }
+  };
 
   useEffect(() => {
     handleGetData();
     handleGetStatistics();
+    handleGetTopCustomer();
+    handleGetDataRevenue();
   }, []);
-  console.log(statistics);
+
+  useEffect(() => {
+    handleTotalDate();
+  }, [dataRevenue]);
+
   const chartOptions = {
     series: [
       {
-        name: "Doanh số đặt vé",
-        data: [40, 70, 20, 90, 36, 80, 30, 91, 60],
-      },
-      {
-        name: "Doanh số hoàn vé",
-        data: [40, 30, 70, 80, 40, 16, 40, 20, 51, 10],
+        name: "Doanh thu đặt vé",
+        data: total,
       },
     ],
     options: {
-      color: ["#6ab04c", "#2980b9"],
+      color: ["#6ab04c"],
       chart: {
         background: "transparent",
       },
@@ -75,17 +128,7 @@ const AdminDashboard = (props) => {
         curve: "smooth",
       },
       xaxis: {
-        categories: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-        ],
+        categories: dates,
       },
       legend: {
         position: "top",
@@ -98,33 +141,6 @@ const AdminDashboard = (props) => {
 
   const topCustomers = {
     head: ["Khách hàng", "Tổng đơn đặt", "Tổng chi"],
-    body: [
-      {
-        username: "john doe",
-        order: "490",
-        price: "$15,870",
-      },
-      {
-        username: "frank iva",
-        order: "250",
-        price: "$12,251",
-      },
-      {
-        username: "anthony baker",
-        order: "120",
-        price: "$10,840",
-      },
-      {
-        username: "frank iva",
-        order: "110",
-        price: "$9,251",
-      },
-      {
-        username: "anthony baker",
-        order: "80",
-        price: "$8,840",
-      },
-    ],
   };
 
   const renderCusomerHead = (item, index) => <th key={index}>{item}</th>;
@@ -152,9 +168,12 @@ const AdminDashboard = (props) => {
       <Helmet>
         <title> PDBus - Dashboard</title>
       </Helmet>
-      <div style={{marginBottom:20}}>
+      <div style={{ marginBottom: 20 }}>
         <h2>Dashboard</h2>
-        <span>(Từ ngày {moment(sevenDaysAgo).format("DD/MM/YYYY")} đến ngày {moment(now).format("DD/MM/YYYY")})</span>
+        <span>
+          (Từ ngày {moment(sevenDaysAgo).format("DD/MM/YYYY")} đến ngày{" "}
+          {moment(now).format("DD/MM/YYYY")})
+        </span>
       </div>
 
       <div className="row">
@@ -163,14 +182,14 @@ const AdminDashboard = (props) => {
             <div className="col-6">
               <StatusCard
                 icon={"bx bx-shopping-bag"}
-                count={"2000"}
+                count={statistics?.totalTicketsSold}
                 title={"Vé bán"}
               />
             </div>
             <div className="col-6">
               <StatusCard
                 icon={"bx bx-cart"}
-                count={"2000"}
+                count={statistics?.totalCustomers}
                 title={"Khách hàng"}
               />
             </div>
@@ -209,12 +228,43 @@ const AdminDashboard = (props) => {
               <h3>Top khách hàng đặt vé</h3>
             </div>
             <div className="card__body">
-              <TableDashboard
-                headData={topCustomers.head}
-                renderHead={(item, index) => renderCusomerHead(item, index)}
-                bodyData={topCustomers.body}
-                renderBody={(item, index) => renderCusomerBody(item, index)}
-              />
+              <TableContainer component={Paper} style={{ marginTop: 20 }}>
+                <Table sx={{ minWidth: 400 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="center" style={{ width: 150 }}>
+                        Khách hàng
+                      </TableCell>
+                      <TableCell style={{ width: 150 }} align="center">
+                        Tổng đơn đặt
+                      </TableCell>
+                      <TableCell align="center" style={{ width: 110 }}>
+                        Tổng chi
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {topCustomer.map((row) => (
+                      <TableRow
+                        key={row?.customerId}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {row?.fullName}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row?.numberOfOrders}
+                        </TableCell>
+                        <TableCell align="center">
+                          {convertCurrency(row?.total)}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </div>
             <div className="card__footer">
               <Link to="/admin/customer">View All Customers</Link>

@@ -1,39 +1,17 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  Drawer,
-  FormControl,
-  Select,
-  MenuItem,
-  FormControlLabel,
-  Grid,
-  Icon,
-  Input,
-  InputLabel,
-  Radio,
-  TextField,
-  Divider,
-} from "@mui/material";
-import React, { useEffect, useState } from "react";
-import fileDownload from "js-file-download";
-import { Breadcrumb, Col, message, notification, Row, Space } from "antd";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { isEmpty } from "lodash";
 import AddIcon from "@mui/icons-material/Add";
-import PrintIcon from "@mui/icons-material/Print";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { Box, Button, Divider, Grid } from "@mui/material";
+import { isEmpty } from "lodash";
+import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import SearchInput from "../../../components/InputSearch";
-import CreateStation from "./Components/CreateEditStation/CreateStation";
-import { StationApi } from "../../../utils/stationApi";
-import TableCustom from "../../../components/TableCustom";
-import StationList from "./Components/StationList";
 import ModalAlert from "../../../components/Modal";
 import customToast from "../../../components/ToastCustom";
-import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
+import { StationApi } from "../../../utils/stationApi";
+import CreateStation from "./Components/CreateEditStation/CreateStation";
 import EditStation from "./Components/CreateEditStation/EditStation";
 import DetailStation from "./Components/DetailStation/DetailStation";
-import { Helmet } from "react-helmet";
+import StationList from "./Components/StationList";
 
 const AdminStation = (props) => {
   const [loadings, setLoadings] = useState([]);
@@ -224,19 +202,6 @@ const AdminStation = (props) => {
     event.preventDefault();
   };
 
-  const funExportExcel = async () => {
-    try {
-      const stationApi = new StationApi();
-      const response = await stationApi.exportExcel();
-      if (response.status == 200) {
-        const fileName = "DS_Ben_Xe" + new Date().toISOString() + ".xlsx";
-        fileDownload(response.data.data, fileName);
-        customToast.success("Tải xuống thành công");
-      }
-    } catch (error) {
-      customToast.error("Tải xuống thất bại");
-    }
-  };
   const exportExcel = () => {
     const params = {};
     const data = {};
@@ -246,7 +211,7 @@ const AdminStation = (props) => {
   return (
     <Box
       sx={{
-        height: '100%',
+        height: "100%",
         width: "100%",
       }}
     >
@@ -264,16 +229,6 @@ const AdminStation = (props) => {
             style={{ display: "flex", justifyContent: "flex-end" }}
             flexDirection={{ xs: "column", md: "row" }}
           >
-            <Button
-              className={"btn-create"}
-              style={{ marginTop: 20, marginRight: 20 }}
-              variant="contained"
-              color="success"
-              startIcon={<DownloadOutlinedIcon />}
-              onClick={funExportExcel}
-            >
-              <span className={"txt"}>Xuất danh sách</span>
-            </Button>
             <Button
               variant="contained"
               color="warning"
