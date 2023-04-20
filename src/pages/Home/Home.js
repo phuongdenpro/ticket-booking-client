@@ -135,33 +135,7 @@ const Home = (props) => {
     },
   ];
 
-  const dataTestPromotion = [
-    {
-      id: "1",
-      title: "Giảm 50% vé cho khách hàng mới tạo tài khoản",
-      image: require("../../assets/promotion1.png"),
-    },
-    {
-      id: "2",
-      title: "Giảm 25% vé cho tuyến đường từ Sài Gòn ra Hà Nội",
-      image: require("../../assets/promotion2.jpg"),
-    },
-    {
-      id: "3",
-      title: "Giảm 30% vé cho tuyến đường từ Sài Gòn ra Hà Nội",
-      image: require("../../assets/trip3.jpg"),
-    },
-    {
-      id: "4",
-      title: "Giam giá bất ngờ cho khách hàng đặt vé trong dịp lễ",
-      image: require("../../assets/trip4.jpg"),
-    },
-    {
-      id: "5",
-      title: "Giam giá bất ngờ cho khách hàng đặt vé trong dịp lễ",
-      image: require("../../assets/trip5.jpg"),
-    },
-  ];
+  
   return (
     <div
       style={{
@@ -327,6 +301,7 @@ const Home = (props) => {
                 ></CalendarMonthIcon>
                 <DatePicker
                   autoFocus={true}
+                  minDate={new Date()}
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
                   dateFormat="dd/MM/yyyy"

@@ -8,8 +8,8 @@
   margin: 5px;
   padding: 10px;
   text-align: center;
-  width: 20px;
-  height: 20px;
+  width: 50px;
+  height: 50px;
   font-size: 14px;
   font-weight: bold;
 }
@@ -24,7 +24,22 @@
   height: 20px;
   font-size: 14px;
   font-weight: bold;
+
   
+}
+
+.seat-none{
+  // background-color: #ccc;
+  // border: 1px solid #aaa;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 10px;
+  text-align: center;
+  width: 50px;
+  height: 50px;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 10px;
 }
 
 .seat.selected {
