@@ -105,6 +105,9 @@ const ListTicketDetail = (props) => {
     setSeatsFloor2(seatsFloor2);
   };
 
+  console.log(seatsFloor1);
+  console.log(seatsFloor2);
+
   useEffect(() => {
     handleSeat();
   }, [dataTicket]);
@@ -178,27 +181,26 @@ const ListTicketDetail = (props) => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
-            <div
-              className="row"
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-evenly",
-                marginLeft: 20,
-                marginRight: 0,
-              }}
-            >
-              <div>
-                <span>Tầng 1</span>
-                <div
-                  className="seats-container"
-                  style={{ display: "flex", flexDirection: "row" }}
-                >
-                  <div>
-                    <span></span>
-                    {seatsFloor1
-                      .slice(0, Math.ceil(seatsFloor1.length / 3))
-                      .map((seat) => (
+            {dataTripDetail?.vehicle?.totalSeat == 34 && (
+              <div
+                className="row"
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                  marginLeft: 20,
+                  marginRight: 0,
+                }}
+              >
+                <div>
+                  <span>Tầng 1</span>
+                  <div
+                    className="seats-container"
+                    style={{ display: "flex", flexDirection: "row" }}
+                  >
+                    <div>
+                      <span></span>
+                      {seatsFloor1.slice(0, 6).map((seat) => (
                         <div
                           key={seat?.id}
                           className={`seat ${
@@ -215,180 +217,617 @@ const ListTicketDetail = (props) => {
                           {seat?.seat?.name}
                         </div>
                       ))}
-                  </div>
-                  
-                  <div>
-                    {seatsFloor1
-                      .slice(
-                        Math.ceil(seatsFloor1.length / 3),
-                        Math.ceil((seatsFloor1.length * 2) / 3)
-                      )
-                      .map((seat) => (
-                        <div
-                          key={seat?.id}
-                          className={`seat ${
-                            selectedSeats.includes(seat?.id) ? "selected" : ""
-                          } ${
-                            seat?.status == "Đã bán"
-                              ? "disabled-sale"
-                              : seat?.status == "Đang chờ thanh toán"
-                              ? "disabled-pending"
-                              : ""
-                          }`}
-                          onClick={() => handleSeatClick(seat?.id)}
-                        >
-                          {seat?.seat?.name}
-                        </div>
-                      ))}
-                  </div>
-                  <div>
-                    <span></span>
-                    {seatsFloor1
-                      .slice(Math.ceil((seatsFloor1.length * 2) / 3))
-                      .map((seat) => (
-                        <div
-                          key={seat?.id}
-                          className={`seat ${
-                            selectedSeats.includes(seat?.id) ? "selected" : ""
-                          } ${
-                            seat?.status == "Đã bán"
-                              ? "disabled-sale"
-                              : seat?.status == "Đang chờ thanh toán"
-                              ? "disabled-pending"
-                              : ""
-                          }`}
-                          onClick={() => handleSeatClick(seat?.id)}
-                        >
-                          {seat?.seat?.name}
-                        </div>
-                      ))}
-                  </div>
-                </div>
-              </div>
-              <div>
-                <span>Tầng 2</span>
-                <div
-                  className="seats-container"
-                  style={{ display: "flex", flexDirection: "row" }}
-                >
-                  <div>
-                    <span></span>
-                    {seatsFloor2
-                      .slice(0, Math.ceil(seatsFloor2.length / 3))
-                      .map((seat) => (
-                        <div
-                          key={seat?.id}
-                          className={`seat ${
-                            selectedSeats.includes(seat?.id) ? "selected" : ""
-                          } ${
-                            seat?.status == "Đã bán"
-                              ? "disabled-sale"
-                              : seat?.status == "Đang chờ thanh toán"
-                              ? "disabled-pending"
-                              : ""
-                          }`}
-                          onClick={() => handleSeatClick(seat?.id)}
-                        >
-                          {seat?.seat?.name}
-                        </div>
-                      ))}
-                  </div>
-                  <div>
-                    {seatsFloor2
-                      .slice(
-                        Math.ceil(seatsFloor2.length / 3),
-                        Math.ceil((seatsFloor2.length * 2) / 3)
-                      )
-                      .map((seat) => (
-                        <div
-                          key={seat?.id}
-                          className={`seat ${
-                            selectedSeats.includes(seat?.id) ? "selected" : ""
-                          } ${
-                            seat?.status == "Đã bán"
-                              ? "disabled-sale"
-                              : seat?.status == "Đang chờ thanh toán"
-                              ? "disabled-pending"
-                              : ""
-                          }`}
-                          onClick={() => handleSeatClick(seat?.id)}
-                        >
-                          {seat?.seat?.name}
-                        </div>
-                      ))}
-                  </div>
-                  <div>
-                    <span></span>
-                    {seatsFloor2
-                      .slice(Math.ceil((seatsFloor2.length * 2) / 3))
-                      .map((seat) => (
-                        <div
-                          key={seat?.id}
-                          className={`seat ${
-                            selectedSeats.includes(seat?.id) ? "selected" : ""
-                          } ${
-                            seat?.status == "Đã bán"
-                              ? "disabled-sale"
-                              : seat?.status == "Đang chờ thanh toán"
-                              ? "disabled-pending"
-                              : ""
-                          }`}
-                          onClick={() => handleSeatClick(seat?.id)}
-                        >
-                          {seat?.seat?.name}
-                        </div>
-                      ))}
-                  </div>
-                  <div style={{ color: "#000", marginLeft: 30 }}>
-                    <span style={{ color: "#000" }}>Chú thích:</span>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                       
-                        alignItems: "center",
-                      }}
-                    >
-                      <div className={`seat-2`}></div>
-                      <span>Trống</span>
                     </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
 
-                        alignItems: "center",
-                      }}
-                    >
-                      <div className={`seat-2 selected`}></div>
-                      <span>Đang chọn</span>
+                    <div>
+                      <div className={`seat-none`}></div>
+                      {seatsFloor1.slice(6, 11).map((seat) => (
+                        <div
+                          key={seat?.id}
+                          className={`seat ${
+                            selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
+                          }`}
+                          onClick={() => handleSeatClick(seat?.id)}
+                        >
+                          {seat?.seat?.name}
+                        </div>
+                      ))}
                     </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        
-                        alignItems: "center",
-                      }}
-                    >
-                      <div className={`seat-2 disabled-sale`}></div>
-                      <span>Đã đặt</span>
+                    <div>
+                      <span></span>
+                      {seatsFloor1.slice(11).map((seat) => (
+                        <div
+                          key={seat?.id}
+                          className={`seat ${
+                            selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
+                          }`}
+                          onClick={() => handleSeatClick(seat?.id)}
+                        >
+                          {seat?.seat?.name}
+                        </div>
+                      ))}
                     </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        
-                        alignItems: "center",
-                      }}
-                    >
-                      <div className={`seat-2 disabled-pending`}></div>
-                      <span>Chờ xác nhận</span>
+                  </div>
+                </div>
+                <div>
+                  <span>Tầng 2</span>
+                  <div
+                    className="seats-container"
+                    style={{ display: "flex", flexDirection: "row" }}
+                  >
+                    <div>
+                      <span></span>
+                      {seatsFloor2.slice(0, 6).map((seat) => (
+                        <div
+                          key={seat?.id}
+                          className={`seat ${
+                            selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
+                          }`}
+                          onClick={() => handleSeatClick(seat?.id)}
+                        >
+                          {seat?.seat?.name}
+                        </div>
+                      ))}
+                    </div>
+                    <div>
+                      <div className={`seat-none`}></div>
+                      {seatsFloor2.slice(6, 11).map((seat) => (
+                        <div
+                          key={seat?.id}
+                          className={`seat ${
+                            selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
+                          }`}
+                          onClick={() => handleSeatClick(seat?.id)}
+                        >
+                          {seat?.seat?.name}
+                        </div>
+                      ))}
+                    </div>
+                    <div>
+                      <span></span>
+                      {seatsFloor2.slice(11).map((seat) => (
+                        <div
+                          key={seat?.id}
+                          className={`seat ${
+                            selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
+                          }`}
+                          onClick={() => handleSeatClick(seat?.id)}
+                        >
+                          {seat?.seat?.name}
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ color: "#000", marginLeft: 30 }}>
+                      <span style={{ color: "#000" }}>Chú thích:</span>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+
+                          alignItems: "center",
+                        }}
+                      >
+                        <div className={`seat-2`}></div>
+                        <span>Trống</span>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+
+                          alignItems: "center",
+                        }}
+                      >
+                        <div className={`seat-2 selected`}></div>
+                        <span>Đang chọn</span>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+
+                          alignItems: "center",
+                        }}
+                      >
+                        <div className={`seat-2 disabled-sale`}></div>
+                        <span>Đã đặt</span>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+
+                          alignItems: "center",
+                        }}
+                      >
+                        <div className={`seat-2 disabled-pending`}></div>
+                        <span>Chờ xác nhận</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
+            {dataTripDetail?.vehicle?.totalSeat == 44 && (
+              <div
+                className="row"
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                  marginLeft: 20,
+                  marginRight: 0,
+                }}
+              >
+                <div>
+                  <span>Tầng 1</span>
+                  <div
+                    className="seats-container"
+                    style={{ display: "flex", flexDirection: "row" }}
+                  >
+                    <div>
+                      <span></span>
+                      {seatsFloor1.slice(0, 7).map((seat) => (
+                        <div
+                          key={seat?.id}
+                          className={`seat ${
+                            selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
+                          }`}
+                          onClick={() => handleSeatClick(seat?.id)}
+                        >
+                          {seat?.seat?.name}
+                        </div>
+                      ))}
+                    </div>
+                    <div>
+                      <span></span>
+                      <div className={`seat-none`}></div>
+                      <div className={`seat-none`}></div>
+                      <div className={`seat-none`}></div>
+                      <div className={`seat-none`}></div>
+                      <div className={`seat-none`}></div>
+                      <div className={`seat-none`}></div>
+                      {seatsFloor1.slice(7, 8).map((seat) => (
+                        <div
+                          key={seat?.id}
+                          className={`seat ${
+                            selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
+                          }`}
+                          onClick={() => handleSeatClick(seat?.id)}
+                        >
+                          {seat?.seat?.name}
+                        </div>
+                      ))}
+                    </div>
+
+                    <div>
+                      <div className={`seat-none`}></div>
+                      {seatsFloor1.slice(8, 14).map((seat) => (
+                        <div
+                          key={seat?.id}
+                          className={`seat ${
+                            selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
+                          }`}
+                          onClick={() => handleSeatClick(seat?.id)}
+                        >
+                          {seat?.seat?.name}
+                        </div>
+                      ))}
+                    </div>
+
+                    <div>
+                      <span></span>
+                      <div className={`seat-none`}></div>
+                      <div className={`seat-none`}></div>
+                      <div className={`seat-none`}></div>
+                      <div className={`seat-none`}></div>
+                      <div className={`seat-none`}></div>
+                      <div className={`seat-none`}></div>
+                      {seatsFloor1.slice(14, 15).map((seat) => (
+                        <div
+                          key={seat?.id}
+                          className={`seat ${
+                            selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
+                          }`}
+                          onClick={() => handleSeatClick(seat?.id)}
+                        >
+                          {seat?.seat?.name}
+                        </div>
+                      ))}
+                    </div>
+                    <div>
+                      <span></span>
+                      {seatsFloor1.slice(15).map((seat) => (
+                        <div
+                          key={seat?.id}
+                          className={`seat ${
+                            selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
+                          }`}
+                          onClick={() => handleSeatClick(seat?.id)}
+                        >
+                          {seat?.seat?.name}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div style={{ marginLeft: 10 }}>
+                  <span>Tầng 2</span>
+                  <div
+                    className="seats-container"
+                    style={{ display: "flex", flexDirection: "row" }}
+                  >
+                    <div>
+                      <span></span>
+                      {seatsFloor2.slice(0, 7).map((seat) => (
+                        <div
+                          key={seat?.id}
+                          className={`seat ${
+                            selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
+                          }`}
+                          onClick={() => handleSeatClick(seat?.id)}
+                        >
+                          {seat?.seat?.name}
+                        </div>
+                      ))}
+                    </div>
+                    <div>
+                      <span></span>
+                      <div className={`seat-none`}></div>
+                      <div className={`seat-none`}></div>
+                      <div className={`seat-none`}></div>
+                      <div className={`seat-none`}></div>
+                      <div className={`seat-none`}></div>
+                      <div className={`seat-none`}></div>
+                      {seatsFloor2.slice(7, 8).map((seat) => (
+                        <div
+                          key={seat?.id}
+                          className={`seat ${
+                            selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
+                          }`}
+                          onClick={() => handleSeatClick(seat?.id)}
+                        >
+                          {seat?.seat?.name}
+                        </div>
+                      ))}
+                    </div>
+
+                    <div>
+                      <div className={`seat-none`}></div>
+                      {seatsFloor2.slice(8, 14).map((seat) => (
+                        <div
+                          key={seat?.id}
+                          className={`seat ${
+                            selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
+                          }`}
+                          onClick={() => handleSeatClick(seat?.id)}
+                        >
+                          {seat?.seat?.name}
+                        </div>
+                      ))}
+                    </div>
+
+                    <div>
+                      <span></span>
+                      <div className={`seat-none`}></div>
+                      <div className={`seat-none`}></div>
+                      <div className={`seat-none`}></div>
+                      <div className={`seat-none`}></div>
+                      <div className={`seat-none`}></div>
+                      <div className={`seat-none`}></div>
+                      {seatsFloor2.slice(14, 15).map((seat) => (
+                        <div
+                          key={seat?.id}
+                          className={`seat ${
+                            selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
+                          }`}
+                          onClick={() => handleSeatClick(seat?.id)}
+                        >
+                          {seat?.seat?.name}
+                        </div>
+                      ))}
+                    </div>
+                    <div>
+                      <span></span>
+                      {seatsFloor2.slice(15).map((seat) => (
+                        <div
+                          key={seat?.id}
+                          className={`seat ${
+                            selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
+                          }`}
+                          onClick={() => handleSeatClick(seat?.id)}
+                        >
+                          {seat?.seat?.name}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div style={{ color: "#000", marginLeft: 30 }}>
+                  <span style={{ color: "#000" }}>Chú thích:</span>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+
+                      alignItems: "center",
+                    }}
+                  >
+                    <div className={`seat-2`}></div>
+                    <span>Trống</span>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+
+                      alignItems: "center",
+                    }}
+                  >
+                    <div className={`seat-2 selected`}></div>
+                    <span>Đang chọn</span>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+
+                      alignItems: "center",
+                    }}
+                  >
+                    <div className={`seat-2 disabled-sale`}></div>
+                    <span>Đã đặt</span>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+
+                      alignItems: "center",
+                    }}
+                  >
+                    <div className={`seat-2 disabled-pending`}></div>
+                    <span>Chờ xác nhận</span>
+                  </div>
+                </div>
+              </div>
+            )}
+            {dataTripDetail?.vehicle?.totalSeat == 28 && (
+              <div
+                className="row"
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                  marginLeft: 20,
+                  marginRight: 0,
+                }}
+              >
+                <div>
+                  <span>Tầng 1</span>
+                  <div
+                    className="seats-container"
+                    style={{ display: "flex", flexDirection: "row" }}
+                  >
+                    <div>
+                      <span></span>
+                      {seatsFloor1.slice(0, 7).map((seat) => (
+                        <div
+                          key={seat?.id}
+                          className={`seat ${
+                            selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
+                          }`}
+                          onClick={() => handleSeatClick(seat?.id)}
+                        >
+                          {seat?.seat?.name}
+                        </div>
+                      ))}
+                    </div>
+
+                    <div>
+                      {seatsFloor1.slice(7, 15).map((seat) => (
+                        <div
+                          key={seat?.id}
+                          className={`seat ${
+                            selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
+                          }`}
+                          onClick={() => handleSeatClick(seat?.id)}
+                        >
+                          {seat?.seat?.name}
+                        </div>
+                      ))}
+                    </div>
+                    <div>
+                      {seatsFloor2.slice(0, 7).map((seat) => (
+                        <div
+                          key={seat?.id}
+                          className={`seat ${
+                            selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
+                          }`}
+                          onClick={() => handleSeatClick(seat?.id)}
+                        >
+                          {seat?.seat?.name}
+                        </div>
+                      ))}
+                    </div>
+                    <div>
+                      {seatsFloor2.slice(7, 15).map((seat) => (
+                        <div
+                          key={seat?.id}
+                          className={`seat ${
+                            selectedSeats.includes(seat?.id) ? "selected" : ""
+                          } ${
+                            seat?.status == "Đã bán"
+                              ? "disabled-sale"
+                              : seat?.status == "Đang chờ thanh toán"
+                              ? "disabled-pending"
+                              : ""
+                          }`}
+                          onClick={() => handleSeatClick(seat?.id)}
+                        >
+                          {seat?.seat?.name}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div style={{ color: "#000", marginLeft: 30 }}>
+                  <span style={{ color: "#000" }}>Chú thích:</span>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+
+                      alignItems: "center",
+                    }}
+                  >
+                    <div className={`seat-2`}></div>
+                    <span>Trống</span>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+
+                      alignItems: "center",
+                    }}
+                  >
+                    <div className={`seat-2 selected`}></div>
+                    <span>Đang chọn</span>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+
+                      alignItems: "center",
+                    }}
+                  >
+                    <div className={`seat-2 disabled-sale`}></div>
+                    <span>Đã đặt</span>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+
+                      alignItems: "center",
+                    }}
+                  >
+                    <div className={`seat-2 disabled-pending`}></div>
+                    <span>Chờ xác nhận</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </DialogContentText>
         </DialogContent>
         <DialogActions
@@ -402,7 +841,7 @@ const ListTicketDetail = (props) => {
             <Button
               variant="contained"
               onClick={() => setShowDrawer(false)}
-              style={{ marginBottom: 1, marginRight:5 }}
+              style={{ marginBottom: 1, marginRight: 5 }}
             >
               Quay lại
             </Button>
