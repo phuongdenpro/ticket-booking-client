@@ -2,8 +2,9 @@ import { Button } from "@mui/material";
 
 import moment from "moment";
 import { useState } from "react";
-import '../../../../assets/scss/default.scss';
+import "../../../../assets/scss/default.scss";
 import TableCustom from "../../../../components/TableCustom";
+import { convertCurrency } from "../../../../data/curren";
 
 const DashboardPromotionList = (props) => {
   const {
@@ -19,195 +20,147 @@ const DashboardPromotionList = (props) => {
     page,
     pageSize,
   } = props;
-  const [openModal, setOpenModal] = useState(false);
-  const [idGroup, setIdGroup] = useState(null);
-  const [nameGroup, setNameGroup] = useState("");
-  const [codeGroup, setCodeGroup] = useState("");
 
-  //   const handleCloseModal = () => {
-  //     setOpenModal(false);
-  //   };
-  //   const handleOpenModal = (id, name, code) => {
-  //     setIdGroup(id);
-  //     setNameGroup(name);
-  //     setCodeGroup(code);
-  //     setOpenModal(true);
-  //   };
-
-  //   const handleConfirm = async () => {
-  //     try {
-  //       const groupCusApi = new GroupCusApi();
-  //       const response = await groupCusApi.deleteById(idGroup);
-  //       customToast.success("Xóa thành công");
-
-  //       handleGetData();
-  //       setOpenModal(false);
-  //       setIdGroup(null);
-  //     } catch (error) {
-  //       customToast.error(error.response.data.message);
-  //     }
-  //   };
   const columns = [
     {
-        field: 'createdAt',
-        headerName: 'Ngày tạo đơn',
-        flex: 100,
-        headerAlign: 'center',
-        headerClassName: 'theme',
-        sortable: false,
-        renderCell: (params) => {
-          return <span>{moment(params.row.createdAt)?.format('DD/MM/YYYY')}</span>;
-        },
+      field: "code",
+      headerName: "Mã CTKM",
+      flex: 100,
+      headerAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+      contentAlign: "center",
+    },
+    {
+      field: "title",
+      headerName: "Tiêu đề CTKM",
+      flex: 150,
+      headerAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+    },
+    {
+      field: "startDate",
+      flex: 85,
+      headerName: "Ngày bắt đầu",
+      contentAlign: "center",
+      headerAlign: "center",
+      headerClassName: "theme",
+      renderCell: (params) => {
+        return (
+          <div>
+            <span>
+              {params.row?.startDate !== undefined &&
+              params.row?.startDate !== null
+                ? moment(params.row.startDate).format("DD-MM-YYYY")
+                : "chưa xác định"}
+            </span>
+          </div>
+        );
       },
-      {
-        field: 'orderNumber',
-        headerName: 'Mã DH',
-        flex: 100,
-        headerAlign: 'center',
-        headerClassName: 'theme',
-        sortable: false,
-        renderCell: (params) => {
-          return (
-            <Button
-              onClick={() => handleShowDetail(params.id)}
-              style={{ backgroundColor: 'transparent' }}
-              disabled={false}
-              color="primary"
-            >
-              <span
-                style={{
-                  textDecorationLine: 'underline',
-                  color: '#1A89AC',
-                  fontSize: '0.8rem',
-                  display: 'inline-block',
-                  textTransform: 'none',
-                }}
-              >
-                {params?.row?.orderNumber}
-              </span>
-            </Button>
-          );
-        },
+    },
+    {
+      field: "endDate",
+      flex: 85,
+      headerName: "Ngày kết thúc",
+      contentAlign: "center",
+      headerAlign: "center",
+      headerClassName: "theme",
+      renderCell: (params) => {
+        return (
+          <div>
+            <span>
+              {params.row?.endDate !== undefined && params.row?.endDate !== null
+                ? moment(params.row.endDate).format("DD-MM-YYYY")
+                : "chưa xác định"}
+            </span>
+          </div>
+        );
       },
-      {
-        field: 'customer',
-        headerName: 'Khách hàng',
-        flex: 120,
-        headerAlign: 'center',
-        headerClassName: 'theme',
-        renderCell: (params) => {
-          return (
-            <div style={{ padding: '5px' }}>
-              <div
-                style={{
-                  borderRadius: '15px',
-                  padding: '2px 5px',
-                }}
-                className={'padding-status'}
-              >
-                <span
-                  style={{
-                    fontSize: '0.8rem',
-                  }}
-                >
-                  {params?.row?.customer?.name}
-                </span>
-              </div>
-            </div>
-          );
-        },
+    },
+    {
+      field: "title",
+      headerName: "Chiết khấu(%)",
+      flex: 100,
+      headerAlign: "center",
+      headerClassName: "theme",
+      contentAlign: "center",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <div>
+            <span>{params.row?.promotionDetail?.percentDiscount}</span>
+          </div>
+        );
       },
-      {
-        field: 'status',
-        headerName: 'Trạng thái',
-        flex: 120,
-        headerAlign: 'center',
-        headerClassName: 'theme',
-        renderCell: (params) => {
-          return (
-            <div >
-              <div
-                style={{
-                  borderRadius: '15px',
-                  padding: '2px 5px',
-                }}
-                className={'padding-status'}
-              >
-                <span
-                  style={{
-                    color: 'white',
-                    fontSize: '0.8rem',
-                  }}
-                >
-                  {params?.row?.status}
-                </span>
-              </div>
-            </div>
-          );
-        },
+    },
+
+    {
+      field: "title",
+      headerName: "Chiết khấu(VND)",
+      flex: 100,
+      headerAlign: "center",
+      headerClassName: "theme",
+      contentAlign: "center",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <div>
+            <span>
+              {params.row?.promotionDetail?.reductionAmount
+                ? convertCurrency(params.row?.promotionDetail?.reductionAmount)
+                : ""}
+            </span>
+          </div>
+        );
       },
-  
-      {
-        field: 'total',
-        headerName: 'Tổng tiền',
-        flex: 80,
-        headerAlign: 'center',
-        headerClassName: 'theme',
-        renderCell: (params) => {
-          return <div></div>;
-        },
+    },
+    {
+      field: "maxBudget",
+      headerName: "Ngân sách tổng",
+      flex: 100,
+      headerAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <div>
+            <span>{convertCurrency(params.row?.maxBudget)}</span>
+          </div>
+        );
       },
-      {
-        field: 'promotion',
-        headerName: 'Khuyến mãi',
-        flex: 80,
-        headerAlign: 'center',
-        headerClassName: 'theme',
-        renderCell: (params) => {
-          return <div></div>;
-        },
+    },
+    {
+      field: "useBudget",
+      headerName: "Ngân sách đã sử dụng",
+      flex: 100,
+      headerAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <div>
+            <span>{convertCurrency(params.row?.useBudget)}</span>
+          </div>
+        );
       },
-      {
-        field: 'totalAmount',
-        headerName: 'Thành tiền',
-        flex: 70,
-        headerAlign: 'center',
-        headerClassName: 'theme',
-        renderCell: (params) => {
-          return <div></div>;
-        },
+    },
+    {
+      field: "Budget",
+      headerName: "Ngân sách còn lại",
+      flex: 100,
+      headerAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <div>
+            <span>{convertCurrency(params.row?.maxBudget - params.row?.useBudget)}</span>
+          </div>
+        );
       },
-      
-      {
-        field: 'note',
-        headerName: 'Ghi chú',
-        flex: 100,
-        headerAlign: 'center',
-        headerClassName: 'theme',
-      },
-      {
-        field: 'userCreate',
-        headerName: 'NV tạo đơn',
-        flex: 80,
-        editable: true,
-        headerAlign: 'center',
-        headerClassName: 'theme',
-        renderCell: (params) => {
-          return (
-            <div style={{ padding: '5px' }}>
-              <span
-                style={{
-                  fontSize: '0.8rem',
-                }}
-              >
-                {params?.row?.userCreate?.name}
-              </span>
-            </div>
-          );
-        },
-      },
-      
-    ];
+    },
+  ];
 
   return (
     <div>
