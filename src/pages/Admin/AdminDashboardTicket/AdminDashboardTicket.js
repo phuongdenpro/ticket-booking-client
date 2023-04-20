@@ -101,9 +101,20 @@ const AdminDashboardTicket = (props) => {
       views: [{ showGridLines: false }],
     });
 
-    worksheet.mergeCells("A1:H1");
+    worksheet.mergeCells("A1:G1");
 
-    const customCell3 = worksheet.getCell("A1");
+    const customCell1 = worksheet.getCell("A1");
+    customCell1.font = {
+      name: "Times New Roman",
+      family: 4,
+      size: 12,
+    };
+
+    customCell1.value = `HỆ THỐNG ĐẶT VÉ XE PDBUS`;
+
+    worksheet.mergeCells("A2:G2");
+
+    const customCell3 = worksheet.getCell("A2");
     customCell3.font = {
       name: "Times New Roman",
       family: 4,
@@ -112,9 +123,9 @@ const AdminDashboardTicket = (props) => {
     const day = new Date();
     customCell3.value = `Nhân viên: ${Cookies.get("fullName")} `;
 
-    worksheet.mergeCells("A2:H2");
+    worksheet.mergeCells("A3:G3");
 
-    const customCell4 = worksheet.getCell("A2");
+    const customCell4 = worksheet.getCell("A3");
     customCell4.font = {
       name: "Times New Roman",
       family: 4,
@@ -128,7 +139,7 @@ const AdminDashboardTicket = (props) => {
       "/" +
       day.getFullYear();
 
-    worksheet.mergeCells("A5:H5");
+    worksheet.mergeCells("A5:G5");
 
     const customCell = worksheet.getCell("A5");
     customCell.font = {
@@ -139,7 +150,7 @@ const AdminDashboardTicket = (props) => {
     };
     customCell.alignment = { vertical: "middle", horizontal: "center" };
 
-    worksheet.mergeCells("A6:H6");
+    worksheet.mergeCells("A6:G6");
 
     const customCell5 = worksheet.getCell("A6");
     customCell5.font = {
@@ -153,9 +164,7 @@ const AdminDashboardTicket = (props) => {
 
     var headerRow = worksheet.addRow();
 
-    customCell.value = `Thống kê vé (${moment(startDate).format(
-      "DD/MM/YYYY"
-    )} - ${moment(endDate).format("DD/MM/YYYY")})`;
+    customCell.value = `Thống kê vé `;
 
     const customCell2 = worksheet.getCell("A6");
     customCell2.font = {
@@ -165,9 +174,22 @@ const AdminDashboardTicket = (props) => {
       bold: false,
     };
     customCell2.alignment = { vertical: "middle", horizontal: "center" };
-    customCell2.value = `Tổng số vé đã bán:${total}`;
-    worksheet.getRow(8).font = { bold: true };
-    worksheet.getRow(8).height = "25";
+    customCell2.value = `(Từ ngày ${moment(startDate).format(
+      "DD/MM/YYYY"
+    )} đến ngày ${moment(endDate).format("DD/MM/YYYY")})`;
+
+    worksheet.mergeCells("A7:G7");
+    const customCell7 = worksheet.getCell("A7");
+    customCell7.font = {
+      name: "Times New Roman",
+      family: 4,
+      size: 12,
+      bold: false,
+    };
+    customCell7.alignment = { vertical: "middle", horizontal: "center" };
+    customCell7.value = `Tổng số vé đã bán:${total}`;
+    worksheet.getRow(9).font = { bold: true };
+    worksheet.getRow(9).height = "25";
     let header = [
       "STT",
       "Mã tuyến",
@@ -179,7 +201,7 @@ const AdminDashboardTicket = (props) => {
     ];
 
     for (let i = 0; i < headerColumn.length; i++) {
-      const columnn = worksheet.getCell(headerColumn[i] + 8);
+      const columnn = worksheet.getCell(headerColumn[i] + 9);
       columnn.font = {
         name: "Times New Roman",
         family: 4,
@@ -208,11 +230,11 @@ const AdminDashboardTicket = (props) => {
 
     worksheet.autoFilter = {
       from: {
-        row: 8,
+        row: 9,
         column: 1,
       },
       to: {
-        row: 8,
+        row: 9,
         column: 7,
       },
     };
@@ -228,7 +250,7 @@ const AdminDashboardTicket = (props) => {
         element?.totalTickets,
       ]);
       for (let j = 0; j < headerColumn.length; j++) {
-        const columnn = worksheet.getCell(headerColumn[j] + (i + 8));
+        const columnn = worksheet.getCell(headerColumn[j] + (i + 9));
         columnn.font = {
           name: "Times New Roman",
           family: 4,
@@ -257,6 +279,8 @@ const AdminDashboardTicket = (props) => {
         }${day.getFullYear()}${day.getHours()}${day.getMinutes()}${day.getSeconds()}.xlsx`
       );
     });
+
+    customToast.success("Xuất báo cáo thành công")
   };
 
   return (

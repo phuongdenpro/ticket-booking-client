@@ -140,7 +140,7 @@ const PromotionList = (props) => {
             <span>
               {params.row?.startDate !== undefined &&
               params.row?.startDate !== null
-                ? moment(params.row.startDate).format("DD-MM-YYYY hh:mm A")
+                ? moment(params.row.startDate).format("DD-MM-YYYY")
                 : "chưa xác định"}
             </span>
           </div>
@@ -159,7 +159,7 @@ const PromotionList = (props) => {
           <div>
             <span>
               {params.row?.endDate !== undefined && params.row?.endDate !== null
-                ? moment(params.row.endDate).format("DD-MM-YYYY hh:mm A")
+                ? moment(params.row.endDate).format("DD-MM-YYYY")
                 : "chưa xác định"}
             </span>
           </div>

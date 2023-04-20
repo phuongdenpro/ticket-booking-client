@@ -55,5 +55,15 @@ class StatisticsApi {
     });
     return res;
   }
+
+  promotionLine(params){
+    const url = "promotion-line";
+    const res = axiosClient.get(url, {
+      params: {
+        ...params,
+      },
+    });
+    return res;
+  }
 }
 export { StatisticsApi };
