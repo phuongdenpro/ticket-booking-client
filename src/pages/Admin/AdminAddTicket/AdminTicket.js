@@ -277,7 +277,8 @@ const AdminAddTicket = (props) => {
         customerId: customerWatch?.id || dataCustomer?.id,
         seatCodes: itemTickets.map((item) => item?.seat?.code),
         tripDetailCode: dataTripDetail?.code,
-        promotionLineCodes: promotionCodes.length > 0 ? promotionCodes : undefined,
+        promotionLineCodes:
+          promotionCodes.length > 0 ? promotionCodes : undefined,
         note: value?.note,
       };
       console.log(params);
@@ -469,6 +470,26 @@ const AdminAddTicket = (props) => {
 
                     <Grid item xs={6}>
                       <FormControlCustom
+                        classNameLabel={
+                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
+                        }
+                        className={"flex-direction-row"}
+                        label={"Tổng tiền vé"}
+                        fullWidth
+                      >
+                        <InputField
+                          disabled
+                          style={{ width: "100%" }}
+                          className={"disabled-field"}
+                          name={"total"}
+                          helperText={""}
+                          placeholder={""}
+                        />
+                      </FormControlCustom>
+                    </Grid>
+
+                    <Grid item xs={6}>
+                      <FormControlCustom
                         label={"Địa chỉ"}
                         classNameLabel={
                           "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
@@ -482,6 +503,23 @@ const AdminAddTicket = (props) => {
                           style={{ width: "100%" }}
                           name={"address"}
                           placeholder={""}
+                        />
+                      </FormControlCustom>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <FormControlCustom
+                        classNameLabel={
+                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
+                        }
+                        className={"flex-direction-row"}
+                        label={"Khuyến mãi"}
+                        fullWidth
+                      >
+                        <AutocompletePromotion
+                          multiple={true}
+                          name={"promotionCodes"}
+                          placeholder={"Chọn khuyến mãi áp dụng"}
+                          listOption={optionPromotion || []}
                         />
                       </FormControlCustom>
                     </Grid>
@@ -512,61 +550,6 @@ const AdminAddTicket = (props) => {
                           "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
                         }
                         className={"flex-direction-row"}
-                        label={"Email"}
-                        fullWidth
-                      >
-                        <InputField
-                          className={"disabled-field"}
-                          disabled
-                          style={{ width: "100%" }}
-                          name={"email"}
-                          helperText={""}
-                          placeholder={""}
-                        />
-                      </FormControlCustom>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <FormControlCustom
-                        classNameLabel={
-                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
-                        }
-                        className={"flex-direction-row"}
-                        label={"Tổng tiền vé"}
-                        fullWidth
-                      >
-                        <InputField
-                          disabled
-                          style={{ width: "100%" }}
-                          className={"disabled-field"}
-                          name={"total"}
-                          helperText={""}
-                          placeholder={""}
-                        />
-                      </FormControlCustom>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <FormControlCustom
-                        classNameLabel={
-                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
-                        }
-                        className={"flex-direction-row"}
-                        label={"Khuyến mãi"}
-                        fullWidth
-                      >
-                        <AutocompletePromotion
-                          multiple={true}
-                          name={"promotionCodes"}
-                          placeholder={"Chọn khuyến mãi áp dụng"}
-                          listOption={optionPromotion || []}
-                        />
-                      </FormControlCustom>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <FormControlCustom
-                        classNameLabel={
-                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
-                        }
-                        className={"flex-direction-row"}
                         label={"Số tiền giảm"}
                         fullWidth
                       >
@@ -580,6 +563,26 @@ const AdminAddTicket = (props) => {
                         />
                       </FormControlCustom>
                     </Grid>
+                    <Grid item xs={6}>
+                      <FormControlCustom
+                        classNameLabel={
+                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
+                        }
+                        className={"flex-direction-row"}
+                        label={"Email"}
+                        fullWidth
+                      >
+                        <InputField
+                          className={"disabled-field"}
+                          disabled
+                          style={{ width: "100%" }}
+                          name={"email"}
+                          helperText={""}
+                          placeholder={""}
+                        />
+                      </FormControlCustom>
+                    </Grid>
+
                     <Grid item xs={6}>
                       <FormControlCustom
                         classNameLabel={
