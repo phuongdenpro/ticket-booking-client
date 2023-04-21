@@ -105,9 +105,6 @@ const ListTicketDetail = (props) => {
     setSeatsFloor2(seatsFloor2);
   };
 
-  console.log(seatsFloor1);
-  console.log(seatsFloor2);
-
   useEffect(() => {
     handleSeat();
   }, [dataTicket]);

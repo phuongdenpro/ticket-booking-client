@@ -1,40 +1,35 @@
 import { Button, Divider, Grid } from "@mui/material";
 
+import { yupResolver } from "@hookform/resolvers/yup";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import { isEmpty } from "lodash";
+import moment from "moment";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
 import { FormProvider, useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router-dom";
+import * as yup from "yup";
+import "../../../assets/scss/default.scss";
 import AutocompleteCustom from "../../../components/AutocompleteCustom";
+import AutocompletePromotion from "../../../components/AutocompletePromotion";
 import FormControlCustom from "../../../components/FormControl";
 import InputField from "../../../components/InputField";
-import * as yup from "yup";
-import { isEmpty } from "lodash";
-import { yupResolver } from "@hookform/resolvers/yup";
-import moment from "moment";
-import SelectCustom from "../../../components/SelectCustom";
-import "./AdminTicket.scss";
-import "../../../assets/scss/default.scss";
-import PriceList from "../AdminPriceList/components/PriceList";
-import { CustomerApi } from "../../../utils/customerApi";
-import { OrderApi } from "../../../utils/orderApi";
-import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import useDebounce from "../../../components/debounce";
-import AddCustomerOrder from "./AddCustomerOrder";
-import BorderColorIcon from "@mui/icons-material/BorderColor";
-import { useNavigate, useParams } from "react-router-dom";
-import { TripApi } from "../../../utils/tripApi";
-import { TicketApi } from "../../../utils/ticketApi";
-import { AdfScanner } from "@mui/icons-material";
-import ListTicketDetail from "./ListTicketDetail";
-import TicketBookingList from "./TicketBookingList";
-import { PriceListApi } from "../../../utils/priceListApi";
 import customToast from "../../../components/ToastCustom";
+import useDebounce from "../../../components/debounce";
 import {
   convertCurrency,
   currencyMark,
   numberFormat,
 } from "../../../data/curren";
+import { OrderApi } from "../../../utils/orderApi";
+import { PriceListApi } from "../../../utils/priceListApi";
 import { PromotionApi } from "../../../utils/promotionApi";
-import AutocompletePromotion from "../../../components/AutocompletePromotion";
+import { TicketApi } from "../../../utils/ticketApi";
+import { TripApi } from "../../../utils/tripApi";
+import AddCustomerOrder from "./AddCustomerOrder";
+import "./AdminTicket.scss";
+import ListTicketDetail from "./ListTicketDetail";
+import TicketBookingList from "./TicketBookingList";
 
 const AdminAddTicket = (props) => {
   const [dataCustomer, setData] = useState();
@@ -57,6 +52,7 @@ const AdminAddTicket = (props) => {
   const [optionPromotion, setOptionPromotion] = useState([]);
   const [promotionCodes, setPromotionCodes] = useState([]);
   const [dataPromotionResults, setDataPromotionResults] = useState([]);
+  const [dataPromotion, setDataPromotion] = useState([]);
 
   const filterItem = async () => {
     const newArray = dataTicket.filter((item) =>
@@ -90,11 +86,13 @@ const AdminAddTicket = (props) => {
     try {
       const promotionApi = new PromotionApi();
       const res = await promotionApi.getPromotionAvailable({
-        tripCode: codeTrip?.code,
+        tripCode: dataTripDetail?.trip?.code,
       });
-      setOptionPromotion(res?.data?.data);
+      setDataPromotion(res?.data?.data);
     } catch (error) {}
   };
+
+  console.log(dataPromotion);
 
   const handelDataTripDetail = async () => {
     try {
@@ -124,6 +122,10 @@ const AdminAddTicket = (props) => {
     handleDataTicket();
     handlePromotion();
   }, [codeTrip]);
+
+  useEffect(() => {
+    handlePromotion();
+  }, [dataTripDetail]);
 
   const handelCustomerList = async () => {
     try {
@@ -222,23 +224,48 @@ const AdminAddTicket = (props) => {
       const res = await promotionApi.calculatePromotionLine({
         total: total,
         numOfTicket: itemTickets?.length || 0,
-        promotionLineCodes: promotionCodes,
+        promotionLineCodes: dataPromotion.map((item) => item.code),
       });
       setDataPromotionResults(res?.data?.data);
     } catch (error) {
       setDataPromotionResults([]);
     }
   };
-  console.log(dataPromotionResults);
+
+  useEffect(() => {
+    let data = [];
+    if (dataPromotionResults.length > 0) {
+      for (let i = 0; i < dataPromotionResults.length; i++) {
+        if (dataPromotionResults[i].amount != 0) {
+          for (let j = 0; j < dataPromotion.length; j++) {
+            if (
+              dataPromotionResults[i].promotionLineCode == dataPromotion[j].code
+            ) {
+              data.push(dataPromotion[j]);
+            }
+          }
+        }
+      }
+    }
+    setOptionPromotion(data);
+  }, [dataPromotionResults]);
 
   useEffect(() => {
     let total = 0;
-
-    if (dataPromotionResults.length > 0) {
-      dataPromotionResults.forEach((item) => (total -= item?.amount));
+    for (let i = 0; i < dataPromotionResults.length; i++) {
+      if (promotionWatch?.length > 0) {
+        for (let j = 0; j < promotionWatch.length; j++) {
+          if (
+            dataPromotionResults[i].promotionLineCode == promotionWatch[j]?.code
+          ) {
+            total -= dataPromotionResults[i]?.amount;
+          }
+        }
+      }
     }
+
     setValue("reduceAmount", convertCurrency(total));
-  }, [itemTickets, dataPromotionResults]);
+  }, [itemTickets, promotionWatch]);
 
   useEffect(() => {
     handlePromotionResult();
@@ -268,10 +295,8 @@ const AdminAddTicket = (props) => {
     }
     setValue("total", convertCurrency(total));
   }, [itemTickets]);
-  console.log(promotionCodes);
 
   const onSubmit = async (value) => {
-    console.log("vào");
     if (itemTickets.length != 0) {
       const params = {
         customerId: customerWatch?.id || dataCustomer?.id,
@@ -281,7 +306,6 @@ const AdminAddTicket = (props) => {
           promotionCodes.length > 0 ? promotionCodes : undefined,
         note: value?.note,
       };
-      console.log(params);
 
       try {
         const orderApi = new OrderApi();
