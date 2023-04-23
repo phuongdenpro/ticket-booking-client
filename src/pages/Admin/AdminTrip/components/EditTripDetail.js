@@ -49,7 +49,7 @@ const EditTripDetail = (props) => {
     startDate: firstDay,
     endDate: lastDay,
   });
-  const optionStatus = ["Còn vé", "Hết vé", "Chưa xuất phát", "Đã xuất phát"];
+  const optionStatus = ["Còn vé", "Hết vé"];
 
   const handelGetOptionVehicle = async () => {
     try {

@@ -32,7 +32,8 @@ import SelectCustom from "../../../../components/SelectCustom";
 import { TripApi } from "../../../../utils/tripApi";
 
 const AddTripDetail = (props) => {
-  const { setShowDrawerCreate, showDrawerCreate, idTrip,handleGetData } = props;
+  const { setShowDrawerCreate, showDrawerCreate, idTrip, handleGetData } =
+    props;
   const [images, setImages] = useState();
   const [urlImage, setUrlImage] = useState();
   const [optionVehicle, setOptionVehicle] = useState([]);
@@ -44,7 +45,6 @@ const AddTripDetail = (props) => {
     startDate: firstDay,
     endDate: lastDay,
   });
-  const optionStatus = ["Còn vé", "Hết vé"];
 
   const handelGetOptionVehicle = async () => {
     try {
@@ -66,10 +66,6 @@ const AddTripDetail = (props) => {
       .matches(/^[A-Za-z0-9]*$/, "Không chứa kí tự đặc biệt")
       .required("Mã không được phép bỏ trống"),
 
-    status: yup
-      .string()
-      .typeError("Trạng thái không được phép bỏ trống")
-      .required("Trạng thái không được phép bỏ trống"),
     codeVehicle: yup
       .object()
       .typeError("Vui lòng chọn xe")
@@ -79,7 +75,6 @@ const AddTripDetail = (props) => {
   const defaultValues = {
     code: "",
     codeVehicle: "",
-    status: "",
   };
 
   const methods = useForm({
@@ -118,8 +113,7 @@ const AddTripDetail = (props) => {
     const params = {
       code: value.code,
       vehicleId: value.codeVehicle.id,
-      status: value.status,
-      tripId:idTrip,
+      tripId: idTrip,
       departureTime: new Date(selectedDate?.startDate),
       expectedTime: new Date(selectedDate?.endDate),
     };
@@ -317,22 +311,6 @@ const AddTripDetail = (props) => {
                             className={"date-picker"}
                           />
                         </LocalizationProvider>
-                      </FormControlCustom>
-                    </Grid>
-
-                    <Grid item xs={12} className="auto-complete">
-                      <FormControlCustom
-                        label={"Trạng thái"}
-                        fullWidth
-                        isMarked
-                      >
-                        <SelectCustom
-                          name={"status"}
-                          placeholder={"Chọn trạng thái"}
-                          error={Boolean(errors?.status)}
-                          helperText={errors?.status?.message}
-                          options={optionStatus || []}
-                        />
                       </FormControlCustom>
                     </Grid>
                   </Grid>
