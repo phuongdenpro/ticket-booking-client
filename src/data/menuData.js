@@ -49,8 +49,20 @@ export const menu = () => {
       path: "/admin/dashboard-promotion",
     },
     {
-      text: "Thống kê doanh thu",
+      text: "Doanh số bán hàng",
       path: "/admin/dashboard-cost",
+    },
+    {
+      text: "Đặt vé cho khách hàng",
+      path: "/admin/booking-trip",
+    },
+    {
+      text: "Quản lý vé xe",
+      path: "/admin/ticket-list",
+    },
+    {
+      text: "Tổng quan",
+      path: "/admin/",
     },
   ];
   return menuData;

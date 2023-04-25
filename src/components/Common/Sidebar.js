@@ -45,7 +45,7 @@ const Sidebar = (props) => {
     };
   };
   const items = [
-    getItem("Dashboard", "", <DashboardOutlined />),
+    getItem("Tổng quan", "", <DashboardOutlined />),
     getItem(
       "Quản Lý Khách Hàng",
       "subUser",
