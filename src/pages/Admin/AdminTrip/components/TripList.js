@@ -57,6 +57,15 @@ const TripList = (props) => {
 
   const columns = [
     {
+      field: "stt",
+      headerName: "STT",
+      flex: 40,
+      headerAlign: "center",
+      contentAlign:'center',
+      headerClassName: "theme",
+      sortable: false,
+    },
+    {
       field: "code",
       headerName: "Mã",
       flex: 30,

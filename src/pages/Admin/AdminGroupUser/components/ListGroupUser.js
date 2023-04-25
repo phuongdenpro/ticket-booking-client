@@ -55,6 +55,15 @@ const UserGroupList = (props) => {
   };
   const columns = [
     {
+      field: "stt",
+      headerName: "STT",
+      flex: 40,
+      headerAlign: "center",
+      contentAlign:'center',
+      headerClassName: "theme",
+      sortable: false,
+    },
+    {
       field: "code",
       headerName: "Mã nhóm",
       flex: 40,

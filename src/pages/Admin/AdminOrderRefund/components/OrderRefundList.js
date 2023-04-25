@@ -61,7 +61,7 @@ const OrderRefundList = (props) => {
       },
       {
         field: 'orderNumber',
-        headerName: 'Mã DH',
+        headerName: 'Mã Đơn Trả',
         flex: 100,
         headerAlign: 'center',
         headerClassName: 'theme',
@@ -83,7 +83,7 @@ const OrderRefundList = (props) => {
                   textTransform: 'none',
                 }}
               >
-                {params?.row?.orderNumber}
+                {params?.row?.code}
               </span>
             </Button>
           );

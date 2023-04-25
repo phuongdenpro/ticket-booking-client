@@ -67,5 +67,14 @@ class OrderApi {
     return res;
   }
 
+  getListOrderRefund(params){
+    const url = "order-refund";
+    const res = axiosClient.get(url, {
+      params: {
+        ...params,
+      },
+    });
+    return res;
+  }
 }
 export { OrderApi };
