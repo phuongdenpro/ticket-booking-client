@@ -45,6 +45,15 @@ class StatisticsApi {
     });
     return res;
   }
+  revenueByEmployees(params) {
+    const url = "statistics/revenue-by-employees";
+    const res = axiosClient.get(url, {
+      params: {
+        ...params,
+      },
+    });
+    return res;
+  }
 
   ticketByRoute(params) {
     const url = "statistics/ticket-sold-by-route";
@@ -57,7 +66,7 @@ class StatisticsApi {
   }
 
   promotionLine(params){
-    const url = "promotion-line";
+    const url = "statistics/promotion-lines";
     const res = axiosClient.get(url, {
       params: {
         ...params,

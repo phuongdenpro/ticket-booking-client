@@ -2,9 +2,10 @@ import { Button } from "@mui/material";
 
 import moment from "moment";
 import { useState } from "react";
-import '../../../../assets/scss/default.scss';
+import "../../../../assets/scss/default.scss";
 import TableCustom from "../../../../components/TableCustom";
 import Badge from "../../../../components/Badge";
+import { convertCurrency } from "../../../../data/curren";
 
 const DashboardTicketList = (props) => {
   const {
@@ -20,115 +21,112 @@ const DashboardTicketList = (props) => {
     page,
     pageSize,
   } = props;
-  
+
   const columns = [
     {
-        field: 'code',
-        headerName: 'Mã tuyến',
-        flex: 100,
-        headerAlign: 'center',
-        headerClassName: 'theme',
-        sortable: false,
-        
+      field: "stt",
+      headerName: "STT",
+      flex: 50,
+      headerAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+    },
+    {
+      field: "code",
+      headerName: "Mã tuyến",
+      flex: 70,
+      headerAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+    },
+    {
+      field: "name",
+      headerName: "Tên tuyến",
+      flex: 150,
+      headerAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+    },
+    {
+      field: "fromStation",
+      headerName: "Nơi đi",
+      flex: 130,
+      headerAlign: "center",
+      headerClassName: "theme",
+      renderCell: (params) => {
+        return (
+          <div style={{ padding: "5px" }}>
+            <span
+              style={{
+                fontSize: "0.8rem",
+              }}
+            >
+              {params?.row?.fromStation?.name}({params?.row?.fromStation?.code})
+            </span>
+          </div>
+        );
       },
-      {
-        field: 'name',
-        headerName: 'Tên tuyến',
-        flex: 150,
-        headerAlign: 'center',
-        headerClassName: 'theme',
-        sortable: false,
-        
+    },
+    {
+      field: "toStation",
+      headerName: "Nơi đến",
+      flex: 150,
+      headerAlign: "center",
+      headerClassName: "theme",
+      renderCell: (params) => {
+        return (
+          <div style={{ padding: "5px" }}>
+            <span
+              style={{
+                fontSize: "0.8rem",
+              }}
+            >
+              {params?.row?.toStation?.name}({params?.row?.toStation?.code})
+            </span>
+          </div>
+        );
       },
-      {
-        field: 'fromStation',
-        headerName: 'Nơi đi',
-        flex: 100,
-        headerAlign: 'center',
-        headerClassName: 'theme',
-        renderCell: (params) => {
-          return (
-            <div style={{ padding: '5px' }}>
-              <div
-                style={{
-                  borderRadius: '15px',
-                  padding: '2px 5px',
-                }}
-                className={'padding-status'}
-              >
-                <span
-                  style={{
-                    fontSize: '0.8rem',
-                  }}
-                >
-                  {params?.row?.fromStation?.name}({params?.row?.fromStation?.code})
-                </span>
-              </div>
-            </div>
-          );
-        },
+    },
+
+    {
+      field: "totalTickets",
+      headerName: "Số vé đặt",
+      flex: 80,
+      headerAlign: "center",
+      contentAlign: "center",
+      headerClassName: "theme",
+    },
+    {
+      field: "total",
+      headerName: "Doanh số trước CK",
+      flex: 140,
+      headerAlign: "center",
+      headerClassName: "theme",
+      renderCell: (params) => {
+        return <div>{convertCurrency(params?.row.totalRevenue)}</div>;
       },
-      {
-        field: 'toStation',
-        headerName: 'Nơi đến',
-        flex: 120,
-        headerAlign: 'center',
-        headerClassName: 'theme',
-        renderCell: (params) => {
-            return (
-              <div style={{ padding: '5px' }}>
-                <div
-                  style={{
-                    borderRadius: '15px',
-                    padding: '2px 5px',
-                  }}
-                  className={'padding-status'}
-                >
-                  <span
-                    style={{
-                      fontSize: '0.8rem',
-                    }}
-                  >
-                    {params?.row?.toStation?.name}({params?.row?.toStation?.code})
-                  </span>
-                </div>
-              </div>
-            );
-          },
+    },
+    {
+      field: "promotion",
+      headerName: "Chiết khấu",
+      flex: 80,
+      headerAlign: "center",
+      headerClassName: "theme",
+      renderCell: (params) => {
+        return <div>{convertCurrency(params?.row.totalDiscount)}</div>;
       },
-      {
-        field: "status",
-        headerName: "Trạng thái",
-        flex: 125,
-        headerAlign: "center",
-        contentAlign: "center",
-        headerClassName: "theme",
-        sortable: false,
-        renderCell: (params) => {
-          return (
-            <div>
-              <Badge
-                type={params?.row?.status == "Kích hoạt" ? "success" : "danger"}
-                content={
-                  params?.row?.status == "Kích hoạt" ? "Hoạt động" : "Tạm ngưng"
-                }
-              />
-            </div>
-          );
-        },
+    },
+    {
+      field: "finalTotal",
+      headerName: "Doanh số sau CK",
+      flex: 130,
+      headerAlign: "center",
+      headerClassName: "theme",
+      renderCell: (params) => {
+        return <div>{convertCurrency(params?.row.finalTotalRevenue)}</div>;
       },
-      {
-        field: 'totalTickets',
-        headerName: 'Số vé đặt',
-        flex: 80,
-        headerAlign: 'center',
-        contentAlign: 'center',
-        headerClassName: 'theme',
-        
-      },
-      
-      
-    ];
+    },
+  ];
 
   return (
     <div>

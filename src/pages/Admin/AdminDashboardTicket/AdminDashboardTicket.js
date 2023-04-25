@@ -101,7 +101,7 @@ const AdminDashboardTicket = (props) => {
       views: [{ showGridLines: false }],
     });
 
-    worksheet.mergeCells("A1:G1");
+    worksheet.mergeCells("A1:I1");
 
     const customCell1 = worksheet.getCell("A1");
     customCell1.font = {
@@ -112,7 +112,7 @@ const AdminDashboardTicket = (props) => {
 
     customCell1.value = `HỆ THỐNG ĐẶT VÉ XE PDBUS`;
 
-    worksheet.mergeCells("A2:G2");
+    worksheet.mergeCells("A2:I2");
 
     const customCell3 = worksheet.getCell("A2");
     customCell3.font = {
@@ -123,7 +123,7 @@ const AdminDashboardTicket = (props) => {
     const day = new Date();
     customCell3.value = `Nhân viên: ${Cookies.get("fullName")} `;
 
-    worksheet.mergeCells("A3:G3");
+    worksheet.mergeCells("A3:I3");
 
     const customCell4 = worksheet.getCell("A3");
     customCell4.font = {
@@ -139,7 +139,7 @@ const AdminDashboardTicket = (props) => {
       "/" +
       day.getFullYear();
 
-    worksheet.mergeCells("A5:G5");
+    worksheet.mergeCells("A5:I5");
 
     const customCell = worksheet.getCell("A5");
     customCell.font = {
@@ -150,7 +150,7 @@ const AdminDashboardTicket = (props) => {
     };
     customCell.alignment = { vertical: "middle", horizontal: "center" };
 
-    worksheet.mergeCells("A6:G6");
+    worksheet.mergeCells("A6:I6");
 
     const customCell5 = worksheet.getCell("A6");
     customCell5.font = {
@@ -160,7 +160,7 @@ const AdminDashboardTicket = (props) => {
     };
     customCell5.alignment = { vertical: "middle", horizontal: "center" };
 
-    let headerColumn = ["A", "B", "C", "D", "E", "F", "G"];
+    let headerColumn = ["A", "B", "C", "D", "E", "F", "G","H", "I"];
 
     var headerRow = worksheet.addRow();
 
@@ -178,7 +178,7 @@ const AdminDashboardTicket = (props) => {
       "DD/MM/YYYY"
     )} đến ngày ${moment(endDate).format("DD/MM/YYYY")})`;
 
-    worksheet.mergeCells("A7:G7");
+    worksheet.mergeCells("A7:J7");
     const customCell7 = worksheet.getCell("A7");
     customCell7.font = {
       name: "Times New Roman",
@@ -187,7 +187,7 @@ const AdminDashboardTicket = (props) => {
       bold: false,
     };
     customCell7.alignment = { vertical: "middle", horizontal: "center" };
-    customCell7.value = `Tổng số vé đã bán:${total}`;
+    
     worksheet.getRow(9).font = { bold: true };
     worksheet.getRow(9).height = "25";
     let header = [
@@ -196,8 +196,10 @@ const AdminDashboardTicket = (props) => {
       "Tên tuyến",
       "Nơi đi",
       "Nơi đến",
-      "Trạng thái",
       "Số vé đã bán",
+      "Doanh số trước CK",
+      "Chiết khấu",
+      "Doanh số sau CK"
     ];
 
     for (let i = 0; i < headerColumn.length; i++) {
@@ -216,8 +218,8 @@ const AdminDashboardTicket = (props) => {
       columnn.fill = {
         type: "pattern",
         pattern: "solid",
-        fgColor: { argb: "f2bc76" },
-        bgColor: { argb: "f2bc76" },
+        fgColor: { argb: "91d6f2" },
+        bgColor: { argb: "91d6f2" },
       };
       if (i == 0) {
         worksheet.getColumn(i + 1).width = "10";
@@ -235,10 +237,14 @@ const AdminDashboardTicket = (props) => {
       },
       to: {
         row: 9,
-        column: 7,
+        column: 9,
       },
     };
     let i = 1;
+    let totalC = 0;
+    let discount = 0;
+    let numberC = 0;
+    let finalTotal = 0;
     data?.data?.data.forEach((element) => {
       worksheet.addRow([
         i,
@@ -246,9 +252,17 @@ const AdminDashboardTicket = (props) => {
         element?.name,
         element?.fromStation.name,
         element?.toStation.name,
-        element?.status == "Kích hoạt" ? "Hoạt động" : "Tạm ngưng",
+       
         element?.totalTickets,
+        element?.totalRevenue,
+        element?.totalDiscount,
+        element?.finalTotalRevenue,
       ]);
+      totalC += element?.totalRevenue;
+      discount += element?.totalDiscount;
+      finalTotal += element?.finalTotalRevenue;
+      numberC +=element?.totalTickets;
+
       for (let j = 0; j < headerColumn.length; j++) {
         const columnn = worksheet.getCell(headerColumn[j] + (i + 9));
         columnn.font = {
@@ -270,7 +284,38 @@ const AdminDashboardTicket = (props) => {
 
       i++;
     });
-
+    const bottom = worksheet.addRow([
+      "Tổng cộng",
+      "",
+      "",
+      "",
+      "",
+      numberC,
+      totalC,
+      discount,
+      finalTotal,
+    ]);
+    worksheet.mergeCells(bottom._cells[0]._address, bottom._cells[4]._address);
+    bottom.font = {
+      name: "Times New Roman",
+      family: 4,
+      bold: true,
+    };
+    bottom.eachCell(
+      { includeEmpty: false },
+      function (cell, colNumber) {
+        
+        cell.border = {
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' },
+        };
+      },
+    );
+    
+    const firstCell = bottom.getCell(1);
+    firstCell.alignment = { horizontal: "right" };
     ExcelJSWorkbook.xlsx.writeBuffer().then(function (buffer) {
       saveAs(
         new Blob([buffer], { type: "application/octet-stream" }),
@@ -400,7 +445,7 @@ const AdminDashboardTicket = (props) => {
             data={data?.data?.data || []}
             handleChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
-            total={data?.data?.pagination?.total}
+            total={data?.data?.data.length}
             handleGetData={handleGetData}
             page={page}
             pageSize={pageSize}
