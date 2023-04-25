@@ -65,10 +65,7 @@ const TicketDetail = (props) => {
       id: 2,
       name: "Chuyển khoản ngân hàng",
     },
-    {
-      id: 3,
-      name: "ZaloPay",
-    },
+   
   ];
 
   const bankBanking = [
@@ -85,17 +82,7 @@ const TicketDetail = (props) => {
       name: "Agribank Phan Đình Phương",
     },
   ];
-  const bankZalo = [
-    {
-      id: 1,
-      name: "0354043344",
-    },
-    {
-      id: 2,
-      name: "04444444444",
-    },
-  ];
-  console.log(dataOrder);
+  
 
   const getDetailOrder = async () => {
     try {
@@ -153,9 +140,6 @@ const TicketDetail = (props) => {
       setDisabledPTTT(true);
     } else if (paymentTypeWatch.id == 2) {
       setOptionPTTT(bankBanking);
-      setDisabledPTTT(false);
-    } else if (paymentTypeWatch.id == 3 ) {
-      setOptionPTTT(bankZalo);
       setDisabledPTTT(false);
     }
   }, [paymentTypeWatch]);

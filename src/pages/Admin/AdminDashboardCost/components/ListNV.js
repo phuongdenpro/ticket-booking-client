@@ -6,7 +6,7 @@ import "../../../../assets/scss/default.scss";
 import TableCustom from "../../../../components/TableCustom";
 import { convertCurrency } from "../../../../data/curren";
 
-const DashboardCostList = (props) => {
+const DashboardCostListNV = (props) => {
   const {
     data,
     handleGetData,
@@ -31,8 +31,16 @@ const DashboardCostList = (props) => {
       sortable: false,
     },
     {
+        field: "code",
+        headerName: "Mã NV",
+        flex: 50,
+        headerAlign: "center",
+        headerClassName: "theme",
+        sortable: false,
+      },
+    {
       field: "fullName",
-      headerName: "Khách hàng",
+      headerName: "Tên nhân viên",
       flex: 120,
       headerAlign: "center",
       headerClassName: "theme",
@@ -53,16 +61,10 @@ const DashboardCostList = (props) => {
       headerAlign: "center",
       headerClassName: "theme",
     },
-    {
-      field: "customerGroupName",
-      headerName: "Nhóm khách hàng",
-      flex: 120,
-      headerAlign: "center",
-      headerClassName: "theme",
-    },
+    
     {
       field: "numberOfOrders",
-      headerName: "Số đơn đặt vé",
+      headerName: "Số đơn bán",
       flex: 120,
       headerAlign: "center",
       headerClassName: "theme",
@@ -130,4 +132,4 @@ const DashboardCostList = (props) => {
   );
 };
 
-export default DashboardCostList;
+export default DashboardCostListNV;

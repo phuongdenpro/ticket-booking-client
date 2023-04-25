@@ -1,60 +1,37 @@
-import { Box, Divider, Grid, TextField, Button } from "@mui/material";
+import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
+import { Box, Button, Divider, Grid, TextField } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
-import { Helmet } from "react-helmet";
-import { FormProvider, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import FormControlCustom from "../../../components/FormControl";
-import SearchInput from "../../../components/InputSearch";
-import SelectCustom from "../../../components/SelectCustom";
-import customToast from "../../../components/ToastCustom";
-import { OrderApi } from "../../../utils/orderApi";
-import "./AdminDashboardPromotion.scss";
-import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
-import DashboardPromotionList from "./components/ListDashboardPromotion";
-import { StatisticsApi } from "../../../utils/statisticsApi";
 import ExcelJS from "exceljs";
 import saveAs from "file-saver";
 import Cookies from "js-cookie";
 import moment from "moment";
+import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
+import { FormProvider, useForm } from "react-hook-form";
+import FormControlCustom from "../../../components/FormControl";
+import SearchInput from "../../../components/InputSearch";
+import customToast from "../../../components/ToastCustom";
+import { StatisticsApi } from "../../../utils/statisticsApi";
+import "./AdminDashboardPromotion.scss";
+import DashboardPromotionList from "./components/ListDashboardPromotion";
 
 const AdminDashboardPromotion = (props) => {
-  const [loadings, setLoadings] = useState([]);
-  const currentYear = new Date().getFullYear();
-  const firstDay = new Date(currentYear, 0, 1);
-  const lastDay = new Date(currentYear, 11, 31);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [searchValue, setSearchValue] = useState("");
   const [filterParams, setFilterParams] = useState(null);
   const [data, setData] = useState([]);
-  const [selected, setSelected] = useState([]);
-  const navigate = useNavigate();
-  const [orderStatus, setOrderStatus] = useState([]);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [selectedDate, setSelectedDate] = useState({
-    startDate: firstDay,
-    endDate: lastDay,
-  });
+  var now = new Date();
+  var sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const [total, setTotal] = useState(0);
+  const [startDate, setStartDate] = useState(
+    moment(sevenDaysAgo).format("YYYY-MM-DD")
+  );
+  const [endDate, setEndDate] = useState(moment(now).format("YYYY-MM-DD"));
 
-  const filterDateTime = [
-    {
-      id: 1,
-      code: "ALL",
-      name: "Tất cả",
-    },
-    {
-      id: 2,
-      code: "option",
-      name: "Tùy chọn",
-    },
-  ];
-
-  const [disable, setDisable] = useState(true);
   const handleGetData = async () => {
     try {
       const statisticApi = new StatisticsApi();
@@ -63,6 +40,7 @@ const AdminDashboardPromotion = (props) => {
         pageSize: pageSize,
         ...filterParams,
       });
+
       setData(response);
     } catch (error) {
       customToast.error(error.response.data.message);
@@ -70,7 +48,7 @@ const AdminDashboardPromotion = (props) => {
   };
 
   useEffect(() => {
-    setFilterParams({ ...filterParams, keywords: searchValue });
+    setFilterParams({ ...filterParams, keyword: searchValue });
   }, [searchValue]);
 
   useEffect(() => {
@@ -78,7 +56,7 @@ const AdminDashboardPromotion = (props) => {
   }, [page, pageSize, filterParams]);
 
   const handleSearch = (e) => {
-    setFilterParams({ keywords: searchValue || undefined });
+    setFilterParams({ ...filterParams, keyword: searchValue || undefined });
   };
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -89,38 +67,33 @@ const AdminDashboardPromotion = (props) => {
     setPage(0);
   };
   const defaultValues = {
-    startDate: null,
-    endDate: null,
+    startDate: moment(sevenDaysAgo).format("YYYY-MM-DD"),
+    endDate: moment(now).format("YYYY-MM-DD"),
   };
   const methods = useForm({
     defaultValues,
   });
   const { handleSubmit, reset, watch } = methods;
-  const watchTime = watch("time");
+
   useEffect(() => {
     const params = {
-      startDate: startDate ? new Date(startDate) : undefined,
-      endDate: endDate ? new Date(endDate) : undefined,
+      startDate: startDate ? startDate : undefined,
+      endDate: endDate ? endDate : undefined,
     };
     setFilterParams(params);
-  }, [watchTime, startDate, endDate]);
-  useEffect(() => {
-    const now = new Date();
+  }, [startDate, endDate]);
+  const handleTotal = () => {
+    let total = 0;
+    const dataNew = data?.data?.data;
+    for (let i = 0; i < dataNew?.length; i++) {
+      total += dataNew[i].totalTickets;
+    }
+    setTotal(total);
+  };
 
-    if (watchTime?.code === "option") {
-      // setSelectedDate({ ...selectedDate, dateFrom: '', dateTo: '' });
-    } else {
-      setStartDate(null);
-      setEndDate(null);
-    }
-  }, [watchTime]);
   useEffect(() => {
-    if (watchTime?.code === "option") {
-      setDisable(false);
-    } else {
-      setDisable(true);
-    }
-  }, [watchTime]);
+    handleTotal();
+  }, [data]);
 
   const exportExcel = () => {
     var ExcelJSWorkbook = new ExcelJS.Workbook();
@@ -201,9 +174,9 @@ const AdminDashboardPromotion = (props) => {
       bold: false,
     };
     customCell2.alignment = { vertical: "middle", horizontal: "center" };
-    customCell2.value = `(Từ ngày ${moment(selectedDate.startDate).format(
+    customCell2.value = `(Từ ngày ${moment(startDate).format(
       "DD/MM/YYYY"
-    )} đến ngày ${moment(selectedDate.endDate).format("DD/MM/YYYY")})`;
+    )} đến ngày ${moment(endDate).format("DD/MM/YYYY")})`;
 
     worksheet.mergeCells("A7:J7");
     const customCell7 = worksheet.getCell("A7");
@@ -214,7 +187,7 @@ const AdminDashboardPromotion = (props) => {
       bold: false,
     };
     customCell7.alignment = { vertical: "middle", horizontal: "center" };
-    customCell7.value = `Tổng số CTKM : ${data?.data?.pagination?.total}`;
+    customCell7.value = `Tổng số CTKM : ${data?.data?.data?.length}`;
 
     worksheet.getRow(9).font = { bold: true };
     worksheet.getRow(9).height = "25";
@@ -247,8 +220,8 @@ const AdminDashboardPromotion = (props) => {
       columnn.fill = {
         type: "pattern",
         pattern: "solid",
-        fgColor: { argb: "f2bc76" },
-        bgColor: { argb: "f2bc76" },
+        fgColor: { argb: "91d6f2" },
+        bgColor: { argb: "91d6f2" },
       };
       if (i == 0) {
         worksheet.getColumn(i + 1).width = "10";
@@ -270,6 +243,9 @@ const AdminDashboardPromotion = (props) => {
       },
     };
     let i = 1;
+    let totalMaxBudget = 0;
+    let totalUseBudget = 0;
+    let numberC = 0;
     data?.data?.data.forEach((element) => {
       worksheet.addRow([
         i,
@@ -283,6 +259,9 @@ const AdminDashboardPromotion = (props) => {
         element?.useBudget,
         element?.maxBudget - element?.useBudget,
       ]);
+      totalMaxBudget += element?.maxBudget;
+      totalUseBudget += element?.useBudget;
+      numberC +=(element?.maxBudget - element?.useBudget);
       for (let j = 0; j < headerColumn.length; j++) {
         const columnn = worksheet.getCell(headerColumn[j] + (i + 9));
         columnn.font = {
@@ -304,6 +283,39 @@ const AdminDashboardPromotion = (props) => {
 
       i++;
     });
+    const bottom = worksheet.addRow([
+      "Tổng cộng",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      totalMaxBudget,
+      totalUseBudget,
+      numberC,
+    ]);
+    worksheet.mergeCells(bottom._cells[0]._address, bottom._cells[6]._address);
+    bottom.font = {
+      name: "Times New Roman",
+      family: 4,
+      bold: true,
+    };
+    bottom.eachCell(
+      { includeEmpty: false },
+      function (cell, colNumber) {
+        
+        cell.border = {
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' },
+        };
+      },
+    );
+    
+    const firstCell = bottom.getCell(1);
+    firstCell.alignment = { horizontal: "right" };
 
     ExcelJSWorkbook.xlsx.writeBuffer().then(function (buffer) {
       saveAs(
@@ -315,10 +327,11 @@ const AdminDashboardPromotion = (props) => {
     });
     customToast.success("Xuất báo cáo thành công");
   };
+
   return (
     <Box sx={{ height: "100%", width: "100%" }}>
       <Helmet>
-        <title> PDBus - Hóa đơn hoàn trả</title>
+        <title> PDBus - Thống kê khuyến mãi</title>
       </Helmet>
       <Grid container className={"align-items-center header_title"}>
         <Grid item md={7}>
@@ -351,25 +364,15 @@ const AdminDashboardPromotion = (props) => {
         style={{ marginTop: 10, marginBottom: 20 }}
       >
         <FormProvider {...methods}>
-          <Grid item md={7} style={{ marginRight: 30 }}>
+          <Grid item md={6} style={{ marginRight: 30 }}>
             <Box
               style={{ display: "flex", justifyContent: "flex-start" }}
               flexDirection={{ xs: "column", md: "row" }}
             >
-              <FormControlCustom label="Thời gian" fullWidth>
-                <div className="view-input" style={{ marginRight: 10 }}>
-                  <SelectCustom
-                    options={filterDateTime}
-                    placeholder={"Tất cả"}
-                    name={"time"}
-                  />
-                </div>
-              </FormControlCustom>
               <FormControlCustom label="Từ ngày" fullWidth>
                 <div className="view-input" style={{ marginRight: 10 }}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
-                      disabled={disable}
                       onChange={(e) => {
                         setStartDate(new Date(e));
                       }}
@@ -386,7 +389,6 @@ const AdminDashboardPromotion = (props) => {
                 <div className="view-input" style={{ marginRight: 10 }}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
-                      disabled={disable}
                       onChange={(e) => {
                         setEndDate(new Date(e));
                       }}
@@ -400,7 +402,7 @@ const AdminDashboardPromotion = (props) => {
               </FormControlCustom>
             </Box>
           </Grid>
-          <Grid item md={4} style={{ marginTop: 3 }}>
+          <Grid item md={5} style={{ marginTop: 3 }}>
             <div style={{ marginBottom: 5 }}>
               <span className="txt-find">Tìm kiếm</span>
             </div>
@@ -433,7 +435,7 @@ const AdminDashboardPromotion = (props) => {
             fontWeight: "bold",
           }}
         >
-          Tổng số:{" "}{data?.data?.pagination?.total}
+          Tổng số: {data?.data?.data.length}
         </span>
         <span className="txt-price"> </span>
       </Grid>
@@ -443,7 +445,7 @@ const AdminDashboardPromotion = (props) => {
             data={data?.data?.data || []}
             handleChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
-            total={data?.data?.pagination?.total}
+            total={data?.data?.data.length}
             handleGetData={handleGetData}
             page={page}
             pageSize={pageSize}

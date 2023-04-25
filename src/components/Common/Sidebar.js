@@ -71,7 +71,7 @@ const Sidebar = (props) => {
     getItem("Thống kê", "subDashboard", <BarChartOutlined />, [
       getChildItem("Thống kê vé", "dashboard-ticket"),
       getChildItem("Thống kê khuyến mãi ", "dashboard-promotion"),
-      getChildItem("Thống kê doanh thu", "dashboard-cost"),
+      getChildItem("Doanh số bán hàng", "dashboard-cost"),
       
     ]),
   ];

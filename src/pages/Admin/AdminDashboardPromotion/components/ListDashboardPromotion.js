@@ -23,6 +23,14 @@ const DashboardPromotionList = (props) => {
 
   const columns = [
     {
+      field: "stt",
+      headerName: "STT",
+      flex: 50,
+      headerAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+    },
+    {
       field: "code",
       headerName: "Mã CTKM",
       flex: 100,

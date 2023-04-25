@@ -27,15 +27,21 @@ const AdminDashboard = (props) => {
   const [dataRevenue, setDataRevenue] = useState([]);
 
   const [total, setTotal] = useState([]);
+
   var dates = [];
+  var dataDate = [];
+
   for (var i = 0; i < 7; i++) {
     var now = new Date();
     var day = now.getDate() - i;
     var sevenDaysAgo = new Date(now.getFullYear(), now.getMonth(), day);
     var data = moment(sevenDaysAgo).format("DD/MM/YYYY");
+    var data2 = moment(sevenDaysAgo).format("DD/MM");
     dates.push(data);
+    dataDate.push(data2);
   }
   dates.reverse();
+  dataDate.reverse();
 
   const handleTotalDate = () => {
     var recentData = [];
@@ -128,7 +134,7 @@ const AdminDashboard = (props) => {
         curve: "smooth",
       },
       xaxis: {
-        categories: dates,
+        categories: dataDate,
       },
       legend: {
         position: "top",
@@ -136,6 +142,7 @@ const AdminDashboard = (props) => {
       grid: {
         show: false,
       },
+      
     },
   };
 
