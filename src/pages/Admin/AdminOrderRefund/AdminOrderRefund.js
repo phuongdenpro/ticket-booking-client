@@ -13,7 +13,7 @@ import SelectCustom from "../../../components/SelectCustom";
 import customToast from "../../../components/ToastCustom";
 import { OrderApi } from "../../../utils/orderApi";
 import "./AdminOrderRefund.scss";
-import OrderList from "../AdminOrder/components/OrderList";
+import OrderRefundList from "./components/OrderRefundList";
 
 const AdminOrderRefund = (props) => {
   const [loadings, setLoadings] = useState([]);
@@ -50,12 +50,13 @@ const AdminOrderRefund = (props) => {
     },
   ];
 
+  const filterStatus = ["Đang chờ xử lý", "Đã hoàn thành"];
+
   const [disable, setDisable] = useState(true);
   const handleGetData = async () => {
     try {
       const orderApi = new OrderApi();
-      const response = await orderApi.getListOrderBill({
-        status: "Trả vé",
+      const response = await orderApi.getListOrderRefund({
         page: page + 1,
         pageSize: pageSize,
         ...filterParams,
@@ -88,19 +89,22 @@ const AdminOrderRefund = (props) => {
   const defaultValues = {
     startDate: null,
     endDate: null,
+    status: null,
   };
   const methods = useForm({
     defaultValues,
   });
   const { handleSubmit, reset, watch } = methods;
+  const watchStatus = watch("status");
   const watchTime = watch("time");
   useEffect(() => {
     const params = {
+      status: watchStatus,
       startDate: startDate ? new Date(startDate) : undefined,
       endDate: endDate ? new Date(endDate) : undefined,
     };
     setFilterParams(params);
-  }, [ watchTime, startDate, endDate]);
+  }, [watchStatus, watchTime, startDate, endDate]);
   useEffect(() => {
     const now = new Date();
 
@@ -121,12 +125,12 @@ const AdminOrderRefund = (props) => {
   return (
     <Box sx={{ height: "100%", width: "100%" }}>
       <Helmet>
-        <title> PDBus - Hóa đơn hoàn trả</title>
+        <title> PDBus - Hóa đơn hoàn vé</title>
       </Helmet>
       <Grid container className={"align-items-center header_title"}>
         <Grid item md={7}>
           <h2 className={"txt-title"} style={{ marginTop: 10 }}>
-            HÓA ĐƠN HOÀN TRẢ
+            HÓA ĐƠN HOÀN VÉ
           </h2>
         </Grid>
       </Grid>
@@ -185,6 +189,15 @@ const AdminOrderRefund = (props) => {
                 </div>
               </FormControlCustom>
 
+              <FormControlCustom label="Trạng thái" fullWidth>
+                <div className="view-input">
+                  <SelectCustom
+                    placeholder={"Tất cả"}
+                    name={"status"}
+                    options={filterStatus}
+                  />
+                </div>
+              </FormControlCustom>
             </Box>
           </Grid>
           <Grid item md={4} style={{ marginTop: 3 }}>
@@ -220,13 +233,13 @@ const AdminOrderRefund = (props) => {
             fontWeight: "bold",
           }}
         >
-          Tổng số:{" "}
+          Tổng số:{data?.data?.pagination?.total}
         </span>
         <span className="txt-price"> </span>
       </Grid>
       <div style={{ display: "flex" }}>
         <div style={{ flexGrow: 1 }}>
-          <OrderList
+          <OrderRefundList
             data={data?.data?.data || []}
             handleShowDetail={onOrderDetail}
             handleChangePage={handleChangePage}
@@ -235,7 +248,7 @@ const AdminOrderRefund = (props) => {
             handleGetData={handleGetData}
             page={page}
             pageSize={pageSize}
-          ></OrderList>
+          ></OrderRefundList>
         </div>
       </div>
     </Box>

@@ -171,6 +171,7 @@ const AdminAddTicket = (props) => {
       phone: dataCustomer?.phone || "",
       customer: dataCustomer || "",
       createAt: dateNow,
+      note: "",
     }),
     [dataCustomer]
   );
@@ -303,6 +304,7 @@ const AdminAddTicket = (props) => {
         tripDetailCode: dataTripDetail?.code,
         promotionLineCodes:
           promotionCodes.length > 0 ? promotionCodes : undefined,
+        note: value?.note,
       };
 
       try {
@@ -625,7 +627,6 @@ const AdminAddTicket = (props) => {
                       </FormControlCustom>
                     </Grid>
 
-                    
                     <Grid item xs={6}>
                       <FormControlCustom
                         classNameLabel={
@@ -642,6 +643,25 @@ const AdminAddTicket = (props) => {
                           name={"createAt"}
                           helperText={""}
                           placeholder={""}
+                        />
+                      </FormControlCustom>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <FormControlCustom
+                        classNameLabel={
+                          "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
+                        }
+                        className={"flex-direction-row"}
+                        label={"Ghi chú"}
+                        fullWidth
+                      >
+                        <InputField
+                          style={{ width: "100%" }}
+                          multiline
+                          rows={2}
+                          name={"note"}
+                          placeholder={"Nhập ghi chú"}
+                          helperText={""}
                         />
                       </FormControlCustom>
                     </Grid>
