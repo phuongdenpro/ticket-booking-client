@@ -33,7 +33,7 @@ const DashboardCostList = (props) => {
     {
       field: "fullName",
       headerName: "Khách hàng",
-      flex: 120,
+      flex: 140,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
@@ -56,7 +56,7 @@ const DashboardCostList = (props) => {
     {
       field: "customerGroupName",
       headerName: "Nhóm khách hàng",
-      flex: 120,
+      flex: 140,
       headerAlign: "center",
       headerClassName: "theme",
     },
