@@ -29,6 +29,7 @@ import AdminSearchTrip from "./pages/Admin/AdminAddTicket/AdminSearchTrip";
 import OrderDetail from "./pages/Admin/AdminOrder/OrderDetail";
 import AdminTicketList from "./pages/Admin/AdminTicketList/AdminTicketList";
 import TicketDetail from "./pages/Admin/AdminTicketList/TicketDetail";
+import OrderRefundDetail from "./pages/Admin/AdminOrderRefund/OrderRefundDetail";
 
 export const history = createBrowserHistory();
 
@@ -71,10 +72,11 @@ function App() {
             <Route path="/admin/order/order-list" element={<AdminOrder />} />
             <Route path="/admin/order/detail/:id" element={<OrderDetail />} />
           </Route>
-          <Route
-            path="/admin/order-refund-list"
-            element={<AdminOrderRefund />}
-          />
+          
+          <Route path="/admin/order-refund">
+            <Route path="/admin/order-refund/list" element={<AdminOrderRefund />} />
+            <Route path="/admin/order-refund/detail/:id" element={<OrderRefundDetail />} />
+          </Route>
           <Route
             path="/admin/dashboard-ticket"
             element={<AdminDashboardTicket />}

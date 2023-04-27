@@ -66,7 +66,7 @@ const Sidebar = (props) => {
       getChildItem("Đặt vé", "booking-trip"),
       getChildItem("Quản lý vé xe", "ticket-list"),
       getChildItem("Hóa đơn đặt vé", "order/order-list"),
-      getChildItem("Hóa đơn hoàn vé", "order-refund-list"),
+      getChildItem("Hóa đơn hoàn vé", "order-refund/list"),
     ]),
     getItem("Thống kê", "subDashboard", <BarChartOutlined />, [
       getChildItem("Thống kê vé", "dashboard-ticket"),

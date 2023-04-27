@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 
 import moment from "moment";
 import { useState } from "react";
-import '../../../../assets/scss/default.scss';
+import "../../../../assets/scss/default.scss";
 import TableCustom from "../../../../components/TableCustom";
 
 const OrderRefundList = (props) => {
@@ -48,166 +48,169 @@ const OrderRefundList = (props) => {
   //     }
   //   };
   const columns = [
+   
     {
-        field: 'createdAt',
-        headerName: 'Ngày tạo đơn',
-        flex: 100,
-        headerAlign: 'center',
-        headerClassName: 'theme',
-        sortable: false,
-        renderCell: (params) => {
-          return <span>{moment(params.row.createdAt)?.format('DD/MM/YYYY')}</span>;
-        },
+      field: "orderNumber",
+      headerName: "Mã Đơn Hoàn Vé",
+      flex: 100,
+      headerAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <Button
+            onClick={() => handleShowDetail(params.row.code)}
+            style={{ backgroundColor: "transparent" }}
+            disabled={false}
+            color="primary"
+          >
+            <span
+              style={{
+                textDecorationLine: "underline",
+                color: "#1A89AC",
+                fontSize: "0.8rem",
+                display: "inline-block",
+                textTransform: "none",
+              }}
+            >
+              {params?.row?.code}
+            </span>
+          </Button>
+        );
       },
-      {
-        field: 'orderNumber',
-        headerName: 'Mã Đơn Trả',
-        flex: 100,
-        headerAlign: 'center',
-        headerClassName: 'theme',
-        sortable: false,
-        renderCell: (params) => {
-          return (
-            <Button
-              onClick={() => handleShowDetail(params.id)}
-              style={{ backgroundColor: 'transparent' }}
-              disabled={false}
-              color="primary"
+    },
+    {
+      field: "customer",
+      headerName: "Khách hàng",
+      flex: 120,
+      headerAlign: "center",
+      headerClassName: "theme",
+      renderCell: (params) => {
+        return (
+          <div style={{ padding: "5px" }}>
+            <div
+              style={{
+                borderRadius: "15px",
+                padding: "2px 5px",
+              }}
+              className={"padding-status"}
             >
               <span
                 style={{
-                  textDecorationLine: 'underline',
-                  color: '#1A89AC',
-                  fontSize: '0.8rem',
-                  display: 'inline-block',
-                  textTransform: 'none',
+                  fontSize: "0.8rem",
                 }}
               >
-                {params?.row?.code}
+                {params?.row?.customer?.fullName}
               </span>
-            </Button>
-          );
-        },
-      },
-      {
-        field: 'customer',
-        headerName: 'Khách hàng',
-        flex: 120,
-        headerAlign: 'center',
-        headerClassName: 'theme',
-        renderCell: (params) => {
-          return (
-            <div style={{ padding: '5px' }}>
-              <div
-                style={{
-                  borderRadius: '15px',
-                  padding: '2px 5px',
-                }}
-                className={'padding-status'}
-              >
-                <span
-                  style={{
-                    fontSize: '0.8rem',
-                  }}
-                >
-                  {params?.row?.customer?.name}
-                </span>
-              </div>
             </div>
-          );
-        },
+          </div>
+        );
       },
-      {
-        field: 'status',
-        headerName: 'Trạng thái',
-        flex: 120,
-        headerAlign: 'center',
-        headerClassName: 'theme',
-        renderCell: (params) => {
-          return (
-            <div >
-              <div
-                style={{
-                  borderRadius: '15px',
-                  padding: '2px 5px',
-                }}
-                className={'padding-status'}
-              >
-                <span
-                  style={{
-                    color: 'white',
-                    fontSize: '0.8rem',
-                  }}
-                >
-                  {params?.row?.status}
-                </span>
-              </div>
-            </div>
-          );
-        },
+    },
+    {
+      field: "createdAt",
+      headerName: "Ngày trả vé",
+      flex: 100,
+      headerAlign: "center",
+      headerClassName: "theme",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <span>{moment(params.row.createdAt)?.format("DD/MM/YYYY")}</span>
+        );
       },
-  
-      {
-        field: 'total',
-        headerName: 'Tổng tiền',
-        flex: 80,
-        headerAlign: 'center',
-        headerClassName: 'theme',
-        renderCell: (params) => {
-          return <div></div>;
-        },
-      },
-      {
-        field: 'promotion',
-        headerName: 'Khuyến mãi',
-        flex: 80,
-        headerAlign: 'center',
-        headerClassName: 'theme',
-        renderCell: (params) => {
-          return <div></div>;
-        },
-      },
-      {
-        field: 'totalAmount',
-        headerName: 'Thành tiền',
-        flex: 70,
-        headerAlign: 'center',
-        headerClassName: 'theme',
-        renderCell: (params) => {
-          return <div></div>;
-        },
-      },
-      
-      {
-        field: 'note',
-        headerName: 'Ghi chú',
-        flex: 100,
-        headerAlign: 'center',
-        headerClassName: 'theme',
-      },
-      {
-        field: 'userCreate',
-        headerName: 'NV tạo đơn',
-        flex: 80,
-        editable: true,
-        headerAlign: 'center',
-        headerClassName: 'theme',
-        renderCell: (params) => {
-          return (
-            <div style={{ padding: '5px' }}>
+    },
+    {
+      field: "status",
+      headerName: "Trạng thái",
+      flex: 120,
+      headerAlign: "center",
+      headerClassName: "theme",
+      renderCell: (params) => {
+        return (
+          <div>
+            <div
+              style={{
+                borderRadius: "15px",
+                padding: "2px 5px",
+                backgroundColor:
+                  params?.row?.status == "Đã hoàn thành"
+                    ? "#0e9315"
+                    : "#ff7b00",
+                alignItems: "center",
+                justifyContent: "center",
+                display: "flex",
+              }}
+              className={"padding-status"}
+            >
               <span
                 style={{
-                  fontSize: '0.8rem',
+                  color: "white",
+                  fontSize: "0.8rem",
                 }}
               >
-                {params?.row?.userCreate?.name}
+                {params?.row?.status}
               </span>
             </div>
-          );
-        },
+          </div>
+        );
       },
-      
-    ];
+    },
+
+    {
+      field: "total",
+      headerName: "Tổng tiền",
+      flex: 80,
+      headerAlign: "center",
+      headerClassName: "theme",
+      renderCell: (params) => {
+        return <div></div>;
+      },
+    },
+    {
+      field: "promotion",
+      headerName: "Khuyến mãi",
+      flex: 80,
+      headerAlign: "center",
+      headerClassName: "theme",
+      renderCell: (params) => {
+        return <div></div>;
+      },
+    },
+    {
+      field: "totalAmount",
+      headerName: "Thành tiền",
+      flex: 70,
+      headerAlign: "center",
+      headerClassName: "theme",
+      renderCell: (params) => {
+        return <div></div>;
+      },
+    },
+
+    
+    {
+      field: "userCreate",
+      headerName: "NV tạo đơn",
+      flex: 80,
+      editable: true,
+      headerAlign: "center",
+      headerClassName: "theme",
+      renderCell: (params) => {
+        return (
+          <div style={{ padding: "5px" }}>
+            <span
+              style={{
+                fontSize: "0.8rem",
+              }}
+            >
+              {params?.row?.staff?.fullName}
+            </span>
+          </div>
+        );
+      },
+    },
+  ];
 
   return (
     <div>
