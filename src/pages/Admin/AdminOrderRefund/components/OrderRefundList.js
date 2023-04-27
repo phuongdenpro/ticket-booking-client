@@ -4,6 +4,7 @@ import moment from "moment";
 import { useState } from "react";
 import "../../../../assets/scss/default.scss";
 import TableCustom from "../../../../components/TableCustom";
+import { convertCurrency } from "../../../../data/curren";
 
 const OrderRefundList = (props) => {
   const {
@@ -52,9 +53,10 @@ const OrderRefundList = (props) => {
     {
       field: "orderNumber",
       headerName: "Mã Đơn Hoàn Vé",
-      flex: 100,
+      flex: 70,
       headerAlign: "center",
       headerClassName: "theme",
+      contentAlign: "center",
       sortable: false,
       renderCell: (params) => {
         return (
@@ -82,7 +84,7 @@ const OrderRefundList = (props) => {
     {
       field: "customer",
       headerName: "Khách hàng",
-      flex: 120,
+      flex: 170,
       headerAlign: "center",
       headerClassName: "theme",
       renderCell: (params) => {
@@ -108,11 +110,41 @@ const OrderRefundList = (props) => {
       },
     },
     {
+      field: "phone",
+      headerName: "Số điện thoại",
+      flex: 120,
+      headerAlign: "center",
+      contentAlign: "center",
+      headerClassName: "theme",
+      renderCell: (params) => {
+        return (
+          <div style={{ padding: "5px" }}>
+            <div
+              style={{
+                borderRadius: "15px",
+                padding: "2px 5px",
+              }}
+              className={"padding-status"}
+            >
+              <span
+                style={{
+                  fontSize: "0.8rem",
+                }}
+              >
+                {params?.row?.customer?.phone}
+              </span>
+            </div>
+          </div>
+        );
+      },
+    },
+    {
       field: "createdAt",
       headerName: "Ngày trả vé",
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
+      contentAlign: "center",
       sortable: false,
       renderCell: (params) => {
         return (
@@ -164,35 +196,26 @@ const OrderRefundList = (props) => {
       headerAlign: "center",
       headerClassName: "theme",
       renderCell: (params) => {
-        return <div></div>;
+        return (
+          <div>
+            <span>{convertCurrency(params?.row?.total)}</span>
+          </div>
+        );
       },
     },
     {
-      field: "promotion",
-      headerName: "Khuyến mãi",
-      flex: 80,
+      field: "note",
+      headerName: "Ghi chú",
+      flex: 110,
       headerAlign: "center",
       headerClassName: "theme",
-      renderCell: (params) => {
-        return <div></div>;
-      },
+      
     },
-    {
-      field: "totalAmount",
-      headerName: "Thành tiền",
-      flex: 70,
-      headerAlign: "center",
-      headerClassName: "theme",
-      renderCell: (params) => {
-        return <div></div>;
-      },
-    },
-
     
     {
       field: "userCreate",
       headerName: "NV tạo đơn",
-      flex: 80,
+      flex: 100,
       editable: true,
       headerAlign: "center",
       headerClassName: "theme",

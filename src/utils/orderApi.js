@@ -96,5 +96,11 @@ class OrderApi {
     const res = axiosClient.patch(url,params);
     return res;
   }
+
+  getPaymentOrder(code,params){
+    const url = `payment-history/order-code/${code}`;
+    const res = axiosClient.get(url,params);
+    return res;
+  }
 }
 export { OrderApi };

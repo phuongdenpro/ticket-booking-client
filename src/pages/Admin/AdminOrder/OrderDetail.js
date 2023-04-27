@@ -47,6 +47,7 @@ const OrderDetail = (props) => {
   const [disabled, setDisabled] = useState(true);
   const idOrder = useParams();
   const [dataOrder, setDataOrder] = useState();
+  const [dataPayment, setDataPayment] = useState();
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
   const componentRef = useRef();
@@ -129,9 +130,24 @@ const OrderDetail = (props) => {
     }
   };
 
+  const getDataPayment = async () => {
+    try {
+      const orderApi = new OrderApi();
+      const res = await orderApi.getPaymentOrder(dataOrder?.code);
+      setDataPayment(res?.data.data);
+    } catch (error) {
+      customToast.error(error);
+    }
+  };
+
   useEffect(() => {
     getDetailOrder();
   }, [idOrder]);
+
+  useEffect(() => {
+    getDataPayment();
+  }, [dataOrder]);
+  console.log(dataPayment);
 
   const schema = yup.object().shape({
     paymentPrice: yup
@@ -264,12 +280,12 @@ const OrderDetail = (props) => {
                     </TableHead>
                     <TableBody>
                       <TableRow>
-                        <TableCell align={"center"}>30/04/2023</TableCell>
+                        <TableCell align={"center"}>{moment(dataPayment?.createAppTime).format("DD/MM/YYYY HH:MM")}</TableCell>
                         <TableCell align={"center"}>
-                          {dataOrder?.paymentMethod}
+                          {dataPayment?.paymentMethod}
                         </TableCell>
                         <TableCell align={"center"}>
-                          {convertCurrency(dataOrder?.finalTotal)}
+                          {convertCurrency(dataPayment?.amount)}
                         </TableCell>
                       </TableRow>
                     </TableBody>
@@ -326,6 +342,21 @@ const OrderDetail = (props) => {
                 {convertCurrency(dataOrder?.finalTotal)}
               </span>
             </div>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                margin: "12px 0",
+              }}
+            >
+              <span className={"order-custom-title"}>
+                Đã thanh toán
+              </span>
+              <span className={"order-field-value"}>
+                {convertCurrency(dataPayment?.amount || 0)}
+              </span>
+            </div>
             
             <div
               style={{
@@ -338,7 +369,7 @@ const OrderDetail = (props) => {
                 Số tiền cần thanh toán
               </span>
               <span className={"order-field-value"}>
-                {convertCurrency(dataOrder?.finalTotal)}
+              {convertCurrency(dataOrder?.finalTotal - (dataPayment?.amount || 0))}
               </span>
             </div>
           </div>

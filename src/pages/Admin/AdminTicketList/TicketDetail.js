@@ -61,11 +61,6 @@ const TicketDetail = (props) => {
       id: 1,
       name: "tiền mặt",
     },
-    {
-      id: 2,
-      name: "Chuyển khoản ngân hàng",
-    },
-   
   ];
 
   const bankBanking = [
@@ -82,7 +77,6 @@ const TicketDetail = (props) => {
       name: "Agribank Phan Đình Phương",
     },
   ];
-  
 
   const getDetailOrder = async () => {
     try {
@@ -155,13 +149,11 @@ const TicketDetail = (props) => {
   const onSubmit = async (value) => {
     const amount = numberFormat(value?.paymentPrice);
     const note = value?.note;
-    if (paymentTypeWatch.id == 3) {
-      window.location.href = `https://momofree.apimienphi.com/api/QRCode?phone=0354043344&amount=${amount}&note=${note}`;
-    } else if (paymentTypeWatch.id == 1) {
+    if (paymentTypeWatch.id == 1) {
       try {
         const params = {
           orderCode: dataOrder?.code,
-          paymentMethod: paymentTypeWatch?.name,
+          note: value?.note,
         };
 
         const orderApi = new OrderApi();
@@ -173,13 +165,14 @@ const TicketDetail = (props) => {
       }
     } else {
       if (paymentBankWatch == null) {
-        customToast.warning("Vui lòng chọn bank");
+        customToast.warning("Vui lòng chọn phương thức thanh toán");
         return;
       }
       try {
         const params = {
           orderCode: dataOrder?.code,
-          paymentMethod: paymentTypeWatch?.name,
+          // paymentMethod: paymentTypeWatch?.name,
+          note: value?.note,
         };
 
         const orderApi = new OrderApi();
@@ -216,7 +209,6 @@ const TicketDetail = (props) => {
           <Grid flexDirection={{ xs: "column", md: "row" }} item>
             <Tabs value={value} onChange={handleChange} textColor="primary">
               <Tab label="Thanh toán" className="left-border" />
-              
             </Tabs>
           </Grid>
         </Grid>
@@ -292,26 +284,6 @@ const TicketDetail = (props) => {
                     />
                   </FormControlCustom>
                 </Grid>
-
-                {disabledPTTT == false && (
-                  <Grid item xs={12}>
-                    <FormControlCustom
-                      label={"Ngân hàng"}
-                      classNameLabel={
-                        "flex justify-content-center align-items-center mr-1 w-100 justify-content-start order-custom-title"
-                      }
-                      className={"flex-direction-row"}
-                      fullWidth
-                    >
-                      <SelectCustom
-                        style={{ width: "100%" }}
-                        name={"paymentBank"}
-                        placeholder={"Chọn bank"}
-                        options={optionPTTT}
-                      />
-                    </FormControlCustom>
-                  </Grid>
-                )}
 
                 <Grid item xs={12}>
                   <FormControlCustom
