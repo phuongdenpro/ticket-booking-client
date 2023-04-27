@@ -185,6 +185,7 @@ const OrderDetail = (props) => {
       });
       customToast.success("Cập nhật thành công");
       getDetailOrder();
+      setOpenModal(false);
     } catch (error) {
       console.log(error);
       customToast.error(error.response.data.message);

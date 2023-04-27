@@ -37,6 +37,13 @@ class OrderApi {
     });
     return res;
   }
+  getOrderByCode(id,params){
+    const url = `order/code/${id}`;
+    const res = axiosClient.get(url, {
+      ...params,
+    });
+    return res;
+  }
   
 
   getOrderStatus() {
@@ -74,6 +81,19 @@ class OrderApi {
         ...params,
       },
     });
+    return res;
+  }
+
+  getOrderRefundByCode(id,params){
+    const url = `order-refund/code/${id}`;
+    const res = axiosClient.get(url, {
+      ...params,
+    });
+    return res;
+  }
+  updateStatusOrderRefund(code,params){
+    const url = `order-refund/code/${code}`;
+    const res = axiosClient.patch(url,params);
     return res;
   }
 }

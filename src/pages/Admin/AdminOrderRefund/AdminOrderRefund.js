@@ -35,7 +35,7 @@ const AdminOrderRefund = (props) => {
     endDate: lastDay,
   });
   const onOrderDetail = (id) => {
-    navigate(`/admin/order/detail/${id}`);
+    navigate(`/admin/order-refund/detail/${id}`);
   };
   const filterDateTime = [
     {
