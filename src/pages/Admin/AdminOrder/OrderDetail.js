@@ -199,6 +199,7 @@ const OrderDetail = (props) => {
       const res = await orderApi.updateStatusOrder(dataOrder?.code, {
         status: "Hoàn tiền trả vé",
       });
+      
       customToast.success("Cập nhật thành công");
       getDetailOrder();
       setOpenModal(false);

@@ -285,20 +285,20 @@ const AdminDashboard = (props) => {
             </div>
             <div className="card__body">
               <TableContainer component={Paper} style={{ marginTop: 20 }}>
-                <Table sx={{ minWidth: 500 }} aria-label="simple table">
+                <Table sx={{ minWidth: 600 }} aria-label="simple table">
                   <TableHead>
                     <TableRow>
                       <TableCell style={{ width: 50 }}>Mã hóa đơn</TableCell>
-                      <TableCell align="center" style={{ width: 150 }}>
+                      <TableCell align="right" style={{ width: 150 }}>
                         Khách hàng
                       </TableCell>
                       <TableCell style={{ width: 100 }} align="right">
                         Tổng tiền
                       </TableCell>
-                      <TableCell align="right" style={{ width: 110 }}>
+                      <TableCell align="right" style={{ width: 100 }}>
                         Ngày tạo
                       </TableCell>
-                      <TableCell align="right" style={{ width: 140 }}>
+                      <TableCell align="right" style={{ width: 200 }}>
                         Trạng thái
                       </TableCell>
                     </TableRow>
@@ -311,7 +311,7 @@ const AdminDashboard = (props) => {
                           "&:last-child td, &:last-child th": { border: 0 },
                         }}
                       >
-                        <TableCell component="th" scope="row">
+                        <TableCell align="right">
                           {row?.code}
                         </TableCell>
                         <TableCell align="right">
@@ -321,7 +321,7 @@ const AdminDashboard = (props) => {
                           {convertCurrency(row?.finalTotal)}
                         </TableCell>
                         <TableCell align="right">
-                          {moment(row?.createdAt).format("DD-MM-YYYY")}
+                          {moment(row?.createdAt).format("DD/MM/YYYY")}
                         </TableCell>
                         <TableCell align="right">
                           <Badge
