@@ -171,58 +171,7 @@ const DetailVehicle = (props) => {
 
         <div className="col-12"></div>
       </div>
-      <div className="content-drawer" style={{ marginTop: 50 }}>
-        <div className="title-group">
-          <span>Thông tin ghế</span>
-        </div>
-        <Grid container spacing={2} style={{ marginTop: 10 }}>
-          <Grid item xs={3}></Grid>
-          <Grid item xs={3}>
-            {seatsFloor1.map((seat) => (
-              <div
-                className={`seat seat-${
-                  seat.type == "trống"
-                    ? "empty"
-                    : seat.type == "Đã bán"
-                    ? "not-empty"
-                    : "pending"
-                }`}
-              >
-                <span>{seat.name}</span>
-              </div>
-            ))}
-          </Grid>
-          <Grid item xs={3}>
-            {seatsFloor2.map((seat) => (
-              <div
-                className={`seat seat-${
-                  seat.type == "trống"
-                    ? "empty"
-                    : seat.type == "Đã bán"
-                    ? "not-empty"
-                    : "pending"
-                }`}
-              >
-                <span>{seat.name}</span>
-              </div>
-            ))}
-          </Grid>
-          <Grid item xs={3}>
-            <div>
-              <span>Chú thích:</span>
-            </div>
-            <div className={"seat seat-empty"}>
-              <span>trống</span>
-            </div>
-            <div className={"seat seat-not-empty"}>
-              <span>Đã đặt</span>
-            </div>
-            <div className={"seat seat-pending"}>
-              <span>Chờ xác nhận</span>
-            </div>
-          </Grid>
-        </Grid>
-      </div>
+      
       <EditVehicle
         setShowDrawer={setShowDrawerEdit}
         showDrawer={showDrawerEdit}
