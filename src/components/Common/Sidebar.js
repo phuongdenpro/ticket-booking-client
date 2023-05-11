@@ -46,6 +46,19 @@ const Sidebar = (props) => {
   };
   const items = [
     getItem("Tổng quan", "", <DashboardOutlined />),
+    getItem("Đặt vé - Hóa đơn", "subOrder", <OrderedListOutlined />, [
+      getChildItem("Đặt vé", "booking-trip"),
+      getChildItem("Quản lý vé xe", "ticket-list"),
+      getChildItem("Hóa đơn đặt vé", "order/order-list"),
+      getChildItem("Hóa đơn hoàn vé", "order-refund/list"),
+    ]),
+    getItem("Bảng giá", "price-list", <IdcardOutlined />),
+    getItem("Khuyến Mãi", "promotion", <DollarCircleOutlined />),
+
+    getItem("Quản Lý Xe", "vehicle", <CarOutlined />),
+    getItem("Quản Lý Bến Xe", "station", <CarRentalIcon />),
+    getItem("Quản lý Tuyến Xe", "trip", <DepartureBoardIcon />),
+
     getItem(
       "Quản Lý Khách Hàng",
       "subUser",
@@ -56,23 +69,10 @@ const Sidebar = (props) => {
       ],
       true
     ),
-    getItem("Bảng giá", "price-list", <IdcardOutlined />),
-
-    getItem("Quản Lý Xe", "vehicle", <CarOutlined />),
-    getItem("Quản Lý Bến Xe", "station", <CarRentalIcon />),
-    getItem("Quản lý Tuyến Xe", "trip", <DepartureBoardIcon />),
-    getItem("Khuyến Mãi", "promotion", <DollarCircleOutlined />),
-    getItem("Đặt vé - Hóa đơn", "subOrder", <OrderedListOutlined />, [
-      getChildItem("Đặt vé", "booking-trip"),
-      getChildItem("Quản lý vé xe", "ticket-list"),
-      getChildItem("Hóa đơn đặt vé", "order/order-list"),
-      getChildItem("Hóa đơn hoàn vé", "order-refund/list"),
-    ]),
     getItem("Thống kê", "subDashboard", <BarChartOutlined />, [
       getChildItem("Thống kê vé", "dashboard-ticket"),
       getChildItem("Thống kê khuyến mãi ", "dashboard-promotion"),
       getChildItem("Doanh số bán hàng", "dashboard-cost"),
-      
     ]),
   ];
 
@@ -100,15 +100,21 @@ const Sidebar = (props) => {
         style={{
           background: "rgb(18, 10, 39)",
           minHeight: "16vh",
-          alignItems:'center',
-          justifyContent:'center',
+          alignItems: "center",
+          justifyContent: "center",
           display: "flex",
-          flexDirection:'column',
-          items:'center',
+          flexDirection: "column",
+          items: "center",
         }}
       >
-        <img src={logo} alt="logo" style={{ width: props.collapsed? '50%':"30%" }} />
-        <span style={{color:'white', fontWeight:'bold', fontSize:25}}>PDBus</span>
+        <img
+          src={logo}
+          alt="logo"
+          style={{ width: props.collapsed ? "50%" : "30%" }}
+        />
+        <span style={{ color: "white", fontWeight: "bold", fontSize: 25 }}>
+          PDBus
+        </span>
       </div>
       <Menu
         mode="inline"
