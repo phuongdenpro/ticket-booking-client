@@ -299,7 +299,7 @@ const AdminDashboard = (props) => {
                       <TableCell align="right" style={{ width: 100 }}>
                         Ngày tạo
                       </TableCell>
-                      <TableCell align="right" style={{ width: 200 }}>
+                      <TableCell align="center" style={{ width: 220 }}>
                         Trạng thái
                       </TableCell>
                     </TableRow>
