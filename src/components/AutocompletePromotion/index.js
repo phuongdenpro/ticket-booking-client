@@ -31,7 +31,8 @@ const AutocompletePromotion = (props) => {
     ...rest
   } = props;
   const { control } = useFormContext();
-
+ 
+console.log(listOption);
   const filterData = (data, valueFilter) => {
     return data?.filter(
       (item) =>
@@ -45,7 +46,7 @@ const AutocompletePromotion = (props) => {
     ignoreAccents: false,
     ignoreCase: true,
     matchFrom: "any",
-    stringify: (options) => `${options.title} ${options.name}`,
+    stringify: (options) => `${options.title} ${options.code}`,
   });
 
   return (

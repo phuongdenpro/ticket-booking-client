@@ -92,8 +92,6 @@ const AdminAddTicket = (props) => {
     } catch (error) {}
   };
 
-  console.log(dataPromotion);
-
   const handelDataTripDetail = async () => {
     try {
       const tripApi = new TripApi();
@@ -248,7 +246,10 @@ const AdminAddTicket = (props) => {
       }
     }
     setOptionPromotion(data);
+    setValue("promotionCodes", data);
+    setValue("promotion", data.map((item) => item.title).join(","))
   }, [dataPromotionResults]);
+  console.log(promotionWatch);
 
   useEffect(() => {
     let total = 0;
@@ -269,7 +270,7 @@ const AdminAddTicket = (props) => {
 
   useEffect(() => {
     handlePromotionResult();
-  }, [itemTickets, promotionCodes]);
+  }, [itemTickets]);
 
   useEffect(() => {
     reset({ ...defaultValues });
@@ -539,11 +540,12 @@ const AdminAddTicket = (props) => {
                         label={"Khuyến mãi"}
                         fullWidth
                       >
-                        <AutocompletePromotion
-                          multiple={true}
-                          name={"promotionCodes"}
-                          placeholder={"Chọn khuyến mãi áp dụng"}
-                          listOption={optionPromotion || []}
+                        <InputField
+                          disabled
+                          className={"disabled-field"}
+                          style={{ width: "100%" }}
+                          name={"promotion"}
+                          placeholder={""}
                         />
                       </FormControlCustom>
                     </Grid>

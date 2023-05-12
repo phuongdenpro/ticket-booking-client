@@ -110,7 +110,7 @@ const TicketList = (props) => {
                 borderRadius: "15px",
                 padding: "2px 5px",
                 backgroundColor:
-                  params?.row?.status == "Chưa thanh toán"
+                  params?.row?.status == "Chờ thanh toán"
                     ? "#949b36"
                     : "#e54242",
                 alignItems: "center",

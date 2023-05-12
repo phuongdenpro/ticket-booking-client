@@ -84,7 +84,7 @@ const GroupTicketPriceList = (props) => {
       headerClassName: "theme",
       sortable: false,
       renderCell: (params) => {
-        return <span>{params.row?.trip.code}</span>;
+        return <span>{params.row?.trip?.code}</span>;
       },
     },
     {
@@ -96,7 +96,7 @@ const GroupTicketPriceList = (props) => {
       headerClassName: "theme",
       sortable: false,
       renderCell: (params) => {
-        return <span>{params.row?.trip.name}</span>;
+        return <span>{params.row?.trip?.name}</span>;
       },
     },
     {
@@ -121,7 +121,7 @@ const GroupTicketPriceList = (props) => {
       headerClassName: "theme",
       sortable: false,
       renderCell: (params) => {
-        return <div>{convertCurrency(params?.row.price)}</div>;
+        return <div>{convertCurrency(params?.row?.price)}</div>;
       },
     },
 

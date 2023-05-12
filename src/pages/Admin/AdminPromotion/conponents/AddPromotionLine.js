@@ -251,7 +251,12 @@ const AddPromotionLine = (props) => {
       getPromotionLine();
     } catch (error) {
       console.log(error);
-      customToast.error(error.response.data.message);
+      if(error.response.data.message){
+        customToast.error(error.response.data.message);
+      }else{
+        customToast.error(error.response.data.error);
+      }
+      
     }
   };
 
