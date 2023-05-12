@@ -18,6 +18,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { StatisticsApi } from "../../../utils/statisticsApi";
+moment.locale('vi');
 const AdminDashboard = (props) => {
   const [dataOrder, setDataOrder] = useState([]);
   const [statistics, setStatistics] = useState();

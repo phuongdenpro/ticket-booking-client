@@ -11,6 +11,7 @@ import { PriceListApi } from "../../../../utils/priceListApi";
 import { PromotionApi } from "../../../../utils/promotionApi";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import DeleteIcon from "@mui/icons-material/Delete";
+moment.locale('vi');
 
 const PromotionDetailList = (props) => {
   const {

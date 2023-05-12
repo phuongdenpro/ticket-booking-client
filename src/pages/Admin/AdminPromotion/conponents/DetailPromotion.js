@@ -17,6 +17,7 @@ import AddPromotionLine from "./AddPromotionLine";
 import EditPromotion from "./EditPromotion";
 import PromotionDetailList from "./PromotionDetailList";
 import EditPromotionLine from "./EditPromotionLine";
+moment.locale('vi');
 
 const DetailPromotion = (props) => {
   const [dataCustomer, setData] = useState();

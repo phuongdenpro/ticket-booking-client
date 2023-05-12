@@ -25,6 +25,7 @@ import dayjs from "dayjs";
 import { PromotionApi } from "../../../../utils/promotionApi";
 import { disabled } from "glamor";
 import AutocompleteMulti from "../../../../components/AutocompleteMuti";
+moment.locale('vi');
 
 const EditPromotionLine = (props) => {
   const now = new Date();

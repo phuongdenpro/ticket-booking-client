@@ -5,6 +5,7 @@ import { useState } from "react";
 import TableCustom from "../../../components/TableCustom";
 import { Button } from "@mui/material";
 import Badge from "../../../components/Badge";
+moment.locale('vi');
 
 const TripDetailList = (props) => {
   const {

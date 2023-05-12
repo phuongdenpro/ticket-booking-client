@@ -10,6 +10,7 @@ import TableCustom from "../../../../components/TableCustom";
 import ModalAlert from "../../../../components/Modal";
 import { PromotionApi } from "../../../../utils/promotionApi";
 import customToast from "../../../../components/ToastCustom";
+moment.locale('vi');
 
 const PromotionList = (props) => {
   const {

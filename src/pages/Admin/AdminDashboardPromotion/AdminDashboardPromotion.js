@@ -17,6 +17,7 @@ import customToast from "../../../components/ToastCustom";
 import { StatisticsApi } from "../../../utils/statisticsApi";
 import "./AdminDashboardPromotion.scss";
 import DashboardPromotionList from "./components/ListDashboardPromotion";
+moment.locale('vi');
 
 const AdminDashboardPromotion = (props) => {
   const [page, setPage] = useState(0);

@@ -30,6 +30,7 @@ import AddCustomerOrder from "./AddCustomerOrder";
 import "./AdminTicket.scss";
 import ListTicketDetail from "./ListTicketDetail";
 import TicketBookingList from "./TicketBookingList";
+moment.locale('vi');
 
 const AdminAddTicket = (props) => {
   const [dataCustomer, setData] = useState();

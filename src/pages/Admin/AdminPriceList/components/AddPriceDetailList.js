@@ -18,6 +18,7 @@ import { isEmpty } from "lodash";
 import { TripApi } from "../../../../utils/tripApi";
 import { VehicleApi } from "../../../../utils/vehicleApi";
 import SelectCustom from "../../../../components/SelectCustom";
+moment.locale('vi');
 
 const CreatePriceListDetail = (props) => {
   const date = new Date();

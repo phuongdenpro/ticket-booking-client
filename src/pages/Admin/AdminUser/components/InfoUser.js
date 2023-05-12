@@ -9,6 +9,7 @@ import ModalAlert from "../../../../components/Modal";
 import customToast from "../../../../components/ToastCustom";
 import { CustomerApi } from "../../../../utils/customerApi";
 import EditUser from "./EditUser";
+moment.locale('vi');
 
 const InfoUser = (props) => {
   const { setShowDrawerDetail, showDrawerDetail, dataCustomer, handleGetData } =

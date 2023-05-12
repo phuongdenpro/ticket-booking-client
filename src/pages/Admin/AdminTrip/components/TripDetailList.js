@@ -12,6 +12,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import moment from "moment";
 import { TripApi } from "../../../../utils/tripApi";
 import Badge from "../../../../components/Badge";
+moment.locale('vi');
 
 const TripDetailList = (props) => {
   const {

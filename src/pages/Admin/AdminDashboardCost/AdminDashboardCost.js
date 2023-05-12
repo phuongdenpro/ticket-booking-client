@@ -26,6 +26,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import DashboardCostListNV from "./components/ListNV";
+moment.locale('vi');
 
 const AdminDashboardCost = (props) => {
   const [page, setPage] = useState(0);
