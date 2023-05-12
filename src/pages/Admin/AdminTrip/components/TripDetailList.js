@@ -11,6 +11,7 @@ import customToast from "../../../../components/ToastCustom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import moment from "moment";
 import { TripApi } from "../../../../utils/tripApi";
+import Badge from "../../../../components/Badge";
 
 const TripDetailList = (props) => {
   const {
@@ -119,7 +120,18 @@ const TripDetailList = (props) => {
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
+      contentAlign: "center",
       sortable: false,
+      renderCell: (params) => {
+        return (
+          <div>
+            <Badge
+              type={params?.row?.status == "Còn vé" ? "success" : "danger"}
+              content={params?.row?.status }
+            />
+          </div>
+        );
+      },
     },
     {
       field: "vehicle",

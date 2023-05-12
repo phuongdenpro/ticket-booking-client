@@ -483,7 +483,7 @@ const TicketDetail = (props) => {
                   <div
                     style={{
                       backgroundColor:
-                        dataOrder?.status == "Chưa thanh toán"
+                        dataOrder?.status == "Chờ thanh toán"
                           ? "#949b36"
                           : "#e54242",
                       borderRadius: "15px",
@@ -504,7 +504,7 @@ const TicketDetail = (props) => {
                   </div>
                 </div>
               </div>
-              {dataOrder?.status == "Chưa thanh toán" ? (
+              {dataOrder?.status == "Chờ thanh toán" ? (
                 <div>
                   <Button
                     style={{

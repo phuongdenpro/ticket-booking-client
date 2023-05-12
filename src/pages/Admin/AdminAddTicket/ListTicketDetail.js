@@ -29,8 +29,8 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   dialogRoot: {
-    minWidth: "60%",
-    maxWidth: "60%",
+    minWidth: "70%",
+    maxWidth: "70%",
     maxHeight: "100%",
     position: "fixed",
   },

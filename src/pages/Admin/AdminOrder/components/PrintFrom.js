@@ -12,10 +12,10 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import QRCode from "qrcode.react";
 
 const PrintForm = React.forwardRef((props, ref) => {
   const dataOrder = props.dataOrder;
-
 
   return (
     <div
@@ -26,7 +26,7 @@ const PrintForm = React.forwardRef((props, ref) => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        marginTop:50
+        marginTop: 50,
       }}
     >
       <div
@@ -60,6 +60,7 @@ const PrintForm = React.forwardRef((props, ref) => {
         >
           Hóa đơn đặt vé
         </span>
+        <QRCode value={dataOrder?.code} style={{ marginBottom: 50 }} />
       </div>
       <div style={{ width: "100%" }}>
         <Grid container spacing={1}>
@@ -120,11 +121,16 @@ const PrintForm = React.forwardRef((props, ref) => {
                 justifyContent: "space-between",
               }}
             >
-              <p>Nhân viên: {dataOrder?.staff?.fullName}</p>
+              <p>
+                Nơi đi:{" "}
+                {
+                  dataOrder?.orderDetails[0]?.ticketDetail.ticket.tripDetail
+                    .trip.fromStation.name
+                }{" "}
+              </p>
             </div>
           </Grid>
-
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <div
               style={{
                 display: "flex",
@@ -133,12 +139,7 @@ const PrintForm = React.forwardRef((props, ref) => {
               }}
             >
               <p>
-                Tuyến xe:{" "}
-                {
-                  dataOrder?.orderDetails[0]?.ticketDetail.ticket.tripDetail
-                    .trip.fromStation.name
-                }{" "}
-                -{" "}
+                Nơi đến:{" "}
                 {
                   dataOrder?.orderDetails[0]?.ticketDetail.ticket.tripDetail
                     .trip.toStation.name
@@ -146,50 +147,75 @@ const PrintForm = React.forwardRef((props, ref) => {
               </p>
             </div>
           </Grid>
-        </Grid>
-        <TableContainer component={Paper} style={{ marginTop: 20 }}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Mã vé</TableCell>
 
-                <TableCell align="right">Tên xe</TableCell>
-                <TableCell align="right">Biển số</TableCell>
-                <TableCell align="right">Thời gian đi</TableCell>
-                <TableCell align="right">Gía vé</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {dataOrder?.orderDetails.map((row) => (
-                <TableRow
-                  key={row.name}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {row?.ticketDetail?.code}
-                  </TableCell>
-                  <TableCell align="right">
-                    {row?.ticketDetail?.seat?.vehicle?.name}
-                  </TableCell>
-                  <TableCell align="right">
-                    {row?.ticketDetail?.seat?.vehicle?.licensePlate}
-                  </TableCell>
-                  <TableCell align="right">
-                    {moment(
-                      row?.ticketDetail?.ticket?.tripDetail?.departureTime
-                    ).format("DD-MM-YYYY HH:MM")}
-                  </TableCell>
-                  <TableCell align="right">
-                    {convertCurrency(row?.total)}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+          <Grid item xs={6}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}
+            >
+              <p>
+                Tên xe:{" "}
+                {dataOrder?.orderDetails[0]?.ticketDetail.seat?.vehicle?.name}
+              </p>
+            </div>
+          </Grid>
+          <Grid item xs={6}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}
+            >
+              <p>
+                Biển số xe:{" "}
+                {
+                  dataOrder?.orderDetails[0]?.ticketDetail.seat?.vehicle
+                    ?.licensePlate
+                }
+              </p>
+            </div>
+          </Grid>
+          <Grid item xs={6}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}
+            >
+              <p>
+                Số ghế:{" "}
+                {dataOrder?.orderDetails
+                  ?.map((item) => item.ticketDetail.seat.name)
+                  .join(",")}
+              </p>
+            </div>
+          </Grid>
+          <Grid item xs={6}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}
+            >
+              <p>
+                Thời gian khởi hành:{" "}
+                {moment(
+                  dataOrder?.orderDetails[0]?.ticketDetail?.ticket?.tripDetail
+                    ?.departureTime
+                ).format("DD/MM/YYYY HH:MM")}
+              </p>
+            </div>
+          </Grid>
+        </Grid>
         <div>
           <Grid container spacing={2} style={{ marginTop: 10 }}>
-            <Grid item xs={8}></Grid>
+            <Grid item xs={7}></Grid>
             <Grid item xs={4}>
               <div
                 style={{
@@ -266,14 +292,30 @@ const PrintForm = React.forwardRef((props, ref) => {
                 </p>
                 <p> {dataOrder?.status}</p>
               </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <p>
+                  <span style={{ fontWeight: "bold", marginRight: 20 }}>
+                    Nhân viên:{" "}
+                  </span>
+                </p>
+                <p> {dataOrder?.staff?.fullName}</p>
+              </div>
             </Grid>
           </Grid>
           
         </div>
+
         <div>
-        <p style={{marginTop:30, textAlign:'center'}}>Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi!</p>
+          <p style={{ marginTop: 100, textAlign: "center" }}>
+            Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi!
+          </p>
         </div>
-        
       </div>
     </div>
   );
