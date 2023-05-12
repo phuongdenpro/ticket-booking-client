@@ -4,7 +4,6 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import moment from "moment";
 import Badge from "../../../../components/Badge";
 import TableCustom from "../../../../components/TableCustom";
-moment.locale("vi");
 
 const UserList = (props) => {
   const {

@@ -17,7 +17,6 @@ import customToast from "../../../components/ToastCustom";
 import { StatisticsApi } from "../../../utils/statisticsApi";
 import "./AdminDashboardTicket.scss";
 import DashboardTicketList from "./components/ListDashboardTicket";
-moment.locale('vi');
 
 const AdminDashboardTicket = (props) => {
   const [page, setPage] = useState(0);
@@ -28,10 +27,8 @@ const AdminDashboardTicket = (props) => {
   var now = new Date();
   var sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
   const [total, setTotal] = useState(0);
-  const [startDate, setStartDate] = useState(
-    moment(sevenDaysAgo).format("YYYY-MM-DD")
-  );
-  const [endDate, setEndDate] = useState(moment(now).format("YYYY-MM-DD"));
+  const [startDate, setStartDate] = useState(sevenDaysAgo);
+  const [endDate, setEndDate] = useState(now);
 
   const handleGetData = async () => {
     try {
@@ -68,8 +65,8 @@ const AdminDashboardTicket = (props) => {
     setPage(0);
   };
   const defaultValues = {
-    startDate: moment(sevenDaysAgo).format("YYYY-MM-DD"),
-    endDate: moment(now).format("YYYY-MM-DD"),
+    startDate: moment.utc(sevenDaysAgo).format("YYYY-MM-DD"),
+    endDate: moment.utc(now).format("YYYY-MM-DD"),
   };
   const methods = useForm({
     defaultValues,
@@ -161,7 +158,7 @@ const AdminDashboardTicket = (props) => {
     };
     customCell5.alignment = { vertical: "middle", horizontal: "center" };
 
-    let headerColumn = ["A", "B", "C", "D", "E", "F", "G","H", "I"];
+    let headerColumn = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
 
     var headerRow = worksheet.addRow();
 
@@ -175,9 +172,11 @@ const AdminDashboardTicket = (props) => {
       bold: false,
     };
     customCell2.alignment = { vertical: "middle", horizontal: "center" };
-    customCell2.value = `(Từ ngày ${moment(startDate).format(
-      "DD/MM/YYYY"
-    )} đến ngày ${moment(endDate).format("DD/MM/YYYY")})`;
+    customCell2.value = `(Từ ngày ${moment
+      .utc(startDate)
+      .format("DD/MM/YYYY")} đến ngày ${moment
+      .utc(endDate)
+      .format("DD/MM/YYYY")})`;
 
     worksheet.mergeCells("A7:J7");
     const customCell7 = worksheet.getCell("A7");
@@ -188,7 +187,7 @@ const AdminDashboardTicket = (props) => {
       bold: false,
     };
     customCell7.alignment = { vertical: "middle", horizontal: "center" };
-    
+
     worksheet.getRow(9).font = { bold: true };
     worksheet.getRow(9).height = "25";
     let header = [
@@ -200,7 +199,7 @@ const AdminDashboardTicket = (props) => {
       "Số vé đã bán",
       "Doanh số trước CK",
       "Chiết khấu",
-      "Doanh số sau CK"
+      "Doanh số sau CK",
     ];
 
     for (let i = 0; i < headerColumn.length; i++) {
@@ -253,7 +252,7 @@ const AdminDashboardTicket = (props) => {
         element?.name,
         element?.fromStation.name,
         element?.toStation.name,
-       
+
         element?.totalTickets,
         element?.totalRevenue,
         element?.totalDiscount,
@@ -262,7 +261,7 @@ const AdminDashboardTicket = (props) => {
       totalC += element?.totalRevenue;
       discount += element?.totalDiscount;
       finalTotal += element?.finalTotalRevenue;
-      numberC +=element?.totalTickets;
+      numberC += element?.totalTickets;
 
       for (let j = 0; j < headerColumn.length; j++) {
         const columnn = worksheet.getCell(headerColumn[j] + (i + 9));
@@ -302,19 +301,15 @@ const AdminDashboardTicket = (props) => {
       family: 4,
       bold: true,
     };
-    bottom.eachCell(
-      { includeEmpty: false },
-      function (cell, colNumber) {
-        
-        cell.border = {
-          top: { style: 'thin' },
-          left: { style: 'thin' },
-          bottom: { style: 'thin' },
-          right: { style: 'thin' },
-        };
-      },
-    );
-    
+    bottom.eachCell({ includeEmpty: false }, function (cell, colNumber) {
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      };
+    });
+
     const firstCell = bottom.getCell(1);
     firstCell.alignment = { horizontal: "right" };
     ExcelJSWorkbook.xlsx.writeBuffer().then(function (buffer) {
@@ -326,7 +321,7 @@ const AdminDashboardTicket = (props) => {
       );
     });
 
-    customToast.success("Xuất báo cáo thành công")
+    customToast.success("Xuất báo cáo thành công");
   };
 
   return (

@@ -50,7 +50,7 @@ const AdminTicketList = (props) => {
     },
   ];
 
-  const filterStatus = ["Chưa thanh toán", "Đã hủy"];
+  const filterStatus = ["Chờ thanh toán", "Đã hủy"];
 
   const [disable, setDisable] = useState(true);
   const handleGetData = async () => {

@@ -5,7 +5,6 @@ import { useState } from "react";
 import "../../../../assets/scss/default.scss";
 import TableCustom from "../../../../components/TableCustom";
 import { convertCurrency } from "../../../../data/curren";
-moment.locale('vi');
 
 const OrderRefundList = (props) => {
   const {
@@ -149,7 +148,7 @@ const OrderRefundList = (props) => {
       sortable: false,
       renderCell: (params) => {
         return (
-          <span>{moment(params.row.createdAt)?.format("DD/MM/YYYY")}</span>
+          <span>{moment.utc(params.row.createdAt)?.format("DD/MM/YYYY")}</span>
         );
       },
     },

@@ -30,6 +30,8 @@ import dayjs from "dayjs";
 import { MobileTimePicker, TimePicker } from "@mui/x-date-pickers";
 import SelectCustom from "../../../../components/SelectCustom";
 import { TripApi } from "../../../../utils/tripApi";
+import moment from "moment";
+
 
 const AddTripDetail = (props) => {
   const { setShowDrawerCreate, showDrawerCreate, idTrip, handleGetData } =
@@ -114,8 +116,8 @@ const AddTripDetail = (props) => {
       code: value.code,
       vehicleId: value.codeVehicle.id,
       tripId: idTrip,
-      departureTime: new Date(selectedDate?.startDate),
-      expectedTime: new Date(selectedDate?.endDate),
+      departureTime: moment(selectedDate?.startDate,'ddd MMM DD YYYY HH:mm:ss [GMT]ZZ (z)').utc().format('YYYY-MM-DD HH:mm:ss') ,
+      expectedTime: moment(selectedDate?.endDate,'ddd MMM DD YYYY HH:mm:ss [GMT]ZZ (z)').utc().format('YYYY-MM-DD HH:mm:ss'),
     };
     console.log(params);
     try {

@@ -12,7 +12,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import moment from "moment";
 import { TripApi } from "../../../../utils/tripApi";
 import Badge from "../../../../components/Badge";
-moment.locale('vi');
+
 
 const TripDetailList = (props) => {
   const {
@@ -89,7 +89,7 @@ const TripDetailList = (props) => {
           <div>
             <span>
               {params.row?.departureTime !== undefined && params.row?.departureTime !== null
-                ? moment(params.row.departureTime).format("DD-MM-YYYY HH:mm A")
+                ? moment.utc(params.row.departureTime).format("DD-MM-YYYY HH:mm A")
                 : "chưa xác định"}
             </span>
           </div>
@@ -108,7 +108,7 @@ const TripDetailList = (props) => {
           <div>
             <span>
               {params.row?.expectedTime !== undefined && params.row?.expectedTime !== null
-                ? moment(params.row.expectedTime).format("DD-MM-YYYY HH:mm A")
+                ? moment.utc(params.row.expectedTime).format("DD-MM-YYYY HH:mm A")
                 : "chưa xác định"}
             </span>
           </div>

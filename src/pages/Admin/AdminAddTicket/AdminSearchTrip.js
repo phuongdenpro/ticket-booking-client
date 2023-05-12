@@ -18,7 +18,7 @@ import { ProvinceApi } from "../../../utils/provinceApi";
 import TripDetailList from "./TripDetailList";
 import { TripApi } from "../../../utils/tripApi";
 import { useNavigate } from "react-router-dom";
-moment.locale('vi');
+
 
 const AdminSearchTrip = (props) => {
   const [optionsProvince, setOptionsProvince] = useState([]);
@@ -59,7 +59,7 @@ const AdminSearchTrip = (props) => {
       const response = await tripApi.getTripDetail({
         page: page + 1,
         pageSize: pageSize,
-        departureTime: new Date(startDate),
+        departureTime: startDate,
         ...filterParams,
       });
 

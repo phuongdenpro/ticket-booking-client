@@ -3,7 +3,7 @@ import moment from "moment";
 import { useState } from "react";
 import ModalAlert from "../../../../components/Modal";
 import TableCustom from "../../../../components/TableCustom";
-moment.locale("vi");
+
 
 const CustomerList = (props) => {
   const {
@@ -99,7 +99,7 @@ const CustomerList = (props) => {
             <span>
               {params.row?.birthday !== undefined &&
               params.row?.birthday !== null
-                ? moment(params.row.birthday).format("DD-MM-YYYY")
+                ? moment.utc(params.row.birthday).format("DD-MM-YYYY")
                 : "chưa xác định"}
             </span>
           </div>

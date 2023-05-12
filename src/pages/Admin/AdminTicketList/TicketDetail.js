@@ -36,11 +36,10 @@ import customToast from "../../../components/ToastCustom";
 import { CustomerApi } from "../../../utils/customerApi";
 import TicketListDetail from "./components/TicketListDetail";
 import ModalAlert from "../../../components/Modal";
-moment.locale('vi');
 
 const TicketDetail = (props) => {
   const [orderDetail, setOrderDetail] = useState();
-  const dateNow = moment(new Date()).format("DD-MM-YYYY hh:mm");
+  const dateNow = moment.utc(new Date()).utcOffset(7).format("DD-MM-YYYY hh:mm");
   const [value, setValueChange] = useState(0);
   const [disabled, setDisabled] = useState(true);
   const idOrder = useParams();
@@ -678,9 +677,8 @@ const TicketDetail = (props) => {
                           style={{ width: "100%" }}
                           disabled={disabled}
                           className={"disabled-field input-detail"}
-                          value={moment(dataOrder?.createdAt).format(
-                            "DD/MM/YYYY HH:mm"
-                          )}
+                          value={moment.utc(dataOrder?.createdAt).format('DD/MM/YYYY hh:mm') }
+                          // value={dataOrder?.createdAt}
                         />
                       </FormControlCustom>
                     </Grid>

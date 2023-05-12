@@ -18,7 +18,6 @@ import { isEmpty } from "lodash";
 import { TripApi } from "../../../../utils/tripApi";
 import { VehicleApi } from "../../../../utils/vehicleApi";
 import SelectCustom from "../../../../components/SelectCustom";
-moment.locale('vi');
 
 const CreatePriceListDetail = (props) => {
   const date = new Date();
@@ -80,7 +79,7 @@ const CreatePriceListDetail = (props) => {
   const defaultValues = {
     code: "",
     price: "",
-    createdAt: moment(new Date()).format("DD/MM/YYYY"),
+    createdAt: moment.utc(new Date()).format("DD/MM/YYYY"),
   };
 
   const methods = useForm({

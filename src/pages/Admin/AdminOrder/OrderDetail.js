@@ -39,11 +39,10 @@ import TicketOrderList from "./components/TicketOrderList";
 import ModalAlert from "../../../components/Modal";
 import ReactToPrint, { useReactToPrint } from "react-to-print";
 import PrintForm from "./components/PrintFrom";
-moment.locale('vi');
 
 const OrderDetail = (props) => {
   const [orderDetail, setOrderDetail] = useState();
-  const dateNow = moment(new Date()).format("DD-MM-YYYY hh:mm");
+  const dateNow = moment.utc(new Date()).format("DD-MM-YYYY hh:mm");
   const [value, setValueChange] = useState(0);
   const [disabled, setDisabled] = useState(true);
   const idOrder = useParams();
@@ -282,7 +281,7 @@ const OrderDetail = (props) => {
                     </TableHead>
                     <TableBody>
                       <TableRow>
-                        <TableCell align={"center"}>{moment(dataPayment?.createAppTime).format("DD/MM/YYYY HH:MM")}</TableCell>
+                        <TableCell align={"center"}>{moment.utc(dataPayment?.createdAt).format("DD/MM/YYYY HH:mm")}</TableCell>
                         <TableCell align={"center"}>
                           {dataPayment?.paymentMethod}
                         </TableCell>
@@ -629,7 +628,7 @@ const OrderDetail = (props) => {
                           style={{ width: "100%" }}
                           disabled={disabled}
                           className={"disabled-field input-detail"}
-                          value={moment(dataOrder?.createdAt).format(
+                          value={moment.utc(dataOrder?.createdAt).format(
                             "DD/MM/YYYY HH:mm"
                           )}
                         />

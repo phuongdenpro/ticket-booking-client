@@ -5,7 +5,6 @@ import { useState } from "react";
 import "../../../../assets/scss/default.scss";
 import TableCustom from "../../../../components/TableCustom";
 import { convertCurrency } from "../../../../data/curren";
-moment.locale('vi');
 
 const DashboardPromotionList = (props) => {
   const {
@@ -61,7 +60,7 @@ const DashboardPromotionList = (props) => {
             <span>
               {params.row?.startDate !== undefined &&
               params.row?.startDate !== null
-                ? moment(params.row.startDate).format("DD-MM-YYYY")
+                ? moment.utc(params.row.startDate).format("DD-MM-YYYY")
                 : "chưa xác định"}
             </span>
           </div>
@@ -80,7 +79,7 @@ const DashboardPromotionList = (props) => {
           <div>
             <span>
               {params.row?.endDate !== undefined && params.row?.endDate !== null
-                ? moment(params.row.endDate).format("DD-MM-YYYY")
+                ? moment.utc(params.row.endDate).format("DD-MM-YYYY")
                 : "chưa xác định"}
             </span>
           </div>

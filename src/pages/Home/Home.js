@@ -21,7 +21,6 @@ import { TripApi } from "../../utils/tripApi";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { PromotionApi } from "../../utils/promotionApi";
-moment.locale('vi');
 
 const Home = (props) => {
   const [optionsProvince, setOptionsProvince] = useState([]);
@@ -87,7 +86,7 @@ const Home = (props) => {
     const codeProvinceFrom = fromProvince.code;
     const toProvinceName = toProvince.name;
     const codeProvinceTo = toProvince.code;
-    const departureTime = moment(startDate).format("DD/MM/YYYY");
+    const departureTime = moment.utc(startDate).format("DD/MM/YYYY");
     setTimeout(function () {
       navigate(
         `/trip/from/${fromProvinceName}/${codeProvinceFrom}/to/${toProvinceName}/${codeProvinceTo}/${startDate}`

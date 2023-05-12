@@ -26,7 +26,6 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import DashboardCostListNV from "./components/ListNV";
-moment.locale('vi');
 
 const AdminDashboardCost = (props) => {
   const [page, setPage] = useState(0);
@@ -201,9 +200,9 @@ const AdminDashboardCost = (props) => {
       bold: false,
     };
     customCell2.alignment = { vertical: "middle", horizontal: "center" };
-    customCell2.value = `(Từ ngày ${moment(startDate).format(
+    customCell2.value = `(Từ ngày ${moment.utc(startDate).format(
       "DD/MM/YYYY"
-    )} đến ngày ${moment(endDate).format("DD/MM/YYYY")})`;
+    )} đến ngày ${moment.utc(endDate).format("DD/MM/YYYY")})`;
 
     worksheet.mergeCells("A7:I7");
     

@@ -14,11 +14,10 @@ import { PriceListApi } from "../../../../utils/priceListApi";
 import CreatePriceListDetail from "./AddPriceDetailList";
 import EditPriceList from "./EditPriceList";
 import GroupDetailPriceList from "./GroupDetailPriceList";
-moment.locale('vi');
 
 const DetailPriceList = (props) => {
   const [dataCustomer, setData] = useState();
-  const dateNow = moment(new Date()).format("DD-MM-YYYY hh:mm");
+  const dateNow = moment.utc(new Date()).format("DD-MM-YYYY hh:mm");
   const navigate = useNavigate();
   const codePriceList = useParams();
   const [detailPriceList, setDetailPriceList] = useState({});
@@ -289,7 +288,7 @@ const DetailPriceList = (props) => {
                           placeholder={"Nhập ngày tạo bảng giá"}
                           helperText={""}
                           className={"input-detail"}
-                          value={moment(detailPriceList?.createdAt).format(
+                          value={moment.utc(detailPriceList?.createdAt).format(
                             "DD/MM/YYYY HH:MM"
                           )}
                         />

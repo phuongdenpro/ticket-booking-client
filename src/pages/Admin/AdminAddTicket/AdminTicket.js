@@ -30,7 +30,7 @@ import AddCustomerOrder from "./AddCustomerOrder";
 import "./AdminTicket.scss";
 import ListTicketDetail from "./ListTicketDetail";
 import TicketBookingList from "./TicketBookingList";
-moment.locale('vi');
+
 
 const AdminAddTicket = (props) => {
   const [dataCustomer, setData] = useState();
@@ -461,7 +461,7 @@ const AdminAddTicket = (props) => {
                     </span>
                     ({dataTripDetail?.trip?.fromStation?.name} -{" "}
                     {dataTripDetail?.trip?.toStation?.name},
-                    {moment(dataTripDetail?.departureTime).format("DD/MM/YYYY")}
+                    {moment.utc(dataTripDetail?.departureTime).format("DD/MM/YYYY")}
                     )
                   </span>
                 </h2>

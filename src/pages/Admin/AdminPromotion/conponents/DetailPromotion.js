@@ -17,11 +17,10 @@ import AddPromotionLine from "./AddPromotionLine";
 import EditPromotion from "./EditPromotion";
 import PromotionDetailList from "./PromotionDetailList";
 import EditPromotionLine from "./EditPromotionLine";
-moment.locale('vi');
 
 const DetailPromotion = (props) => {
   const [dataCustomer, setData] = useState();
-  const dateNow = moment(new Date()).format("DD-MM-YYYY hh:mm");
+  const dateNow = moment.utc(new Date()).format("DD-MM-YYYY hh:mm");
   const navigate = useNavigate();
   const codePromotion = useParams();
   const [detailPromotion, setDetailPromotion] = useState({});
@@ -251,7 +250,7 @@ const DetailPromotion = (props) => {
                           placeholder={""}
                           className={"input-detail"}
                           disabled
-                          value={moment(detailPromotion?.startDate).format("DD-MM-YYYY") }
+                          value={moment.utc(detailPromotion?.startDate).format("DD-MM-YYYY") }
                         />
                       </FormControlCustom>
                     </Grid>
@@ -271,7 +270,7 @@ const DetailPromotion = (props) => {
                           placeholder={""}
                           className={"input-detail"}
                           disabled
-                          value={moment(detailPromotion?.endDate).format("DD-MM-YYYY")}
+                          value={moment.utc(detailPromotion?.endDate).format("DD-MM-YYYY")}
                         />
                       </FormControlCustom>
                     </Grid>
