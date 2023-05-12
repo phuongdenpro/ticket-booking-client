@@ -13,6 +13,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import QRCode from "qrcode.react";
+moment.locale('vi');
 
 const PrintForm = React.forwardRef((props, ref) => {
   const dataOrder = props.dataOrder;

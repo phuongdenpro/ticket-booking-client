@@ -14,6 +14,7 @@ import { PriceListApi } from "../../../../utils/priceListApi";
 import CreatePriceListDetail from "./AddPriceDetailList";
 import EditPriceList from "./EditPriceList";
 import GroupDetailPriceList from "./GroupDetailPriceList";
+moment.locale('vi');
 
 const DetailPriceList = (props) => {
   const [dataCustomer, setData] = useState();

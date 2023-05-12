@@ -5,6 +5,7 @@ import { useState } from "react";
 import "../../../../assets/scss/default.scss";
 import TableCustom from "../../../../components/TableCustom";
 import { convertCurrency } from "../../../../data/curren";
+moment.locale('vi');
 
 const OrderRefundList = (props) => {
   const {
@@ -166,7 +167,7 @@ const OrderRefundList = (props) => {
                 borderRadius: "15px",
                 padding: "2px 5px",
                 backgroundColor:
-                  params?.row?.status == "Đã hoàn thành"
+                  params?.row?.status == "Hoàn thành"
                     ? "#0e9315"
                     : "#ff7b00",
                 alignItems: "center",

@@ -18,6 +18,7 @@ import { PromotionApi } from "../../../utils/promotionApi";
 import "./AdminPromotion.scss";
 import AddPromotion from "./conponents/AddPromotion";
 import PromotionList from "./conponents/PromotionList";
+moment.locale('vi');
 
 const AdminPromotion = (props) => {
   const [loadings, setLoadings] = useState([]);

@@ -38,6 +38,7 @@ import { CustomerApi } from "../../../utils/customerApi";
 import ModalAlert from "../../../components/Modal";
 import ReactToPrint, { useReactToPrint } from "react-to-print";
 import TicketOrderListOrderRefund from "./components/TicketOrderListOrderRefund";
+moment.locale('vi');
 
 const OrderRefundDetail = (props) => {
   const [orderDetail, setOrderDetail] = useState();
@@ -213,7 +214,7 @@ const OrderRefundDetail = (props) => {
     try {
       const orderApi = new OrderApi();
       const res = await orderApi.updateStatusOrderRefund(dataOrder?.code, {
-        status: "Đã hoàn thành",
+        status: "Hoàn thành",
         note: noteRefund
       });
       customToast.success("Cập nhật thành công");
@@ -427,7 +428,7 @@ const OrderRefundDetail = (props) => {
                   <div
                     style={{
                       backgroundColor:
-                        dataOrderRefund?.status == "Đã hoàn thành"
+                        dataOrderRefund?.status == "Hoàn thành"
                           ? "#0e9315"
                           : "#ff7b00",
                       borderRadius: "15px",
@@ -448,7 +449,7 @@ const OrderRefundDetail = (props) => {
                   </div>
                 </div>
               </div>
-              {dataOrderRefund?.status == "Đang chờ xử lý" ? (
+              {dataOrderRefund?.status == "Chờ xử lý" ? (
                 <div>
                   <Button
                     style={{

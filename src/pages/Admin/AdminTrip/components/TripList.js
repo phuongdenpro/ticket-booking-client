@@ -116,7 +116,7 @@ const TripList = (props) => {
     },
     {
       field: "startDate",
-      headerName: "Thời gian đi",
+      headerName: "Ngày bắt đầu",
       flex: 100,
       headerAlign: "center",
       contentAlign: "center",
@@ -130,7 +130,7 @@ const TripList = (props) => {
     },
     {
       field: "endDate",
-      headerName: "Thời gian đến",
+      headerName: "Ngày kết thúc",
       flex: 110,
       headerAlign: "center",
       contentAlign: "center",

@@ -1,6 +1,7 @@
 import moment from "moment";
 import TableCustom from "../../../components/TableCustom";
 import { convertCurrency, numberFormat } from "../../../data/curren";
+moment.locale('vi');
 
 const TicketBookingList = (props) => {
   const {

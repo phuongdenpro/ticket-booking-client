@@ -4,6 +4,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import EditVehicle from "./EditVehicle";
 import "./index.scss";
+moment.locale('vi');
 
 const DetailVehicle = (props) => {
   const { setShowDrawerDetail, showDrawerDetail, dataVehicle, handleGetData } =

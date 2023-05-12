@@ -39,6 +39,7 @@ import TicketOrderList from "./components/TicketOrderList";
 import ModalAlert from "../../../components/Modal";
 import ReactToPrint, { useReactToPrint } from "react-to-print";
 import PrintForm from "./components/PrintFrom";
+moment.locale('vi');
 
 const OrderDetail = (props) => {
   const [orderDetail, setOrderDetail] = useState();

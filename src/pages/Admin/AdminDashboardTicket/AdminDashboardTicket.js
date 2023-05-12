@@ -17,6 +17,7 @@ import customToast from "../../../components/ToastCustom";
 import { StatisticsApi } from "../../../utils/statisticsApi";
 import "./AdminDashboardTicket.scss";
 import DashboardTicketList from "./components/ListDashboardTicket";
+moment.locale('vi');
 
 const AdminDashboardTicket = (props) => {
   const [page, setPage] = useState(0);

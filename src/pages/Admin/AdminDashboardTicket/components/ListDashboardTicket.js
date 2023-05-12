@@ -6,6 +6,7 @@ import "../../../../assets/scss/default.scss";
 import TableCustom from "../../../../components/TableCustom";
 import Badge from "../../../../components/Badge";
 import { convertCurrency } from "../../../../data/curren";
+moment.locale('vi');
 
 const DashboardTicketList = (props) => {
   const {

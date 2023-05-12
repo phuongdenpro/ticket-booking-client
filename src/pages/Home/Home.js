@@ -21,6 +21,7 @@ import { TripApi } from "../../utils/tripApi";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { PromotionApi } from "../../utils/promotionApi";
+moment.locale('vi');
 
 const Home = (props) => {
   const [optionsProvince, setOptionsProvince] = useState([]);
@@ -50,8 +51,9 @@ const Home = (props) => {
       setLoading(true);
       const provinceApi = new ProvinceApi();
       const res = await provinceApi.getAllProvince();
-
-      setOptionsProvince(res?.data?.data);
+      const data = res?.data?.data
+      const newData = data.filter(item => item.code !== 0);
+      setOptionsProvince(newData);
       setLoading(false);
     } catch (error) {}
   };

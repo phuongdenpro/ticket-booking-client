@@ -36,6 +36,7 @@ import customToast from "../../../components/ToastCustom";
 import { CustomerApi } from "../../../utils/customerApi";
 import TicketListDetail from "./components/TicketListDetail";
 import ModalAlert from "../../../components/Modal";
+moment.locale('vi');
 
 const TicketDetail = (props) => {
   const [orderDetail, setOrderDetail] = useState();
