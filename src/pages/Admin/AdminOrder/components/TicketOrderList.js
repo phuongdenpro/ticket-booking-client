@@ -96,7 +96,7 @@ const TicketOrderList = (props) => {
         return (
           <div>
             <span>
-              {moment(
+              {moment.utc(
                 params.row?.ticketDetail?.ticket?.tripDetail?.departureTime
               ).format("DD-MM-YYYY HH:MM")}
             </span>

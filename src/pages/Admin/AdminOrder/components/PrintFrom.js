@@ -13,7 +13,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import QRCode from "qrcode.react";
-moment.locale('vi');
 
 const PrintForm = React.forwardRef((props, ref) => {
   const dataOrder = props.dataOrder;
@@ -86,7 +85,7 @@ const PrintForm = React.forwardRef((props, ref) => {
             >
               <p>
                 Ngày đặt:{" "}
-                {moment(dataOrder?.createdAt).format("DD/MM/YYYY HH:MM")}
+                {moment.utc(dataOrder?.createdAt).format("DD/MM/YYYY HH:MM")}
               </p>
             </div>
           </Grid>
@@ -206,7 +205,7 @@ const PrintForm = React.forwardRef((props, ref) => {
             >
               <p>
                 Thời gian khởi hành:{" "}
-                {moment(
+                {moment.utc(
                   dataOrder?.orderDetails[0]?.ticketDetail?.ticket?.tripDetail
                     ?.departureTime
                 ).format("DD/MM/YYYY HH:MM")}

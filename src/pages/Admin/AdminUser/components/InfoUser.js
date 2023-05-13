@@ -9,7 +9,6 @@ import ModalAlert from "../../../../components/Modal";
 import customToast from "../../../../components/ToastCustom";
 import { CustomerApi } from "../../../../utils/customerApi";
 import EditUser from "./EditUser";
-moment.locale('vi');
 
 const InfoUser = (props) => {
   const { setShowDrawerDetail, showDrawerDetail, dataCustomer, handleGetData } =
@@ -176,7 +175,7 @@ const InfoUser = (props) => {
         </div>
         <div className="col-8" style={{ marginTop: 10 }}>
           <Typography style={{ fontSize: 16 }}>
-            {moment(dataCustomer?.createdAt).format("YYYY-MM-DD")}
+            {moment.utc(dataCustomer?.createdAt).format("YYYY-MM-DD")}
           </Typography>
         </div>
       </div>

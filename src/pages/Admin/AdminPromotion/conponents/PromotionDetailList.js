@@ -11,7 +11,6 @@ import { PriceListApi } from "../../../../utils/priceListApi";
 import { PromotionApi } from "../../../../utils/promotionApi";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import DeleteIcon from "@mui/icons-material/Delete";
-moment.locale('vi');
 
 const PromotionDetailList = (props) => {
   const {
@@ -117,7 +116,7 @@ const PromotionDetailList = (props) => {
       sortable: false,
       renderCell: (params) => {
         return (
-          <span>{moment(params.row?.startDate).format("DD/MM/YYYY")}</span>
+          <span>{moment.utc(params.row?.startDate).format("DD/MM/YYYY")}</span>
         );
       },
     },
@@ -130,7 +129,7 @@ const PromotionDetailList = (props) => {
       headerClassName: "theme",
       sortable: false,
       renderCell: (params) => {
-        return <span>{moment(params.row?.endDate).format("DD/MM/YYYY")}</span>;
+        return <span>{moment.utc(params.row?.endDate).format("DD/MM/YYYY")}</span>;
       },
     },
     {

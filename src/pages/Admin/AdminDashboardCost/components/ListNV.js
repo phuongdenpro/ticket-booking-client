@@ -5,7 +5,6 @@ import { useState } from "react";
 import "../../../../assets/scss/default.scss";
 import TableCustom from "../../../../components/TableCustom";
 import { convertCurrency } from "../../../../data/curren";
-moment.locale('vi');
 
 const DashboardCostListNV = (props) => {
   const {

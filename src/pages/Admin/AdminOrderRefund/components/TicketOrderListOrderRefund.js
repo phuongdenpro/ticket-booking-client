@@ -2,7 +2,6 @@ import moment from "moment";
 import { convertCurrency } from "../../../../data/curren";
 import TableCustom from "../../../../components/TableCustom";
 import PrintIcon from "@mui/icons-material/Print";
-moment.locale('vi');
 
 const TicketOrderListOrderRefund = (props) => {
   const {
@@ -97,7 +96,7 @@ const TicketOrderListOrderRefund = (props) => {
         return (
           <div>
             <span>
-              {moment(
+              {moment.utc(
                 params.row?.ticketDetail?.ticket?.tripDetail?.departureTime
               ).format("DD-MM-YYYY HH:MM")}
             </span>

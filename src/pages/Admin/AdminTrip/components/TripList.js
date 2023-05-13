@@ -10,7 +10,6 @@ import ModalAlert from "../../../../components/Modal";
 import { TripApi } from "../../../../utils/tripApi";
 import customToast from "../../../../components/ToastCustom";
 import Badge from "../../../../components/Badge";
-moment.locale("vi");
 
 const TripList = (props) => {
   const {
@@ -124,7 +123,7 @@ const TripList = (props) => {
       sortable: false,
       renderCell: (params) => {
         return (
-          <span>{moment(params.row?.startDate).format("DD-MM-YYYY")}</span>
+          <span>{moment.utc(params.row?.startDate).format("DD-MM-YYYY")}</span>
         );
       },
     },
@@ -141,7 +140,7 @@ const TripList = (props) => {
           <div>
             <span>
               {params.row?.endDate !== undefined && params.row?.endDate !== null
-                ? moment(params.row.endDate).format("DD-MM-YYYY")
+                ? moment.utc(params.row.endDate).format("DD-MM-YYYY")
                 : "chưa xác định"}
             </span>
           </div>

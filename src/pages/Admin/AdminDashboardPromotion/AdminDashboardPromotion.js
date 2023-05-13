@@ -17,7 +17,6 @@ import customToast from "../../../components/ToastCustom";
 import { StatisticsApi } from "../../../utils/statisticsApi";
 import "./AdminDashboardPromotion.scss";
 import DashboardPromotionList from "./components/ListDashboardPromotion";
-moment.locale('vi');
 
 const AdminDashboardPromotion = (props) => {
   const [page, setPage] = useState(0);
@@ -28,10 +27,9 @@ const AdminDashboardPromotion = (props) => {
   var now = new Date();
   var sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
   const [total, setTotal] = useState(0);
-  const [startDate, setStartDate] = useState(
-    moment(sevenDaysAgo).format("YYYY-MM-DD")
-  );
-  const [endDate, setEndDate] = useState(moment(now).format("YYYY-MM-DD"));
+  const [startDate, setStartDate] = useState(sevenDaysAgo);
+
+  const [endDate, setEndDate] = useState(now);
 
   const handleGetData = async () => {
     try {
@@ -68,8 +66,8 @@ const AdminDashboardPromotion = (props) => {
     setPage(0);
   };
   const defaultValues = {
-    startDate: moment(sevenDaysAgo).format("YYYY-MM-DD"),
-    endDate: moment(now).format("YYYY-MM-DD"),
+    startDate: moment.utc(sevenDaysAgo).format("YYYY-MM-DD"),
+    endDate: moment.utc(now).format("YYYY-MM-DD"),
   };
   const methods = useForm({
     defaultValues,
@@ -175,9 +173,9 @@ const AdminDashboardPromotion = (props) => {
       bold: false,
     };
     customCell2.alignment = { vertical: "middle", horizontal: "center" };
-    customCell2.value = `(Từ ngày ${moment(startDate).format(
+    customCell2.value = `(Từ ngày ${moment.utc(startDate).format(
       "DD/MM/YYYY"
-    )} đến ngày ${moment(endDate).format("DD/MM/YYYY")})`;
+    )} đến ngày ${moment.utc(endDate).format("DD/MM/YYYY")})`;
 
     worksheet.mergeCells("A7:J7");
     const customCell7 = worksheet.getCell("A7");
@@ -252,8 +250,8 @@ const AdminDashboardPromotion = (props) => {
         i,
         element?.code,
         element?.title,
-        moment(element?.startDate).format("DD-MM-YYYY"),
-        moment(element?.endDate).format("DD-MM-YYYY"),
+        moment.utc(element?.startDate).format("DD-MM-YYYY"),
+        moment.utc(element?.endDate).format("DD-MM-YYYY"),
         element?.promotionDetail?.percentDiscount,
         element?.promotionDetail?.reductionAmount,
         element?.maxBudget,

@@ -7,7 +7,7 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import LoadingButton from "@mui/lab/LoadingButton";
 import moment from "moment";
-moment.locale('vi');
+
 
 export default function InputSearchTrip(props) {
 	return (
@@ -19,7 +19,6 @@ export default function InputSearchTrip(props) {
 							<Autocomplete
 								disablePortal
 								id="combo-box-demo"
-								
 								sx={{width: 300}}
 								renderInput={(params) => <TextField {...params} label="Điểm đi" />}
 							/>

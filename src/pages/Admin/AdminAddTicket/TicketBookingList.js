@@ -1,7 +1,6 @@
 import moment from "moment";
 import TableCustom from "../../../components/TableCustom";
 import { convertCurrency, numberFormat } from "../../../data/curren";
-moment.locale('vi');
 
 const TicketBookingList = (props) => {
   const {
@@ -90,7 +89,7 @@ const TicketBookingList = (props) => {
         return (
           <div>
             <span>
-              {moment(params.row.startDate).format("DD-MM-YYYY HH:MM")}
+              {moment.utc(params.row.startDate).format("DD-MM-YYYY HH:MM")}
             </span>
           </div>
         );

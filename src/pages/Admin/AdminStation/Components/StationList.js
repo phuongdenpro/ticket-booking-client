@@ -4,7 +4,6 @@ import moment from "moment";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import BorderColorIcon from '@mui/icons-material/BorderColor';
-moment.locale("vi");
 
 const StationList = (props) => {
   const {
@@ -66,7 +65,7 @@ const StationList = (props) => {
       editable: true,
       renderCell: (params) => {
         return (
-          <span>{moment(params.row?.createdAt).format("DD-MM-YYYY")}</span>
+          <span>{moment.utc(params.row?.createdAt).format("DD-MM-YYYY")}</span>
         );
       },
     },

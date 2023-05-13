@@ -38,11 +38,10 @@ import { CustomerApi } from "../../../utils/customerApi";
 import ModalAlert from "../../../components/Modal";
 import ReactToPrint, { useReactToPrint } from "react-to-print";
 import TicketOrderListOrderRefund from "./components/TicketOrderListOrderRefund";
-moment.locale('vi');
 
 const OrderRefundDetail = (props) => {
   const [orderDetail, setOrderDetail] = useState();
-  const dateNow = moment(new Date()).format("DD-MM-YYYY hh:mm");
+  const dateNow = moment.utc(new Date()).format("DD-MM-YYYY hh:mm");
   const [value, setValueChange] = useState(0);
   const [disabled, setDisabled] = useState(true);
   const idOrder = useParams();
@@ -300,7 +299,7 @@ const OrderRefundDetail = (props) => {
                     <TableBody>
                       <TableRow>
                         <TableCell align={"center"}>
-                          {moment(dataPayment?.createAppTime).format(
+                          {moment.utc(dataPayment?.createdAt).format(
                             "DD/MM/YYYY HH:MM"
                           )}
                         </TableCell>
@@ -622,7 +621,7 @@ const OrderRefundDetail = (props) => {
                           style={{ width: "100%" }}
                           disabled={disabled}
                           className={"disabled-field input-detail"}
-                          value={moment(dataOrderRefund?.createdAt).format(
+                          value={moment.utc(dataOrderRefund?.createdAt).format(
                             "DD/MM/YYYY HH:mm"
                           )}
                         />

@@ -8,7 +8,6 @@ import TableCustom from "../../../../components/TableCustom";
 import customToast from "../../../../components/ToastCustom";
 import { convertCurrency } from "../../../../data/curren";
 import { PriceListApi } from "../../../../utils/priceListApi";
-moment.locale('vi');
 
 const GroupTicketPriceList = (props) => {
   const {
@@ -145,7 +144,7 @@ const GroupTicketPriceList = (props) => {
       sortable: false,
       renderCell: (params) => {
         return (
-          <span>{moment(params.row?.createdAt).format("DD/MM/YYYY")}</span>
+          <span>{moment.utc(params.row?.createdAt).format("DD/MM/YYYY")}</span>
         );
       },
     },

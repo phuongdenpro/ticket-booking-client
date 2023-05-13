@@ -50,7 +50,7 @@ const AdminOrderRefund = (props) => {
     },
   ];
 
-  const filterStatus = ["Đang chờ xử lý", "Đã hoàn thành"];
+  const filterStatus = ["Chờ xử lý", "Hoàn thành"];
 
   const [disable, setDisable] = useState(true);
   const handleGetData = async () => {

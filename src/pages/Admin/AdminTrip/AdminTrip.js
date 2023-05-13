@@ -270,7 +270,7 @@ const AdminTrip = (props) => {
                   />
                 </div>
               </FormControlCustom>
-              <FormControlCustom label="Ngày xuất phát" fullWidth>
+              <FormControlCustom label="Ngày bắt đầu" fullWidth>
                 <div className="view-input">
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
@@ -286,7 +286,7 @@ const AdminTrip = (props) => {
                   </LocalizationProvider>
                 </div>
               </FormControlCustom>
-              <FormControlCustom label="Ngày đến" fullWidth>
+              <FormControlCustom label="Ngày kết thúc" fullWidth>
                 <div className="view-input">
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker

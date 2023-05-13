@@ -5,7 +5,6 @@ import { useState } from "react";
 import TableCustom from "../../../components/TableCustom";
 import { Button } from "@mui/material";
 import Badge from "../../../components/Badge";
-moment.locale('vi');
 
 const TripDetailList = (props) => {
   const {
@@ -74,7 +73,7 @@ const TripDetailList = (props) => {
             <span>
               {params.row?.departureTime !== undefined &&
               params.row?.departureTime !== null
-                ? moment(params.row.departureTime).format("DD-MM-YYYY HH:mm")
+                ? moment.utc(params.row.departureTime).format("DD-MM-YYYY HH:mm")
                 : "chưa xác định"}
             </span>
           </div>
@@ -94,7 +93,7 @@ const TripDetailList = (props) => {
             <span>
               {params.row?.expectedTime !== undefined &&
               params.row?.expectedTime !== null
-                ? moment(params.row.expectedTime).format("DD-MM-YYYY HH:mm")
+                ? moment.utc(params.row.expectedTime).format("DD-MM-YYYY HH:mm")
                 : "chưa xác định"}
             </span>
           </div>
