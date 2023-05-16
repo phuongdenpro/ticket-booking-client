@@ -1,22 +1,16 @@
+import AddIcon from "@mui/icons-material/Add";
+import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import { Box, Button, Divider, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
-import PrintIcon from "@mui/icons-material/Print";
-import DeleteIcon from "@mui/icons-material/Delete";
-import SearchInput from "../../../components/InputSearch";
-import { FormProvider, useForm } from "react-hook-form";
-import FormControlCustom from "../../../components/FormControl";
-import SelectCustom from "../../../components/SelectCustom";
-import UserList from "./components/UserList";
-import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
-import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import { Helmet } from "react-helmet";
-import { CustomerApi } from "../../../utils/customerApi";
+import { FormProvider, useForm } from "react-hook-form";
+import SearchInput from "../../../components/InputSearch";
 import customToast from "../../../components/ToastCustom";
-import AddUser from "./components/AddUser";
-import InfoUser from "./components/InfoUser";
+import { CustomerApi } from "../../../utils/customerApi";
+import { StaffApi } from "../../../utils/staffApi";
+import StaffList from "./components/StaffList";
 
-const AdminUser = (props) => {
+const AdminStaff = (props) => {
   const [loadings, setLoadings] = useState([]);
 
   const [page, setPage] = useState(0);
@@ -45,8 +39,8 @@ const AdminUser = (props) => {
 
   const handleGetData = async () => {
     try {
-      const customerApi = new CustomerApi();
-      const response = await customerApi.getAll({
+      const staffApi = new StaffApi();
+      const response = await staffApi.getAll({
         page: page + 1,
         pageSize: pageSize,
         ...filterParams,
@@ -57,7 +51,7 @@ const AdminUser = (props) => {
     }
   };
   useEffect(() => {
-    setFilterParams({ ...filterParams, keywords: searchValue });
+    setFilterParams({ ...filterParams, keyword: searchValue });
   }, [searchValue]);
 
   useEffect(() => {
@@ -65,7 +59,7 @@ const AdminUser = (props) => {
   }, [page, pageSize, filterParams]);
 
   const handleSearch = (e) => {
-    setFilterParams({ keywords: searchValue || undefined });
+    setFilterParams({ keyword: searchValue || undefined });
   };
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -98,12 +92,12 @@ const AdminUser = (props) => {
   return (
     <Box sx={{ height: "100%", width: "100%" }}>
       <Helmet>
-        <title> PDBus - Quản lý khách hàng</title>
+        <title> PDBus - Quản lý nhân viên</title>
       </Helmet>
       <Grid container className={"align-items-center header_title"}>
         <Grid item md={7}>
           <h2 className={"txt-title"} style={{ marginTop: 20 }}>
-            DANH SÁCH KHÁCH HÀNG
+            DANH SÁCH NHÂN VIÊN
           </h2>
         </Grid>
         <Grid item md={5}>
@@ -121,6 +115,7 @@ const AdminUser = (props) => {
             >
               <span className={"txt"}>Làm mới</span>
             </Button>
+           
             <Button
               variant="contained"
               color="warning"
@@ -152,7 +147,7 @@ const AdminUser = (props) => {
 
             <SearchInput
               className="txt-search"
-              placeholder={"Tìm kiếm khách hàng"}
+              placeholder={"Tìm kiếm nhân viên"}
               value={searchValue}
               setSearchValue={setSearchValue}
               handleSearch={handleSearch}
@@ -171,14 +166,14 @@ const AdminUser = (props) => {
         }}
         md={6}
       >
-        <span className="title-price">Tổng số khách hàng: </span>
+        <span className="title-price">Tổng số nhân viên: </span>
         <span className="txt-price" style={{ marginLeft: 5 }}>
           {data?.data?.pagination?.total}
         </span>
       </Grid>
       <div style={{ display: "flex" }}>
         <div style={{ flexGrow: 1 }}>
-          <UserList
+          <StaffList
             data={data?.data?.data || []}
             handleChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
@@ -187,22 +182,13 @@ const AdminUser = (props) => {
             handelDetail={handelDetail}
             page={page}
             pageSize={pageSize}
-          ></UserList>
+          ></StaffList>
         </div>
       </div>
-      <AddUser
-        setShowDrawer={setShowDrawerCreate}
-        showDrawer={showDrawerCreate}
-        handleGetData={handleGetData}
-      ></AddUser>
-      <InfoUser
-        setShowDrawerDetail={setShowDrawerDetail}
-        showDrawerDetail={showDrawerDetail}
-        dataCustomer={detailCustomer}
-        handleGetData={handleGetData}
-      ></InfoUser>
+      
+      
     </Box>
   );
 };
 
-export default AdminUser;
+export default AdminStaff;

@@ -38,6 +38,7 @@ class AdminApi {
     Cookies.set("updatedBy", data.updatedBy);
     Cookies.set("isActive", data.isActive);
     Cookies.set("lastLogin", data.lastLogin);
+    Cookies.set("isManager", data.isManage);
   }
   remove_token(response) {
     Cookies.remove("access_token");

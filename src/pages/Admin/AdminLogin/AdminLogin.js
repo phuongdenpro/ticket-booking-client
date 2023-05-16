@@ -14,7 +14,7 @@ const Login = () => {
   const passwordRef = useRef();
   const navigate = useNavigate();
   const [loadings, setLoadings] = useState([]);
-
+  
   const enterLoading = (index) => {
     setLoadings((prevLoadings) => {
       const newLoadings = [...prevLoadings];
@@ -30,12 +30,33 @@ const Login = () => {
       return newLoadings;
     });
   };
+  const isEmail = (username) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(username);
+  };
 
   const onFinish = async (values) => {
     enterLoading(0);
     const adminApi = new AdminApi();
+    const userName = values.username;
+    
     try {
-      const response = await adminApi.login(values);
+      let response;
+      if (isEmail(userName)) {
+        response = await adminApi.login({
+          email: userName,
+          password: values.password
+        });
+        // Thực hiện đăng nhập với email
+      } else {
+        // Thực hiện đăng nhập với số điện thoại
+        console.log('sdt');
+        response = await adminApi.login({
+          phone: userName,
+          password: values.password
+        });
+      }
+      
       if (response.status == 200) {
         adminApi.save_token(response.data);
       }
@@ -68,7 +89,7 @@ const Login = () => {
                 onFinish={onFinish}
               >
                 <Form.Item
-                  name="email"
+                  name="username"
                   rules={[
                     {
                       required: true,
