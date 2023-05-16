@@ -31,11 +31,17 @@ import AdminTicketList from "./pages/Admin/AdminTicketList/AdminTicketList";
 import TicketDetail from "./pages/Admin/AdminTicketList/TicketDetail";
 import OrderRefundDetail from "./pages/Admin/AdminOrderRefund/OrderRefundDetail";
 import AdminStaff from "./pages/Admin/AdminStaff/AdminStaff";
+import { Helmet } from "react-helmet";
 
 export const history = createBrowserHistory();
 
 function App() {
   return (
+    <div>
+    <Helmet>
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+      </Helmet>
+      
     <BrowserRouter history={history}>
       <Routes>
         <Route path="admin" element={<AdminLayout />}>
@@ -104,6 +110,7 @@ function App() {
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>
+    </div>
   );
 }
 
