@@ -89,7 +89,7 @@ const TripDetailList = (props) => {
           <div>
             <span>
               {params.row?.departureTime !== undefined && params.row?.departureTime !== null
-                ? moment.utc(params.row.departureTime).format("DD-MM-YYYY HH:mm A")
+                ? moment(params.row.departureTime).format("DD-MM-YYYY HH:mm")
                 : "chưa xác định"}
             </span>
           </div>
@@ -108,7 +108,7 @@ const TripDetailList = (props) => {
           <div>
             <span>
               {params.row?.expectedTime !== undefined && params.row?.expectedTime !== null
-                ? moment.utc(params.row.expectedTime).format("DD-MM-YYYY HH:mm A")
+                ? moment(params.row.expectedTime).format("DD-MM-YYYY HH:mm")
                 : "chưa xác định"}
             </span>
           </div>

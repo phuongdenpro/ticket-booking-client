@@ -200,9 +200,9 @@ const AdminDashboardCost = (props) => {
       bold: false,
     };
     customCell2.alignment = { vertical: "middle", horizontal: "center" };
-    customCell2.value = `(Từ ngày ${moment.utc(startDate).format(
+    customCell2.value = `(Từ ngày ${moment(startDate).format(
       "DD/MM/YYYY"
-    )} đến ngày ${moment.utc(endDate).format("DD/MM/YYYY")})`;
+    )} đến ngày ${moment(endDate).format("DD/MM/YYYY")})`;
 
     worksheet.mergeCells("A7:I7");
     

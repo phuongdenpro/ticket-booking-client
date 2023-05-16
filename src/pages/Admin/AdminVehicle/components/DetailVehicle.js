@@ -151,7 +151,7 @@ const DetailVehicle = (props) => {
         </div>
         <div className="col-8" style={{ marginTop: 10 }}>
           <Typography style={{ fontSize: 16 }}>
-            {moment.utc(dataVehicle.createdAt).format("DD/MM/YYYY")}
+            {moment(dataVehicle.createdAt).format("DD/MM/YYYY")}
           </Typography>
         </div>
 

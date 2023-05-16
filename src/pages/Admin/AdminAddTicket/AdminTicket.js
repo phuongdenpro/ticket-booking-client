@@ -461,7 +461,7 @@ const AdminAddTicket = (props) => {
                     </span>
                     ({dataTripDetail?.trip?.fromStation?.name} -{" "}
                     {dataTripDetail?.trip?.toStation?.name},
-                    {moment.utc(dataTripDetail?.departureTime).format("DD/MM/YYYY")}
+                    {moment(dataTripDetail?.departureTime).format("DD/MM/YYYY")}
                     )
                   </span>
                 </h2>

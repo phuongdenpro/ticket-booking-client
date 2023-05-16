@@ -116,8 +116,8 @@ const AddTripDetail = (props) => {
       code: value.code,
       vehicleId: value.codeVehicle.id,
       tripId: idTrip,
-      departureTime: moment(selectedDate?.startDate,'ddd MMM DD YYYY HH:mm:ss [GMT]ZZ (z)').utc().format('YYYY-MM-DD HH:mm:ss') ,
-      expectedTime: moment(selectedDate?.endDate,'ddd MMM DD YYYY HH:mm:ss [GMT]ZZ (z)').utc().format('YYYY-MM-DD HH:mm:ss'),
+      departureTime: new Date(selectedDate?.startDate) ,
+      expectedTime: new Date(selectedDate?.endDate),
     };
     console.log(params);
     try {

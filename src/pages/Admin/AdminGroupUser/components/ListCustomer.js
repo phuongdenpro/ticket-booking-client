@@ -99,7 +99,7 @@ const CustomerList = (props) => {
             <span>
               {params.row?.birthday !== undefined &&
               params.row?.birthday !== null
-                ? moment.utc(params.row.birthday).format("DD-MM-YYYY")
+                ? moment(params.row.birthday).format("DD-MM-YYYY")
                 : "chưa xác định"}
             </span>
           </div>
