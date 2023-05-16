@@ -175,7 +175,7 @@ const InfoUser = (props) => {
         </div>
         <div className="col-8" style={{ marginTop: 10 }}>
           <Typography style={{ fontSize: 16 }}>
-            {moment.utc(dataCustomer?.createdAt).format("YYYY-MM-DD")}
+            {moment(dataCustomer?.createdAt).format("YYYY-MM-DD")}
           </Typography>
         </div>
       </div>

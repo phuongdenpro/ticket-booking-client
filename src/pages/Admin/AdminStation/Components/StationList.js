@@ -65,7 +65,7 @@ const StationList = (props) => {
       editable: true,
       renderCell: (params) => {
         return (
-          <span>{moment.utc(params.row?.createdAt).format("DD-MM-YYYY")}</span>
+          <span>{moment(params.row?.createdAt).format("DD-MM-YYYY")}</span>
         );
       },
     },

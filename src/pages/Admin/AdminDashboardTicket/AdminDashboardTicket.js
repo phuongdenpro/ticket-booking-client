@@ -65,8 +65,8 @@ const AdminDashboardTicket = (props) => {
     setPage(0);
   };
   const defaultValues = {
-    startDate: moment.utc(sevenDaysAgo).format("YYYY-MM-DD"),
-    endDate: moment.utc(now).format("YYYY-MM-DD"),
+    startDate: moment(sevenDaysAgo).format("YYYY-MM-DD"),
+    endDate: moment(now).format("YYYY-MM-DD"),
   };
   const methods = useForm({
     defaultValues,
@@ -84,11 +84,11 @@ const AdminDashboardTicket = (props) => {
     let total = 0;
     const dataNew = data?.data?.data;
     for (let i = 0; i < dataNew?.length; i++) {
-      total += dataNew[i].totalTickets;
+      total += Number(dataNew[i].totalTickets);
     }
     setTotal(total);
   };
-
+console.log(total);
   useEffect(() => {
     handleTotal();
   }, [data]);
@@ -261,7 +261,7 @@ const AdminDashboardTicket = (props) => {
       totalC += element?.totalRevenue;
       discount += element?.totalDiscount;
       finalTotal += element?.finalTotalRevenue;
-      numberC += element?.totalTickets;
+      numberC += Number(element?.totalTickets);
 
       for (let j = 0; j < headerColumn.length; j++) {
         const columnn = worksheet.getCell(headerColumn[j] + (i + 9));

@@ -110,13 +110,13 @@ const SearchTrip = (props) => {
             <h2 className="home_slide_title" style={{ color: "#a53e3e" }}>
               {params?.fromProvinceName} - {params?.toProvinceName}
             </h2>
-            <span>{moment.utc(params?.startDate).format("DD-MM-YYYY")}</span>
+            <span>{moment(params?.startDate).format("DD-MM-YYYY")}</span>
           </div>
           <div className="content-trip" style={{ width: "50vw" }}>
             <span style={{ color: "#000" }}>
               Các chuyến đi từ {params?.fromProvinceName} -{" "}
               {params?.toProvinceName} ngày{" "}
-              {moment.utc(params?.startDate).format("DD-MM-YYYY")}
+              {moment(params?.startDate).format("DD-MM-YYYY")}
             </span>
             {dataTrip?.length == 0 ? (
               <div
@@ -145,9 +145,9 @@ const SearchTrip = (props) => {
                     }}
                   >
                     <h3>
-                      {moment.utc(item?.departureTime).format("HH:mm")}{" "}
+                      {moment(item?.departureTime).format("HH:mm")}{" "}
                       <StartIcon style={{ height: 15 }} />{" "}
-                      {moment.utc(item?.expectedTime).format("HH:mm")}
+                      {moment(item?.expectedTime).format("HH:mm")}
                     </h3>
                     <span>
                       <LocalActivityIcon style={{ marginRight: 10 }} />

@@ -59,7 +59,7 @@ const AdminSearchTrip = (props) => {
       const response = await tripApi.getTripDetail({
         page: page + 1,
         pageSize: pageSize,
-        departureTime: startDate,
+        departureTime: new Date(startDate),
         ...filterParams,
       });
 

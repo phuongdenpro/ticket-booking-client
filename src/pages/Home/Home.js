@@ -86,7 +86,7 @@ const Home = (props) => {
     const codeProvinceFrom = fromProvince.code;
     const toProvinceName = toProvince.name;
     const codeProvinceTo = toProvince.code;
-    const departureTime = moment.utc(startDate).format("DD/MM/YYYY");
+    const departureTime = moment(startDate).format("DD/MM/YYYY");
     setTimeout(function () {
       navigate(
         `/trip/from/${fromProvinceName}/${codeProvinceFrom}/to/${toProvinceName}/${codeProvinceTo}/${startDate}`

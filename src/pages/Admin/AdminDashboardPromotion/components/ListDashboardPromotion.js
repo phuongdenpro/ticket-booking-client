@@ -60,7 +60,7 @@ const DashboardPromotionList = (props) => {
             <span>
               {params.row?.startDate !== undefined &&
               params.row?.startDate !== null
-                ? moment.utc(params.row.startDate).format("DD-MM-YYYY")
+                ? moment(params.row.startDate).format("DD-MM-YYYY")
                 : "chưa xác định"}
             </span>
           </div>
@@ -79,7 +79,7 @@ const DashboardPromotionList = (props) => {
           <div>
             <span>
               {params.row?.endDate !== undefined && params.row?.endDate !== null
-                ? moment.utc(params.row.endDate).format("DD-MM-YYYY")
+                ? moment(params.row.endDate).format("DD-MM-YYYY")
                 : "chưa xác định"}
             </span>
           </div>

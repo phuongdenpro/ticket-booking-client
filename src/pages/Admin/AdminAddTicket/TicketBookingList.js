@@ -89,7 +89,7 @@ const TicketBookingList = (props) => {
         return (
           <div>
             <span>
-              {moment.utc(params.row.startDate).format("DD-MM-YYYY HH:MM")}
+              {moment(params.row.startDate).format("DD-MM-YYYY HH:MM")}
             </span>
           </div>
         );

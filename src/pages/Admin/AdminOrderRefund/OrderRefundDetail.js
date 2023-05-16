@@ -41,7 +41,7 @@ import TicketOrderListOrderRefund from "./components/TicketOrderListOrderRefund"
 
 const OrderRefundDetail = (props) => {
   const [orderDetail, setOrderDetail] = useState();
-  const dateNow = moment.utc(new Date()).format("DD-MM-YYYY hh:mm");
+  const dateNow = moment(new Date()).format("DD-MM-YYYY hh:mm");
   const [value, setValueChange] = useState(0);
   const [disabled, setDisabled] = useState(true);
   const idOrder = useParams();
@@ -299,7 +299,7 @@ const OrderRefundDetail = (props) => {
                     <TableBody>
                       <TableRow>
                         <TableCell align={"center"}>
-                          {moment.utc(dataPayment?.createdAt).format(
+                          {moment(dataPayment?.createdAt).format(
                             "DD/MM/YYYY HH:MM"
                           )}
                         </TableCell>
@@ -621,7 +621,7 @@ const OrderRefundDetail = (props) => {
                           style={{ width: "100%" }}
                           disabled={disabled}
                           className={"disabled-field input-detail"}
-                          value={moment.utc(dataOrderRefund?.createdAt).format(
+                          value={moment(dataOrderRefund?.createdAt).format(
                             "DD/MM/YYYY HH:mm"
                           )}
                         />

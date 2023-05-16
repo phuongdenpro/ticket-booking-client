@@ -79,7 +79,7 @@ const CreatePriceListDetail = (props) => {
   const defaultValues = {
     code: "",
     price: "",
-    createdAt: moment.utc(new Date()).format("DD/MM/YYYY"),
+    createdAt: moment(new Date()).format("DD/MM/YYYY"),
   };
 
   const methods = useForm({

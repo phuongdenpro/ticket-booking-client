@@ -85,7 +85,7 @@ const PrintForm = React.forwardRef((props, ref) => {
             >
               <p>
                 Ngày đặt:{" "}
-                {moment.utc(dataOrder?.createdAt).format("DD/MM/YYYY HH:MM")}
+                {moment(dataOrder?.createdAt).format("DD/MM/YYYY HH:MM")}
               </p>
             </div>
           </Grid>
@@ -205,7 +205,7 @@ const PrintForm = React.forwardRef((props, ref) => {
             >
               <p>
                 Thời gian khởi hành:{" "}
-                {moment.utc(
+                {moment(
                   dataOrder?.orderDetails[0]?.ticketDetail?.ticket?.tripDetail
                     ?.departureTime
                 ).format("DD/MM/YYYY HH:MM")}
