@@ -19,6 +19,7 @@ import customToast from "../ToastCustom";
 import ArticleIcon from "@mui/icons-material/Article";
 import { menu } from "../../data/menuData";
 import ModalAlert from "../Modal";
+import UserUpdatePassword from "./UpdatePassword";
 
 const Topbar = (props) => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const Topbar = (props) => {
   const [time, setTime] = useState();
   const [routeName, setRouteName] = useState();
   const [open, setOpen] = useState(false);
+  const [openChangePassModal, setOpenChangePassModal] = useState(false);
   const handleCloseModal = () => {
     setOpen(false);
   };
@@ -68,23 +70,36 @@ const Topbar = (props) => {
   const handleOpenProfileModal = () => {
     setOpen(true);
   };
-
+  const handleOpenChangePass = () => {
+    setOpenChangePassModal(true);
+  };
   const items = [
     {
+      key: "1",
       label: (
         <a rel="noopener noreferrer" onClick={handleOpenProfileModal}>
           Thông tin tài khoản
         </a>
       ),
-      key: "1",
     },
     {
+      key: "2",
+      label: (
+        <a rel="noopener noreferrer" onClick={handleOpenChangePass}>
+          Đổi mật khẩu
+        </a>
+      ),
+    },
+    {
+      type: "divider",
+    },
+    {
+      key: "3",
       label: (
         <a rel="noopener noreferrer" onClick={onClickLogout}>
           Đăng xuất
         </a>
       ),
-      key: "2",
     },
   ];
   return (
@@ -237,6 +252,10 @@ const Topbar = (props) => {
             type={"information"}
           />
         </div>
+        <UserUpdatePassword
+          openEditModal={openChangePassModal}
+          setOpenEditModal={setOpenChangePassModal}
+        />
       </Toolbar>
     </AppBar>
   );
