@@ -81,7 +81,6 @@ const Topbar = (props) => {
           Thông tin tài khoản
         </a>
       ),
-      key: "1",
     },
     {
       key: "2",
@@ -101,7 +100,6 @@ const Topbar = (props) => {
           Đăng xuất
         </a>
       ),
-      key: "2",
     },
   ];
   return (
