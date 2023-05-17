@@ -18,6 +18,11 @@ class AdminApi {
     const res = axiosClient.get(url);
     return res;
   }
+  changePassword(params) {
+    const url ="admin/password";
+    const res = axiosClient.patch(url, params);
+    return res;
+  }
   save_token(data) {
     Cookies.set("access_token", data.data.access_token);
     Cookies.set("refresh_token", data.data.refresh_token);
