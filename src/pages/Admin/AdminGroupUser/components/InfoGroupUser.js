@@ -17,6 +17,7 @@ import customToast from "../../../../components/ToastCustom";
 import { GroupCusApi } from "../../../../utils/groupCusApi";
 import CustomerList from "./ListCustomer";
 import EditGroupUser from "./EditGroupUser";
+import Cookies from "js-cookie";
 
 const InfoGroupUser = (props) => {
   const {
@@ -26,6 +27,7 @@ const InfoGroupUser = (props) => {
     handleGetData,
   } = props;
   const [showDrawerEdit, setShowDrawerEdit] = useState(false);
+  const isManager = Cookies.get("isManager");
   return (
     <Drawer
       PaperProps={{
@@ -47,15 +49,16 @@ const InfoGroupUser = (props) => {
       <div className="content-drawer">
         <div className="title-group">
           <span>Thông tin nhóm khách hàng</span>
-
-          <Button
-            variant="outlined"
-            size="small"
-            color="secondary"
-            onClick={() => setShowDrawerEdit(true)}
-          >
-            sửa thông tin
-          </Button>
+          {isManager == "true" && (
+            <Button
+              variant="outlined"
+              size="small"
+              color="secondary"
+              onClick={() => setShowDrawerEdit(true)}
+            >
+              sửa thông tin
+            </Button>
+          )}
         </div>
       </div>
       <div
@@ -106,7 +109,10 @@ const InfoGroupUser = (props) => {
         </div>
       </div>
       <div>
-        <CustomerList idGroup={dataGroupCustomer.id}  data={dataGroupCustomer.customers}></CustomerList>
+        <CustomerList
+          idGroup={dataGroupCustomer.id}
+          data={dataGroupCustomer.customers}
+        ></CustomerList>
       </div>
 
       <EditGroupUser

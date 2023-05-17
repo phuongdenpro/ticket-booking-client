@@ -3,7 +3,8 @@ import TableCustom from "../../../../components/TableCustom";
 import moment from "moment";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
-import BorderColorIcon from '@mui/icons-material/BorderColor';
+import BorderColorIcon from "@mui/icons-material/BorderColor";
+import Cookies from "js-cookie";
 
 const StationList = (props) => {
   const {
@@ -19,6 +20,7 @@ const StationList = (props) => {
     page,
     pageSize,
   } = props;
+  const isManager = Cookies.get("isManager");
 
   const columns = [
     {
@@ -26,7 +28,7 @@ const StationList = (props) => {
       headerName: "STT",
       headerAlign: "center",
       headerClassName: "theme",
-      contentAlign:'center',
+      contentAlign: "center",
       flex: 50,
     },
     {
@@ -34,7 +36,7 @@ const StationList = (props) => {
       headerName: "Mã bến xe",
       headerAlign: "center",
       headerClassName: "theme",
-      contentAlign:'center',
+      contentAlign: "center",
       flex: 100,
     },
     {
@@ -42,7 +44,7 @@ const StationList = (props) => {
       headerName: "Tên bến xe",
       headerAlign: "center",
       headerClassName: "theme",
-      contentAlign:'center',
+      contentAlign: "center",
       flex: 250,
       editable: true,
     },
@@ -59,7 +61,7 @@ const StationList = (props) => {
       headerName: "Ngày tạo",
       headerAlign: "center",
       headerClassName: "theme",
-      contentAlign:'center',
+      contentAlign: "center",
       type: "date",
       flex: 110,
       editable: true,
@@ -73,7 +75,7 @@ const StationList = (props) => {
     {
       field: "action",
       headerName: "Thao tác",
-      contentAlign:'center',
+      contentAlign: "center",
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
@@ -82,23 +84,34 @@ const StationList = (props) => {
         return (
           <div>
             {" "}
-            
             <Tooltip title="Xem chi tiết">
               <IconButton>
                 <VisibilityIcon
-                onClick={() => handelDetail(params.id)}
-                style={{ backgroundColor: "white", borderRadius: 5,width:17,height:17 }}/>
-              </IconButton>
-            </Tooltip>
-            
-            <Tooltip title="Cập nhật">
-              <IconButton>
-                <BorderColorIcon
-                  onClick={() => handleShowDetail(params.id)}
-                  style={{ backgroundColor: "white", borderRadius: 5, width:17,height:17}}
+                  onClick={() => handelDetail(params.id)}
+                  style={{
+                    backgroundColor: "white",
+                    borderRadius: 5,
+                    width: 17,
+                    height: 17,
+                  }}
                 />
               </IconButton>
             </Tooltip>
+            {isManager == "true" && (
+              <Tooltip title="Cập nhật">
+                <IconButton>
+                  <BorderColorIcon
+                    onClick={() => handleShowDetail(params.id)}
+                    style={{
+                      backgroundColor: "white",
+                      borderRadius: 5,
+                      width: 17,
+                      height: 17,
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
+            )}
           </div>
         );
       },

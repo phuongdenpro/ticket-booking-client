@@ -12,7 +12,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import moment from "moment";
 import { TripApi } from "../../../../utils/tripApi";
 import Badge from "../../../../components/Badge";
-
+import Cookies from "js-cookie";
 
 const TripDetailList = (props) => {
   const {
@@ -33,6 +33,7 @@ const TripDetailList = (props) => {
   const [idGroup, setIdGroup] = useState(null);
   const [nameGroup, setNameGroup] = useState("");
   const [codeGroup, setCodeGroup] = useState("");
+  const isManager = Cookies.get("isManager");
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -88,7 +89,8 @@ const TripDetailList = (props) => {
         return (
           <div>
             <span>
-              {params.row?.departureTime !== undefined && params.row?.departureTime !== null
+              {params.row?.departureTime !== undefined &&
+              params.row?.departureTime !== null
                 ? moment(params.row.departureTime).format("DD-MM-YYYY HH:mm")
                 : "chưa xác định"}
             </span>
@@ -107,7 +109,8 @@ const TripDetailList = (props) => {
         return (
           <div>
             <span>
-              {params.row?.expectedTime !== undefined && params.row?.expectedTime !== null
+              {params.row?.expectedTime !== undefined &&
+              params.row?.expectedTime !== null
                 ? moment(params.row.expectedTime).format("DD-MM-YYYY HH:mm")
                 : "chưa xác định"}
             </span>
@@ -128,7 +131,7 @@ const TripDetailList = (props) => {
           <div>
             <Badge
               type={params?.row?.status == "Còn vé" ? "success" : "danger"}
-              content={params?.row?.status }
+              content={params?.row?.status}
             />
           </div>
         );
@@ -144,9 +147,7 @@ const TripDetailList = (props) => {
       renderCell: (params) => {
         return (
           <div>
-            <span>
-              {params?.row?.vehicle.code}
-            </span>
+            <span>{params?.row?.vehicle.code}</span>
           </div>
         );
       },
@@ -161,9 +162,7 @@ const TripDetailList = (props) => {
       renderCell: (params) => {
         return (
           <div>
-            <span>
-              {params?.row?.vehicle.name}
-            </span>
+            <span>{params?.row?.vehicle.name}</span>
           </div>
         );
       },
@@ -178,9 +177,7 @@ const TripDetailList = (props) => {
       renderCell: (params) => {
         return (
           <div>
-            <span>
-              {params?.row?.vehicle.type}
-            </span>
+            <span>{params?.row?.vehicle.type}</span>
           </div>
         );
       },
@@ -195,9 +192,7 @@ const TripDetailList = (props) => {
       renderCell: (params) => {
         return (
           <div>
-            <span>
-              {params?.row?.vehicle.licensePlate}
-            </span>
+            <span>{params?.row?.vehicle.licensePlate}</span>
           </div>
         );
       },
@@ -212,40 +207,42 @@ const TripDetailList = (props) => {
       sortable: false,
       renderCell: (params) => {
         return (
-          <div>
-          <Tooltip title="Cập nhật">
-          <IconButton>
-            <BorderColorIcon
-            onClick={() => handleShowDetail(params.id)}
-              style={{
-                backgroundColor: "white",
-                borderRadius: 5,
-                width: 17,
-                height: 17,
-              }}
-            />
-          </IconButton>
-        </Tooltip>
-            <Tooltip title="Xóa">
-              <IconButton>
-                <DeleteIcon
-                  onClick={() =>
-                    handleOpenModal(
-                      params?.row?.id,
-                      params?.row?.name,
-                      params?.row?.code
-                    )
-                  }
-                  style={{
-                    backgroundColor: "white",
-                    borderRadius: 5,
-                    width: 17,
-                    height: 17,
-                  }}
-                />
-              </IconButton>
-            </Tooltip>
-          </div>
+          isManager == "true" && (
+            <div>
+              <Tooltip title="Cập nhật">
+                <IconButton>
+                  <BorderColorIcon
+                    onClick={() => handleShowDetail(params.id)}
+                    style={{
+                      backgroundColor: "white",
+                      borderRadius: 5,
+                      width: 17,
+                      height: 17,
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Xóa">
+                <IconButton>
+                  <DeleteIcon
+                    onClick={() =>
+                      handleOpenModal(
+                        params?.row?.id,
+                        params?.row?.name,
+                        params?.row?.code
+                      )
+                    }
+                    style={{
+                      backgroundColor: "white",
+                      borderRadius: 5,
+                      width: 17,
+                      height: 17,
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
+            </div>
+          )
         );
       },
     },

@@ -19,6 +19,7 @@ import AddTrip from "./components/AddTrip";
 import EditTrip from "./components/EditTrip";
 import TripDetail from "./components/TripDetail";
 import TripList from "./components/TripList";
+import Cookies from "js-cookie";
 
 const AdminTrip = (props) => {
   const [data, setData] = useState([]);
@@ -39,6 +40,7 @@ const AdminTrip = (props) => {
   const [idTrip, setIdTrip] = useState(null);
   const [detailTrip, setDetailTrip] = useState("");
   const [showDrawerDetail, setShowDrawerDetail] = useState(false);
+  const isManager = Cookies.get("isManager");
   const handelDetail = (id) => {
     setShowDrawerDetail(true);
     setIdTrip(id);
@@ -236,16 +238,18 @@ const AdminTrip = (props) => {
             >
               <span className={"txt"}>Làm mới</span>
             </Button>
-            <Button
-              variant="contained"
-              color="warning"
-              className={"btn-create"}
-              startIcon={<AddIcon />}
-              style={{ marginTop: 20, marginRight: 20 }}
-              onClick={() => setShowDrawerCreate(true)}
-            >
-              <span className={"txt"}>Thêm mới</span>
-            </Button>
+            {isManager == "true" && (
+              <Button
+                variant="contained"
+                color="warning"
+                className={"btn-create"}
+                startIcon={<AddIcon />}
+                style={{ marginTop: 20, marginRight: 20 }}
+                onClick={() => setShowDrawerCreate(true)}
+              >
+                <span className={"txt"}>Thêm mới</span>
+              </Button>
+            )}
           </Box>
         </Grid>
       </Grid>

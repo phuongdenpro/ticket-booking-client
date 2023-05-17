@@ -12,6 +12,7 @@ import CreateStation from "./Components/CreateEditStation/CreateStation";
 import EditStation from "./Components/CreateEditStation/EditStation";
 import DetailStation from "./Components/DetailStation/DetailStation";
 import StationList from "./Components/StationList";
+import Cookies from "js-cookie";
 
 
 const AdminStation = (props) => {
@@ -29,6 +30,7 @@ const AdminStation = (props) => {
   const [searchValue, setSearchValue] = useState("");
   const [filterParams, setFilterParams] = useState(null);
   const [data, setData] = useState([]);
+  const isManager = Cookies.get("isManager");
 
   const handleGetData = async () => {
     try {
@@ -225,36 +227,37 @@ const AdminStation = (props) => {
             QUẢN LÝ BẾN XE
           </h2>
         </Grid>
-        <Grid item md={5}>
-          <Box
-            style={{ display: "flex", justifyContent: "flex-end" }}
-            flexDirection={{ xs: "column", md: "row" }}
+        {isManager == "true" &&  <Grid item md={5}>
+        <Box
+          style={{ display: "flex", justifyContent: "flex-end" }}
+          flexDirection={{ xs: "column", md: "row" }}
+        >
+          <Button
+            variant="contained"
+            color="warning"
+            className={"btn-create"}
+            onClick={() => {
+              setShowDrawerCreate(true);
+            }}
+            startIcon={<AddIcon />}
+            style={{ marginTop: 20, marginRight: 20 }}
           >
-            <Button
-              variant="contained"
-              color="warning"
-              className={"btn-create"}
-              onClick={() => {
-                setShowDrawerCreate(true);
-              }}
-              startIcon={<AddIcon />}
-              style={{ marginTop: 20, marginRight: 20 }}
-            >
-              <span className={"txt"}>Thêm mới</span>
-            </Button>
+            <span className={"txt"}>Thêm mới</span>
+          </Button>
 
-            <Button
-              variant="contained"
-              color="error"
-              className={"btn-create"}
-              startIcon={<DeleteIcon />}
-              style={{ marginTop: 20 }}
-              onClick={() => handleOpenModal()}
-            >
-              <span className={"txt"}>Xóa</span>
-            </Button>
-          </Box>
-        </Grid>
+          <Button
+            variant="contained"
+            color="error"
+            className={"btn-create"}
+            startIcon={<DeleteIcon />}
+            style={{ marginTop: 20 }}
+            onClick={() => handleOpenModal()}
+          >
+            <span className={"txt"}>Xóa</span>
+          </Button>
+        </Box>
+      </Grid>}
+       
       </Grid>
       <Divider style={{ marginTop: 20 }} />
 

@@ -37,6 +37,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
+import Cookies from "js-cookie";
 
 const useStyles = makeStyles((theme) => ({
   dialogRoot: {
@@ -72,6 +73,7 @@ const TripDetail = (props) => {
   const lastDay = new Date(currentYear, 11, 31);
   const [disable, setDisable] = useState(true);
   const [total, setTotal] = useState(0);
+  const isManager = Cookies.get("isManager");
   const [selectedDate, setSelectedDate] = useState({
     startDate: firstDay,
     endDate: lastDay,
@@ -92,7 +94,6 @@ const TripDetail = (props) => {
       code: "Hết vé",
       name: "Hết vé",
     },
-    
   ];
 
   const filterDateTime = [
@@ -118,14 +119,14 @@ const TripDetail = (props) => {
         ...filterParams,
       });
       const data = response?.data?.data;
-      setTotal(response?.data?.pagination?.total)
+      setTotal(response?.data?.pagination?.total);
       const updatedData = await Promise.all(
         data.map(async (item) => {
           const response1 = await tripApi.getTripDetailById(item.id);
-  
+
           item.trip = response1?.data?.data?.trip;
-          item.vehicle =response1?.data?.data?.vehicle;
-  
+          item.vehicle = response1?.data?.data?.vehicle;
+
           return item;
         })
       );
@@ -261,25 +262,26 @@ const TripDetail = (props) => {
             Danh sách chuyến đi chi tiết của tuyến #
             <span style={{ color: "blue" }}>{dataTrip?.code}</span>
           </div>
-
-          <Button
-            variant="contained"
-            color="warning"
-            className={"btn-create"}
-            startIcon={<AddIcon />}
-            onClick={() => {
-              setShowDrawerCreate(true);
-            }}
-          >
-            Thêm mới
-          </Button>
+          {isManager == "true" && (
+            <Button
+              variant="contained"
+              color="warning"
+              className={"btn-create"}
+              startIcon={<AddIcon />}
+              onClick={() => {
+                setShowDrawerCreate(true);
+              }}
+            >
+              Thêm mới
+            </Button>
+          )}
         </DialogTitle>
         <DialogContent className={classes.dialogContent}>
           <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
             <div className="row" style={{ marginBottom: 20 }}>
               <div className="col-7">
                 <FormProvider {...methods}>
-                  <div style={{display:'flex', flexDirection:'row'}}>
+                  <div style={{ display: "flex", flexDirection: "row" }}>
                     <FormControlCustom label="Thời gian" fullWidth>
                       <div className="view-input" style={{ marginRight: 10 }}>
                         <SelectCustom

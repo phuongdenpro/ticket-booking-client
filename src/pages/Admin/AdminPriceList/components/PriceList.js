@@ -8,6 +8,7 @@ import ModalAlert from "../../../../components/Modal";
 import TableCustom from "../../../../components/TableCustom";
 import customToast from "../../../../components/ToastCustom";
 import { PriceListApi } from "../../../../utils/priceListApi";
+import Cookies from "js-cookie";
 
 const PriceList = (props) => {
   const {
@@ -27,6 +28,7 @@ const PriceList = (props) => {
   const [idPriceList, setIdPriceList] = useState(null);
   const [namePriceList, setNamePriceList] = useState("");
   const [codePriceList, setCodePriceList] = useState("");
+  const isManager = Cookies.get("isManager");
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -167,6 +169,7 @@ const PriceList = (props) => {
         );
       },
     },
+    
     {
       field: "action",
       headerName: "",
@@ -177,6 +180,7 @@ const PriceList = (props) => {
       sortable: false,
       renderCell: (params) => {
         return (
+          isManager == "true" &&
           <div>
             {" "}
             <Tooltip title="Xóa">

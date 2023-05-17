@@ -14,6 +14,7 @@ import { PriceListApi } from "../../../../utils/priceListApi";
 import CreatePriceListDetail from "./AddPriceDetailList";
 import EditPriceList from "./EditPriceList";
 import GroupDetailPriceList from "./GroupDetailPriceList";
+import Cookies from "js-cookie";
 
 const DetailPriceList = (props) => {
   const [dataCustomer, setData] = useState();
@@ -23,6 +24,7 @@ const DetailPriceList = (props) => {
   const [detailPriceList, setDetailPriceList] = useState({});
   const [showDrawer, setShowDrawer] = useState(false);
   const [showDrawerAdd, setShowDrawerAdd] = useState(false);
+  const isManager = Cookies.get("isManager");
 
   const [priceListDetails, setPriceListDetails] = useState([]);
 
@@ -140,30 +142,31 @@ const DetailPriceList = (props) => {
                   </div>
                 </div>
               </div>
-              <div>
-                <Button
+              {isManager == "true" && <div>
+              <Button
+                style={{
+                  padding: "1px 4px",
+                  textTransform: "none",
+                }}
+                onClick={() => setShowDrawer(true)}
+              >
+                <BorderColorIcon color="primary" fontSize="small" />
+                <span
                   style={{
-                    padding: "1px 4px",
-                    textTransform: "none",
+                    color: "#00354e ",
+                    fontSize: "0.875rem",
+                    fontWeight: "500",
+                    padding: "2px 5px",
+                    display: "flex",
+                    alignItems: "center",
+                    marginRight: "5px",
                   }}
-                  onClick={() => setShowDrawer(true)}
                 >
-                  <BorderColorIcon color="primary" fontSize="small" />
-                  <span
-                    style={{
-                      color: "#00354e ",
-                      fontSize: "0.875rem",
-                      fontWeight: "500",
-                      padding: "2px 5px",
-                      display: "flex",
-                      alignItems: "center",
-                      marginRight: "5px",
-                    }}
-                  >
-                    Cập nhật
-                  </span>
-                </Button>
-              </div>
+                  Cập nhật
+                </span>
+              </Button>
+            </div>}
+              
             </Grid>
             <Divider />
             <FormProvider {...methods}>
@@ -305,20 +308,21 @@ const DetailPriceList = (props) => {
               <Grid md={7}>
                 <h2 className={"txt-title"}>DANH SÁCH GIÁ</h2>
               </Grid>
-              <div
-                className="item-btn-right"
-                style={{ float: "right", marginBottom: 20 }}
+              {isManager =="true" && <div
+              className="item-btn-right"
+              style={{ float: "right", marginBottom: 20 }}
+            >
+              <Button
+                className={"btn-create"}
+                variant="outlined"
+                size="medium"
+                style={{ height: "2rem" }}
+                onClick={() => setShowDrawerAdd(true)}
               >
-                <Button
-                  className={"btn-create"}
-                  variant="outlined"
-                  size="medium"
-                  style={{ height: "2rem" }}
-                  onClick={() => setShowDrawerAdd(true)}
-                >
-                  <span className={"txt"}>Thêm nhóm</span>
-                </Button>
-              </div>
+                <span className={"txt"}>Thêm nhóm</span>
+              </Button>
+            </div>}
+              
             </Grid>
             <GroupDetailPriceList
               data={priceListDetails}

@@ -10,6 +10,7 @@ import ModalAlert from "../../../../components/Modal";
 import { TripApi } from "../../../../utils/tripApi";
 import customToast from "../../../../components/ToastCustom";
 import Badge from "../../../../components/Badge";
+import Cookies from "js-cookie";
 
 const TripList = (props) => {
   const {
@@ -30,6 +31,7 @@ const TripList = (props) => {
   const [openModal, setOpenModal] = useState(false);
   const [idTrip, setIdTrip] = useState(null);
   const [codeTrip, setCodeTrip] = useState("");
+  const isManager = Cookies.get("isManager");
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -196,6 +198,7 @@ const TripList = (props) => {
       sortable: false,
       renderCell: (params) => {
         return (
+          isManager == "true" &&
           <div>
             {" "}
             <Tooltip title="Cập nhật">

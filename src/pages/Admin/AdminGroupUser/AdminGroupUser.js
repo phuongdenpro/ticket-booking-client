@@ -15,6 +15,7 @@ import customToast from "../../../components/ToastCustom";
 import { Helmet } from "react-helmet";
 import AddGroupUser from "./components/AddGroupUser";
 import InfoGroupUser from "./components/InfoGroupUser";
+import Cookies from "js-cookie";
 
 const AdminGroupUser = (props) => {
   const [loadings, setLoadings] = useState([]);
@@ -28,7 +29,7 @@ const AdminGroupUser = (props) => {
   const [showDrawerDetail, setShowDrawerDetail] = useState(false);
   const [idGroupCustomer, setIdGroupCustomer] = useState(null);
   const [detailGroupCustomer, setDetailGroupCustomer] = useState("");
-
+  const isManager = Cookies.get("isManager");
 
   const handleGetData = async () => {
     try {
@@ -110,18 +111,20 @@ const AdminGroupUser = (props) => {
             >
               <span className={"txt"}>Làm mới</span>
             </Button>
-            <Button
-              variant="contained"
-              color="warning"
-              className={"btn-create"}
-              startIcon={<AddIcon />}
-              style={{ marginTop: 10, marginRight: 20 }}
-              onClick={() => {
-                setShowDrawerCreate(true);
-              }}
-            >
-              <span className={"txt"}>Thêm mới</span>
-            </Button>
+            {isManager == "true" && (
+              <Button
+                variant="contained"
+                color="warning"
+                className={"btn-create"}
+                startIcon={<AddIcon />}
+                style={{ marginTop: 10, marginRight: 20 }}
+                onClick={() => {
+                  setShowDrawerCreate(true);
+                }}
+              >
+                <span className={"txt"}>Thêm mới</span>
+              </Button>
+            )}
           </Box>
         </Grid>
       </Grid>
@@ -159,9 +162,8 @@ const AdminGroupUser = (props) => {
             fontWeight: "bold",
           }}
         >
-          Tổng số nhóm khách hàng:  {data?.data?.pagination?.total}
+          Tổng số nhóm khách hàng: {data?.data?.pagination?.total}
         </span>
-       
       </Grid>
       <div style={{ display: "flex" }}>
         <div style={{ flexGrow: 1 }}>
