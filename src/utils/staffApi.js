@@ -12,6 +12,26 @@ class StaffApi {
     return res;
   }
 
-  
+  create(params){
+    const url = `staff`;
+    const res = axiosClient.post(url, {
+      ...params,
+    });
+    return res;
+  }
+  getByCode(id, params) {
+    const url = `staff/code/${id}`;
+    const res = axiosClient.get(url, {
+      params: {
+        ...params,
+      },
+    });
+    return res;
+  }
+  deleteByCode(id, params) {
+    const url = `staff/code/${id}`;
+    const res = axiosClient.delete(url, params);
+    return res;
+  }
 }
 export { StaffApi };

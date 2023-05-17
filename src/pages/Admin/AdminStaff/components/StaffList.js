@@ -148,7 +148,7 @@ const StaffList = (props) => {
                     width: 17,
                     height: 17,
                   }}
-                  onClick={() => handelDetail(params.id)}
+                  onClick={() => handelDetail(params.row.code)}
                 />
               </IconButton>
             </Tooltip>

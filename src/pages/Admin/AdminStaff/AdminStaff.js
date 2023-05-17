@@ -9,6 +9,8 @@ import customToast from "../../../components/ToastCustom";
 import { CustomerApi } from "../../../utils/customerApi";
 import { StaffApi } from "../../../utils/staffApi";
 import StaffList from "./components/StaffList";
+import AddStaff from "./components/AddStaff";
+import InfoStaff from "./components/InfoStaff";
 
 const AdminStaff = (props) => {
   const [loadings, setLoadings] = useState([]);
@@ -20,22 +22,22 @@ const AdminStaff = (props) => {
   const [data, setData] = useState([]);
   const [showDrawerCreate, setShowDrawerCreate] = useState(false);
   const [showDrawerDetail, setShowDrawerDetail] = useState(false);
-  const [idCustomer, setIdCustomer] = useState(null);
-  const [detailCustomer, setDetailCustomer] = useState("");
+  const [idStaff, setIdStaff] = useState(null);
+  const [detailStaff, setDetailStaff] = useState("");
   const handelDetail = (id) => {
     setShowDrawerDetail(true);
-    setIdCustomer(id);
+    setIdStaff(id);
   };
 
-  const getDetailCustomer = async (id) => {
+  const getDetailStaff = async (id) => {
     if (!id) return;
-    const customerApi = new CustomerApi();
-    const response = await customerApi.getById(id);
-    setDetailCustomer(response.data.data);
+    const staffApi = new StaffApi();
+    const response = await staffApi.getByCode(id);
+    setDetailStaff(response.data.data);
   };
   useEffect(() => {
-    getDetailCustomer(idCustomer);
-  }, [idCustomer, showDrawerDetail]);
+    getDetailStaff(idStaff);
+  }, [idStaff, showDrawerDetail]);
 
   const handleGetData = async () => {
     try {
@@ -185,8 +187,17 @@ const AdminStaff = (props) => {
           ></StaffList>
         </div>
       </div>
-      
-      
+      <AddStaff
+        setShowDrawer={setShowDrawerCreate}
+        showDrawer={showDrawerCreate}
+        handleGetData={handleGetData}
+      ></AddStaff>
+      <InfoStaff
+        setShowDrawerDetail={setShowDrawerDetail}
+        showDrawerDetail={showDrawerDetail}
+        dataStaff={detailStaff}
+        handleGetData={handleGetData}
+      ></InfoStaff>
     </Box>
   );
 };

@@ -62,7 +62,7 @@ const CreatePriceListDetail = (props) => {
       .matches(/^\S*$/, "Mã không chưa khoảng trắng")
       .matches(/^[A-Za-z0-9]*$/, "Không chứa kí tự đặc biệt")
       .required("Mã không được phép bỏ trống"),
-      type: yup
+    type: yup
       .object()
       .typeError("Loại xe không được phép bỏ trống")
       .required("Loại xe không được phép bỏ trống"),
@@ -141,7 +141,7 @@ const CreatePriceListDetail = (props) => {
       price: numberFormat(value?.price),
       note: value?.note,
       priceListId: idPriceList,
-      seatType: value?.type.name
+      seatType: value?.type.name,
     };
 
     try {
