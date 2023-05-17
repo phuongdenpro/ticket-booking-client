@@ -128,7 +128,7 @@ const Login = () => {
                 <Form.Item>
                   <div className="view-link">
                     <Link
-                      to="/quen-mat-khau"
+                      to="/forgot-password"
                       style={{ color: "#00354e", fontSize: 16 }}
                     >
                       Quên mật khẩu ?

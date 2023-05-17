@@ -1,27 +1,25 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import { Button, Divider, Drawer, Grid } from "@mui/material";
+import { Button, Drawer, Grid } from "@mui/material";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { isEmpty } from "lodash";
 import { FormProvider, useForm } from "react-hook-form";
 
 import * as yup from "yup";
 
-import { useEffect, useMemo, useState } from "react";
-import InputField from "../../../../components/InputField";
-import FormControlCustom from "../../../../components/FormControl";
-import "../../../../assets/scss/default.scss";
 import { LoadingButton } from "@mui/lab";
-import customToast from "../../../../components/ToastCustom";
-import { GroupCusApi } from "../../../../utils/groupCusApi";
-import { ProvinceApi } from "../../../../utils/provinceApi";
-import { DistrictApi } from "../../../../utils/districtApi";
-import { WardApi } from "../../../../utils/wardApi";
+import { useEffect, useMemo, useState } from "react";
+import "../../../../assets/scss/default.scss";
+import FormControlCustom from "../../../../components/FormControl";
+import InputField from "../../../../components/InputField";
 import SelectCustom from "../../../../components/SelectCustom";
-import { CustomerApi } from "../../../../utils/customerApi";
+import customToast from "../../../../components/ToastCustom";
+import { DistrictApi } from "../../../../utils/districtApi";
+import { ProvinceApi } from "../../../../utils/provinceApi";
+import { StaffApi } from "../../../../utils/staffApi";
+import { WardApi } from "../../../../utils/wardApi";
 
-const AddUser = (props) => {
+const AddStaff = (props) => {
   const { setShowDrawer, showDrawer, handleGetData } = props;
   const [optionsProvince, setOptionsProvince] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState({});
@@ -30,7 +28,7 @@ const AddUser = (props) => {
   const [optionsWard, setOptionsWard] = useState([]);
 
 
-  const [optionCustomerGroup, setOptionCustomerGroup] = useState([]);
+
 
   const getDataProvince = async () => {
     try {
@@ -42,6 +40,7 @@ const AddUser = (props) => {
       newData.map((item) =>
         options.push({ name: item.name, code: item.code })
       );
+      
 
       setOptionsProvince(options);
     } catch (error) {}
@@ -72,22 +71,9 @@ const AddUser = (props) => {
   };
   useEffect(() => {
     getDataProvince();
-    getDataCustomerGroup();
   }, []);
 
-  const getDataCustomerGroup = async () => {
-    try {
-      const customerGroupApi = new GroupCusApi();
-      const res = await customerGroupApi.getAll();
-
-      const options = [];
-      res.data.data.map((item) =>
-        options.push({ name: item.name, code: item.code, id: item.id })
-      );
-
-      setOptionCustomerGroup(options);
-    } catch (error) {}
-  };
+  
 
   const optionGender = [
     {
@@ -127,11 +113,14 @@ const AddUser = (props) => {
       .typeError("Số điện thoại không được phép bỏ trống")
       .matches(/^0\d{9,}$/, "Số điện thoại không đúng định dạng")
       .required("Số điện thoại không được phép bỏ trống"),
+      email: yup
+      .string()
+      .typeError("Email không được phép bỏ trống")
+      .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Email không đúng định dạng")
+      .required("Email không được phép bỏ trống"),
+      
     address: yup.string().required("Địa chỉ không được phép bỏ trống"),
-    customerGroupId: yup
-      .object()
-      .typeError("Nhóm khách hàng không được bỏ trống")
-      .required("Nhóm khách hàng không được bỏ trống"),
+    
     wardCode: yup
       .object()
       .typeError("Phường/thị xã không được bỏ trống")
@@ -187,19 +176,19 @@ const AddUser = (props) => {
   }, [showDrawer]);
 
   const onSubmit = async (value) => {
+
     const params = {
       fullName: value.fullName,
       phone: value.phone,
-      email: value?.email || undefined,
+      email: value?.email,
       gender: value?.gender.code,
-      customerGroupId: value.customerGroupId.id,
       address: value.address,
       wardCode: value.wardCode.code,
       note: value?.note,
     };
     try {
-      const customerApi = new CustomerApi();
-      const res = await customerApi.create(params);
+      const staffApi = new StaffApi();
+      const res = await staffApi.create(params);
       customToast.success("Thêm mới thành công");
       handleGetData();
       setShowDrawer(false);
@@ -227,24 +216,24 @@ const AddUser = (props) => {
               <ArrowBackIosIcon className="icon-back" />
             </div>
             <div>
-              <span>Thêm khách hàng</span>
+              <span>Thêm nhân viên</span>
             </div>
           </div>
           <div className="content-drawer">
             <div className="title-group">
-              <span>Thông tin khách hàng</span>
+              <span>Thông tin nhân viên</span>
             </div>
             <div className="content">
               <Grid container spacing={1.5}>
                 <Grid item xs={6} className="auto-complete">
                   <FormControlCustom
-                    label={"Tên khách hàng"}
+                    label={"Tên nhân viên"}
                     fullWidth
                     isMarked
                   >
                     <InputField
                       name={"fullName"}
-                      placeholder={"Nhập tên khách hàng"}
+                      placeholder={"Nhập tên nhân viên"}
                       error={Boolean(errors.fullName)}
                       helperText={errors?.fullName?.message}
                     />
@@ -282,21 +271,7 @@ const AddUser = (props) => {
                   </FormControlCustom>
                 </Grid>
 
-                <Grid item xs={12}>
-                  <FormControlCustom
-                    label={"Nhóm khách hàng"}
-                    fullWidth
-                    isMarked
-                  >
-                    <SelectCustom
-                      name={"customerGroupId"}
-                      placeholder={"Chọn nhóm khách hàng"}
-                      error={Boolean(errors?.customerGroupId)}
-                      helperText={errors?.customerGroupId?.message}
-                      options={optionCustomerGroup}
-                    />
-                  </FormControlCustom>
-                </Grid>
+                
                 <Grid item xs={4}>
                   <FormControlCustom label={"Chọn địa chỉ"} fullWidth isMarked>
                     <SelectCustom
@@ -401,4 +376,4 @@ const AddUser = (props) => {
   );
 };
 
-export default AddUser;
+export default AddStaff;
