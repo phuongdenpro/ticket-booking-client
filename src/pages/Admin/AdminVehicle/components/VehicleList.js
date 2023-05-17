@@ -10,6 +10,7 @@ import { VehicleApi } from "../../../../utils/vehicleApi";
 import ModalAlert from "../../../../components/Modal";
 import { useState } from "react";
 import customToast from "../../../../components/ToastCustom";
+import Cookies from "js-cookie";
 
 const VehicleList = (props) => {
   const {
@@ -30,6 +31,7 @@ const VehicleList = (props) => {
   const [openModal, setOpenModal] = useState(false);
   const [idVehicle, setIdVehicle] = useState(null);
   const [codeVehicle, setCodeVehicle] = useState("");
+  const isManager = Cookies.get("isManager");
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -155,6 +157,7 @@ const VehicleList = (props) => {
       sortable: false,
       renderCell: (params) => {
         return (
+          isManager == "true" &&
           <div>
             {" "}
             <Tooltip title="Xem chi tiết">

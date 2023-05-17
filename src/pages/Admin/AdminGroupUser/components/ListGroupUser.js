@@ -3,13 +3,13 @@ import { Button, IconButton, Tooltip } from "@mui/material";
 import DataTable from "../../../../components/DataTable";
 import TableCustom from "../../../../components/TableCustom";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useState } from "react";
 import ModalAlert from "../../../../components/Modal";
 import { GroupCusApi } from "../../../../utils/groupCusApi";
 import customToast from "../../../../components/ToastCustom";
-import DeleteIcon from '@mui/icons-material/Delete';
-
+import DeleteIcon from "@mui/icons-material/Delete";
+import Cookies from "js-cookie";
 
 const UserGroupList = (props) => {
   const {
@@ -30,6 +30,7 @@ const UserGroupList = (props) => {
   const [idGroup, setIdGroup] = useState(null);
   const [nameGroup, setNameGroup] = useState("");
   const [codeGroup, setCodeGroup] = useState("");
+  const isManager = Cookies.get("isManager");
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -60,7 +61,7 @@ const UserGroupList = (props) => {
       headerName: "STT",
       flex: 40,
       headerAlign: "center",
-      contentAlign:'center',
+      contentAlign: "center",
       headerClassName: "theme",
       sortable: false,
     },
@@ -69,14 +70,14 @@ const UserGroupList = (props) => {
       headerName: "Mã nhóm",
       flex: 40,
       headerAlign: "center",
-      contentAlign:'center',
+      contentAlign: "center",
       headerClassName: "theme",
       sortable: false,
     },
     {
       field: "name",
       headerName: "Tên nhóm",
-      contentAlign:'center',
+      contentAlign: "center",
       flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
@@ -103,7 +104,7 @@ const UserGroupList = (props) => {
       headerName: "Thao tác",
       flex: 50,
       headerAlign: "center",
-      contentAlign:'center',
+      contentAlign: "center",
       headerClassName: "theme",
       sortable: false,
       renderCell: (params) => {
@@ -123,25 +124,27 @@ const UserGroupList = (props) => {
                 />
               </IconButton>
             </Tooltip>
-            <Tooltip title="Xóa">
-              <IconButton>
-                <DeleteIcon
-                  onClick={() =>
-                    handleOpenModal(
-                      params?.row?.id,
-                      params?.row?.name,
-                      params?.row?.code
-                    )
-                  }
-                  style={{
-                    backgroundColor: "white",
-                    borderRadius: 5,
-                    width: 17,
-                    height: 17,
-                  }}
-                />
-              </IconButton>
-            </Tooltip>
+            {isManager == "true" && (
+              <Tooltip title="Xóa">
+                <IconButton>
+                  <DeleteIcon
+                    onClick={() =>
+                      handleOpenModal(
+                        params?.row?.id,
+                        params?.row?.name,
+                        params?.row?.code
+                      )
+                    }
+                    style={{
+                      backgroundColor: "white",
+                      borderRadius: 5,
+                      width: 17,
+                      height: 17,
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
+            )}
           </div>
         );
       },

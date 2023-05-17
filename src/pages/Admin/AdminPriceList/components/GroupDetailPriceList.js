@@ -8,6 +8,7 @@ import TableCustom from "../../../../components/TableCustom";
 import customToast from "../../../../components/ToastCustom";
 import { convertCurrency } from "../../../../data/curren";
 import { PriceListApi } from "../../../../utils/priceListApi";
+import Cookies from "js-cookie";
 
 const GroupTicketPriceList = (props) => {
   const {
@@ -27,6 +28,7 @@ const GroupTicketPriceList = (props) => {
   const [openModal, setOpenModal] = useState(false);
   const [id, setId] = useState(null);
   const [code, setCode] = useState("");
+  const isManager = Cookies.get("isManager");
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -159,6 +161,7 @@ const GroupTicketPriceList = (props) => {
       sortable: false,
       renderCell: (params) => {
         return (
+          isManager == "true" &&
           <Button
             onClick={() => handleOpenModal(params?.row?.id, params?.row?.code)}
             style={{ backgroundColor: "transparent" }}

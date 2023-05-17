@@ -17,6 +17,7 @@ import { PriceListApi } from "../../../utils/priceListApi";
 import "./AdminPriceList.scss";
 import AddPriceList from "./components/AddPriceList";
 import PriceList from "./components/PriceList";
+import Cookies from "js-cookie";
 
 const AdminPriceList = (props) => {
   const [loadings, setLoadings] = useState([]);
@@ -31,6 +32,8 @@ const AdminPriceList = (props) => {
   const [selected, setSelected] = useState([]);
   const [showDrawerCreate, setShowDrawerCreate] = useState(false);
   const navigate = useNavigate();
+  const isManager = Cookies.get("isManager");
+  console.log(isManager);
 
   const [selectedDate, setSelectedDate] = useState({
     startDate: firstDay,
@@ -93,7 +96,7 @@ const AdminPriceList = (props) => {
   }, [page, pageSize, filterParams]);
 
   const handleSearch = (e) => {
-    setSearchValue(e.target.value)
+    setSearchValue(e.target.value);
   };
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -193,18 +196,20 @@ const AdminPriceList = (props) => {
             >
               <span className={"txt"}>Làm mới</span>
             </Button>
-            <Button
-              variant="contained"
-              color="warning"
-              className={"btn-create"}
-              startIcon={<AddIcon />}
-              style={{ marginTop: 10, marginRight: 20 }}
-              onClick={() => {
-                setShowDrawerCreate(true);
-              }}
-            >
-              <span className={"txt"}>Thêm mới</span>
-            </Button>
+            {isManager == "true" && (
+              <Button
+                variant="contained"
+                color="warning"
+                className={"btn-create"}
+                startIcon={<AddIcon />}
+                style={{ marginTop: 10, marginRight: 20 }}
+                onClick={() => {
+                  setShowDrawerCreate(true);
+                }}
+              >
+                <span className={"txt"}>Thêm mới</span>
+              </Button>
+            )}
           </Box>
         </Grid>
       </Grid>
@@ -332,10 +337,10 @@ const AdminPriceList = (props) => {
         </div>
       </div>
       <AddPriceList
-      setShowDrawer={setShowDrawerCreate}
-      showDrawer={showDrawerCreate}
-      handleGetData={handleGetData}
-    ></AddPriceList>
+        setShowDrawer={setShowDrawerCreate}
+        showDrawer={showDrawerCreate}
+        handleGetData={handleGetData}
+      ></AddPriceList>
     </Box>
   );
 };

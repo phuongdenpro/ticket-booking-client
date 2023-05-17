@@ -66,26 +66,26 @@ const StaffList = (props) => {
       headerClassName: "theme",
       sortable: false,
     },
-    {
-      field: "birthDay",
-      headerName: "Ngày sinh",
-      contentAlign: "center",
-      flex: 120,
-      headerAlign: "center",
-      headerClassName: "theme",
-      sortable: false,
-      renderCell: (params) => {
-        return (
-          <div>
-            <span>
-              {params.row?.birthDay
-                ? moment(params.row.birthDay).format("DD/MM/YYYY")
-                : "Chưa xác định"}
-            </span>
-          </div>
-        );
-      },
-    },
+    // {
+    //   field: "birthDay",
+    //   headerName: "Ngày sinh",
+    //   contentAlign: "center",
+    //   flex: 120,
+    //   headerAlign: "center",
+    //   headerClassName: "theme",
+    //   sortable: false,
+    //   renderCell: (params) => {
+    //     return (
+    //       <div>
+    //         <span>
+    //           {params.row?.birthDay
+    //             ? moment(params.row.birthDay).format("DD/MM/YYYY")
+    //             : "Chưa xác định"}
+    //         </span>
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       field: "gender",
       headerName: "Giới tính",

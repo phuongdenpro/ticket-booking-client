@@ -22,7 +22,7 @@ import CarRentalIcon from "@mui/icons-material/CarRental";
 import DepartureBoardIcon from "@mui/icons-material/DepartureBoard";
 import DirectionsTransitIcon from "@mui/icons-material/DirectionsTransit";
 import Cookies from "js-cookie";
-import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
+import ContactEmergencyIcon from "@mui/icons-material/ContactEmergency";
 
 const { Title } = Typography;
 
@@ -73,16 +73,15 @@ const Sidebar = (props) => {
       ],
       true
     ),
-    getItem("Quản lý Nhân Viên", "staff", <ContactEmergencyIcon />),
+    isManager == "true"
+      ? getItem("Quản lý Nhân Viên", "staff", <ContactEmergencyIcon />)
+      : undefined,
     getItem("Thống kê", "subDashboard", <BarChartOutlined />, [
       getChildItem("Thống kê vé", "dashboard-ticket"),
       getChildItem("Thống kê khuyến mãi ", "dashboard-promotion"),
       getChildItem("Doanh số bán hàng", "dashboard-cost"),
     ]),
-    
   ];
-
-
 
   const onOpenChange = (keys) => {
     const latestOpenKey = keys.find((key) => openKeys?.indexOf(key) === -1);

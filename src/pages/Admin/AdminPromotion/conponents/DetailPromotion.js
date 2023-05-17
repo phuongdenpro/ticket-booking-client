@@ -17,6 +17,7 @@ import AddPromotionLine from "./AddPromotionLine";
 import EditPromotion from "./EditPromotion";
 import PromotionDetailList from "./PromotionDetailList";
 import EditPromotionLine from "./EditPromotionLine";
+import Cookies from "js-cookie";
 
 const DetailPromotion = (props) => {
   const [dataCustomer, setData] = useState();
@@ -29,6 +30,7 @@ const DetailPromotion = (props) => {
   const [showDrawerEdit, setShowDrawerEdit] = useState(false);
   const [idPromotionLine, setIdPromotionLine] = useState(null);
   const [detailPromotionLine, setDetailPromotionLine] = useState("");
+  const isManager = Cookies.get("isManager");
 
   const [promotionLine, setPromotionLine] = useState([]);
 
@@ -164,30 +166,31 @@ const DetailPromotion = (props) => {
                   </div>
                 </div>
               </div>
-              <div>
-                <Button
+              {isManager == "true" && <div>
+              <Button
+                style={{
+                  padding: "1px 4px",
+                  textTransform: "none",
+                }}
+                onClick={() => setShowDrawer(true)}
+              >
+                <BorderColorIcon color="primary" fontSize="small" />
+                <span
                   style={{
-                    padding: "1px 4px",
-                    textTransform: "none",
+                    color: "#00354e ",
+                    fontSize: "0.875rem",
+                    fontWeight: "500",
+                    padding: "2px 5px",
+                    display: "flex",
+                    alignItems: "center",
+                    marginRight: "5px",
                   }}
-                  onClick={() => setShowDrawer(true)}
                 >
-                  <BorderColorIcon color="primary" fontSize="small" />
-                  <span
-                    style={{
-                      color: "#00354e ",
-                      fontSize: "0.875rem",
-                      fontWeight: "500",
-                      padding: "2px 5px",
-                      display: "flex",
-                      alignItems: "center",
-                      marginRight: "5px",
-                    }}
-                  >
-                    Cập nhật
-                  </span>
-                </Button>
-              </div>
+                  Cập nhật
+                </span>
+              </Button>
+            </div>}
+              
             </Grid>
             <Divider />
             <FormProvider {...methods}>
@@ -329,20 +332,21 @@ const DetailPromotion = (props) => {
               <Grid md={7}>
                 <h2 className={"txt-title"}>DÒNG KHUYẾN MÃI</h2>
               </Grid>
-              <div
-                className="item-btn-right"
-                style={{ float: "right", marginBottom: 20 }}
+              {isManager == "true" && <div
+              className="item-btn-right"
+              style={{ float: "right", marginBottom: 20 }}
+            >
+              <Button
+                className={"btn-create"}
+                variant="outlined"
+                size="medium"
+                style={{ height: "2rem" }}
+                onClick={() => setShowDrawerAdd(true)}
               >
-                <Button
-                  className={"btn-create"}
-                  variant="outlined"
-                  size="medium"
-                  style={{ height: "2rem" }}
-                  onClick={() => setShowDrawerAdd(true)}
-                >
-                  <span className={"txt"}>Thêm mới</span>
-                </Button>
-              </div>
+                <span className={"txt"}>Thêm mới</span>
+              </Button>
+            </div>}
+              
             </Grid>
             <PromotionDetailList
               data={promotionLine}

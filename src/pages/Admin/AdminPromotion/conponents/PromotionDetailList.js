@@ -11,6 +11,7 @@ import { PriceListApi } from "../../../../utils/priceListApi";
 import { PromotionApi } from "../../../../utils/promotionApi";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Cookies from "js-cookie";
 
 const PromotionDetailList = (props) => {
   const {
@@ -30,6 +31,7 @@ const PromotionDetailList = (props) => {
   const [openModal, setOpenModal] = useState(false);
   const [id, setId] = useState(null);
   const [code, setCode] = useState("");
+  const isManager = Cookies.get("isManager");
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -142,6 +144,7 @@ const PromotionDetailList = (props) => {
       sortable: false,
       renderCell: (params) => {
         return (
+          isManager == "true" &&
           <div>
             {" "}
             <Tooltip title="Cập nhật">

@@ -18,6 +18,7 @@ import { PromotionApi } from "../../../utils/promotionApi";
 import "./AdminPromotion.scss";
 import AddPromotion from "./conponents/AddPromotion";
 import PromotionList from "./conponents/PromotionList";
+import Cookies from "js-cookie";
 
 const AdminPromotion = (props) => {
   const [loadings, setLoadings] = useState([]);
@@ -33,7 +34,8 @@ const AdminPromotion = (props) => {
   const [endDate, setEndDate] = useState(null);
   const [showDrawerCreate, setShowDrawerCreate] = useState(false);
   const navigate = useNavigate();
-  
+  const isManager = Cookies.get("isManager");
+
   const filterDateTime = [
     {
       id: 1,
@@ -176,18 +178,20 @@ const AdminPromotion = (props) => {
             >
               <span className={"txt"}>Làm mới</span>
             </Button>
-            <Button
-              variant="contained"
-              color="warning"
-              className={"btn-create"}
-              startIcon={<AddIcon />}
-              style={{ marginTop: 10, marginRight: 20 }}
-              onClick={() => {
-                setShowDrawerCreate(true);
-              }}
-            >
-              <span className={"txt"}>Thêm mới</span>
-            </Button>
+            {isManager == "true" && (
+              <Button
+                variant="contained"
+                color="warning"
+                className={"btn-create"}
+                startIcon={<AddIcon />}
+                style={{ marginTop: 10, marginRight: 20 }}
+                onClick={() => {
+                  setShowDrawerCreate(true);
+                }}
+              >
+                <span className={"txt"}>Thêm mới</span>
+              </Button>
+            )}
           </Box>
         </Grid>
       </Grid>
@@ -216,14 +220,14 @@ const AdminPromotion = (props) => {
                 <div className="view-input" style={{ marginRight: 10 }}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
-                    disabled={disable}
-                    onChange={(e) => {
-                      setStartDate(new Date(e));
-                    }}
-                    value={dayjs(startDate)}
-                    className={"date-picker"}
-                    renderInput={(params) => <TextField {...params} />}
-                    format="DD/MM/YYYY"
+                      disabled={disable}
+                      onChange={(e) => {
+                        setStartDate(new Date(e));
+                      }}
+                      value={dayjs(startDate)}
+                      className={"date-picker"}
+                      renderInput={(params) => <TextField {...params} />}
+                      format="DD/MM/YYYY"
                     />
                   </LocalizationProvider>
                 </div>
@@ -233,14 +237,14 @@ const AdminPromotion = (props) => {
                 <div className="view-input" style={{ marginRight: 10 }}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
-                    disabled={disable}
-                    value={dayjs(endDate)}
-                    onChange={(e) => {
-                      setEndDate(new Date(e));
-                    }}
-                    className={"date-picker"}
-                    renderInput={(params) => <TextField {...params} />}
-                    format="DD/MM/YYYY"
+                      disabled={disable}
+                      value={dayjs(endDate)}
+                      onChange={(e) => {
+                        setEndDate(new Date(e));
+                      }}
+                      className={"date-picker"}
+                      renderInput={(params) => <TextField {...params} />}
+                      format="DD/MM/YYYY"
                     />
                   </LocalizationProvider>
                 </div>
@@ -309,10 +313,10 @@ const AdminPromotion = (props) => {
         </div>
       </div>
       <AddPromotion
-      setShowDrawer={setShowDrawerCreate}
-      showDrawer={showDrawerCreate}
-      handleGetData={handleGetData}
-    ></AddPromotion>
+        setShowDrawer={setShowDrawerCreate}
+        showDrawer={showDrawerCreate}
+        handleGetData={handleGetData}
+      ></AddPromotion>
     </Box>
   );
 };

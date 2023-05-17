@@ -14,6 +14,7 @@ import customToast from "../../../components/ToastCustom";
 import { Helmet } from "react-helmet";
 import AddVehicle from "./components/AddVehicle";
 import DetailVehicle from "./components/DetailVehicle";
+import Cookies from "js-cookie";
 
 const AdminVehicle = (props) => {
   const [data, setData] = useState([]);
@@ -31,6 +32,7 @@ const AdminVehicle = (props) => {
   const [detailVehicle, setDetailVehicle] = useState("");
 
   const [showDrawerCreate, setShowDrawerCreate] = useState(false);
+  const isManager = Cookies.get("isManager");
 
   const floorNumberFilter = [
     {
@@ -148,25 +150,26 @@ const AdminVehicle = (props) => {
             DANH SÁCH XE
           </h2>
         </Grid>
-        <Grid item md={5}>
-          <Box
-            style={{ display: "flex", justifyContent: "flex-end" }}
-            flexDirection={{ xs: "column", md: "row" }}
+        {isManager == "true" && <Grid item md={5}>
+        <Box
+          style={{ display: "flex", justifyContent: "flex-end" }}
+          flexDirection={{ xs: "column", md: "row" }}
+        >
+          <Button
+            variant="contained"
+            color="warning"
+            className={"btn-create"}
+            startIcon={<AddIcon />}
+            style={{ marginTop: 20, marginRight: 20 }}
+            onClick={() => {
+              setShowDrawerCreate(true);
+            }}
           >
-            <Button
-              variant="contained"
-              color="warning"
-              className={"btn-create"}
-              startIcon={<AddIcon />}
-              style={{ marginTop: 20, marginRight: 20 }}
-              onClick={() => {
-                setShowDrawerCreate(true);
-              }}
-            >
-              <span className={"txt"}>Thêm mới</span>
-            </Button>
-          </Box>
-        </Grid>
+            <span className={"txt"}>Thêm mới</span>
+          </Button>
+        </Box>
+      </Grid>}
+        
       </Grid>
       <Divider style={{ marginTop: 20 }} />
       <Grid

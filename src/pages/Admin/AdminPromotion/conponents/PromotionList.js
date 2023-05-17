@@ -10,6 +10,7 @@ import TableCustom from "../../../../components/TableCustom";
 import ModalAlert from "../../../../components/Modal";
 import { PromotionApi } from "../../../../utils/promotionApi";
 import customToast from "../../../../components/ToastCustom";
+import Cookies from "js-cookie";
 
 
 const PromotionList = (props) => {
@@ -29,6 +30,7 @@ const PromotionList = (props) => {
   const [openModal, setOpenModal] = useState(false);
   const [idPromotion, setIdPromotion] = useState(null);
   const [codePromotion, setCodePromotion] = useState("");
+  const isManager = Cookies.get("isManager");
 
     const handleCloseModal = () => {
       setOpenModal(false);
@@ -212,6 +214,7 @@ const PromotionList = (props) => {
       sortable: false,
       renderCell: (params) => {
         return (
+          isManager == "true" &&
           <div>
             {" "}
             <Tooltip title="Xóa">
