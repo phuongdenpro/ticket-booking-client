@@ -156,13 +156,13 @@ const EditStaff = (props) => {
       },
       provinceId:
         {
-          code: dataCustomer?.ward?.district.province.code,
-          name: dataCustomer?.ward?.district.province.name,
+          code: dataCustomer?.ward?.district?.province?.code,
+          name: dataCustomer?.ward?.district?.province?.name,
         } || "",
       districtId:
         {
-          code: dataCustomer?.ward.district?.code,
-          name: dataCustomer?.ward.district?.name,
+          code: dataCustomer?.ward?.district?.code,
+          name: dataCustomer?.ward?.district?.name,
         } || "",
       wardId:
         {
