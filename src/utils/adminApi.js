@@ -56,6 +56,19 @@ class AdminApi {
       refresh: Cookies.get("access_token"),
     };
   }
+  sendOtp(params) {
+    const url = "auth/admin/send-otp";
+    return axiosClient.post(url, params);
+  };
+  activeAccount(params)  {
+    const url = "admin/active";
+    return axiosClient.post(url, params);
+  };
+  resetPassword(params) {
+    const url ="admin/reset-password";
+    const res = axiosClient.patch(url, params);
+    return res;
+  }
 }
 
 export { AdminApi };
