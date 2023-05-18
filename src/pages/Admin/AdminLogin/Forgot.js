@@ -1,4 +1,4 @@
-import { CodeOutlined, UserOutlined,LockOutlined } from "@ant-design/icons";
+import { CodeOutlined, UserOutlined, LockOutlined } from "@ant-design/icons";
 import { Button, Col, Form, Input, Row, Typography, message } from "antd";
 import React, { useRef, useState } from "react";
 import { Helmet } from "react-helmet";
@@ -9,7 +9,6 @@ import customToast from "../../../components/ToastCustom";
 const { Title } = Typography;
 
 const Forgot = () => {
-
   const phoneRef = useRef();
   const passwordRef = useRef();
   const nameRef = useRef();
@@ -87,8 +86,6 @@ const Forgot = () => {
     }
   };
 
-
-
   const requestOTP = async () => {};
 
   const verifyOTP = async (e) => {
@@ -103,7 +100,6 @@ const Forgot = () => {
         phone: phone != "" ? phone : undefined,
         email: email != "" ? email : undefined,
         otp: OTP,
-        type: "RESET_PASSWORD",
       });
       customToast.success("Xác thực thành công");
       setFlag1(false);
@@ -119,7 +115,7 @@ const Forgot = () => {
       passwordRef.current.focus();
       return;
     }
-    
+
     if (values.password != values.repeat_password) {
       customToast.error("Mật khẩu không giống nhau");
       stopLoading(0);
@@ -131,19 +127,17 @@ const Forgot = () => {
       const res = await adminApi.resetPassword({
         phone: phone != "" ? phone : undefined,
         email: email != "" ? email : undefined,
-        otp: OTP,
         newPassword: values.password,
-        confirmNewPassword:values.repeat_password
+        confirmNewPassword: values.repeat_password,
       });
+
       customToast.success("Lấy lại mật khẩu thành công");
-      setFlag1(true);
-      setFlag2(false);
-      setFlag3(false);
-      window.location.href ='/admin/login';
+      setTimeout(() => {
+        window.location.href = "/admin/login";
+      }, 1000); // Chờ 2 giây trước khi chuyển trang
     } catch (error) {
       customToast.error(error.response.data.message);
     }
-    
   };
 
   return (
@@ -171,7 +165,7 @@ const Forgot = () => {
           <title> PDBus - Quên mật khẩu</title>
         </Helmet>
         <Title level={2} style={{ marginBottom: "20px" }}>
-         {flag3 == true ? "Lấy lại mật khẩu" :"Quên mật khẩu"}
+          {flag3 == true ? "Lấy lại mật khẩu" : "Quên mật khẩu"}
         </Title>
         <Form
           form={form}
@@ -330,7 +324,6 @@ const Forgot = () => {
           <p>
             <Link to="/admin/login">Đăng nhập ngay</Link>{" "}
           </p>
-          
         </Form>
       </Col>
     </Row>
