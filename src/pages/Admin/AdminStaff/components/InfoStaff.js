@@ -9,6 +9,7 @@ import ModalAlert from "../../../../components/Modal";
 import customToast from "../../../../components/ToastCustom";
 import { CustomerApi } from "../../../../utils/customerApi";
 import { StaffApi } from "../../../../utils/staffApi";
+import EditStaff from "./EditStaff";
 
 const InfoStaff = (props) => {
   const { setShowDrawerDetail, showDrawerDetail, dataStaff, handleGetData } =
@@ -99,9 +100,7 @@ const InfoStaff = (props) => {
 
         <div className="col-12"></div>
         <div className="col-3" style={{ marginTop: 10 }}>
-          <span style={{ color: "#000", fontSize: 16 }}>
-            Tên nhân viên:
-          </span>{" "}
+          <span style={{ color: "#000", fontSize: 16 }}>Tên nhân viên:</span>{" "}
         </div>
         <div className="col-8" style={{ marginTop: 10 }}>
           <span variant="h6" style={{ fontSize: 16 }}>
@@ -159,7 +158,14 @@ const InfoStaff = (props) => {
         <div className="col-3" style={{ marginTop: 10 }}>
           <span style={{ color: "#000", fontSize: 16 }}>Trạng thái:</span>{" "}
         </div>
-
+        <div className="col-8" style={{ marginTop: 10 }}>
+          <Badge
+            type={dataStaff?.isActive == true ? "success" : "danger"}
+            content={
+              dataStaff?.isActive == true ? "Kích hoạt" : "Chưa kích hoạt"
+            }
+          />
+        </div>
         <div className="col-12"></div>
         <div className="col-3" style={{ marginTop: 10 }}>
           <span style={{ color: "#000", fontSize: 16 }}>Ngày tạo:</span>{" "}
@@ -187,6 +193,13 @@ const InfoStaff = (props) => {
           </div>
         }
       />
+      <EditStaff
+        setShowDrawer={setShowDrawerEdit}
+        showDrawer={showDrawerEdit}
+        dataCustomer={dataStaff}
+        setShowDrawerDetail={setShowDrawerDetail}
+        handleGetData={handleGetData}
+      ></EditStaff>
     </Drawer>
   );
 };
