@@ -33,5 +33,10 @@ class StaffApi {
     const res = axiosClient.delete(url, params);
     return res;
   }
+  editByCode(id, params) {
+    const url = `staff/code/${id}`
+    const res = axiosClient.patch(url, params);
+    return res;
+  }
 }
 export { StaffApi };
