@@ -75,10 +75,10 @@ const EditVehicle = (props) => {
       .object()
       .typeError("Loại xe không được phép bỏ trống")
       .required("Loại xe không được phép bỏ trống"),
-    floorNumber: yup
-      .object()
-      .typeError("Số tầng không được phép bỏ trống")
-      .required("Số tầng không được phép bỏ trống"),
+      floorNumber: yup
+      .number()
+      .typeError("Vui lòng điền đúng định dạng")
+      .required("Vui lòng nhập số tầng"),
     totalSeat: yup
       .number()
       .typeError("Vui lòng điền đúng định dạng")
