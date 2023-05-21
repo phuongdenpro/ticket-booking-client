@@ -103,10 +103,7 @@ const EditVehicle = (props) => {
             : "OTHER",
         name: dataVehicle?.type,
       },
-      floorNumber: {
-        code: dataVehicle?.floorNumber,
-        name: dataVehicle?.floorNumber == 1 ? "Một tầng" : "Hai tầng",
-      },
+      floorNumber: dataVehicle?.floorNumber,
       totalSeat: dataVehicle?.totalSeat,
       licensePlate: dataVehicle?.licensePlate,
       image: dataVehicle?.images?.[0]?.url || "",
@@ -128,12 +125,15 @@ const EditVehicle = (props) => {
       setValue("totalSeat", defaultValues.totalSeat);
       setDisabled(false);
     } else if (watchType?.code === "LIMOUSINE") {
+      setValue("floorNumber", 2);
       setValue("totalSeat", 34);
       setDisabled(true);
     } else if (watchType?.code === "SLEEPER_BUS") {
+      setValue("floorNumber", 2);
       setValue("totalSeat", 44);
       setDisabled(true);
     } else if (watchType?.code === "SEAT_BUS") {
+      setValue("floorNumber", 1);
       setValue("totalSeat", 28);
       setDisabled(true);
     }
@@ -293,19 +293,20 @@ const EditVehicle = (props) => {
                 </Grid>
                 <Grid item xs={6}>
                   <FormControlCustom label={"Số tầng"} fullWidth isMarked>
-                    <SelectCustom
+                  <InputField
+                      disabled
                       name={"floorNumber"}
-                      placeholder={"Chọn số tầng"}
-                      error={Boolean(errors?.floorNumber)}
+                      placeholder={"Nhập số tầng"}
+                      error={Boolean(errors.floorNumber)}
                       helperText={errors?.floorNumber?.message}
-                      options={floorNumberFilter}
                     />
+                    
                   </FormControlCustom>
                 </Grid>
                 <Grid item xs={6}>
                   <FormControlCustom label={"Số ghế"} fullWidth isMarked>
                     <InputField
-                      disabled={disabled}
+                      disabled
                       name={"totalSeat"}
                       placeholder={"Nhập số ghế"}
                       error={Boolean(errors.totalSeat)}
