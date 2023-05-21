@@ -212,7 +212,7 @@ const EditVehicle = (props) => {
         description: value?.description,
         type: value.type?.name,
         licensePlate: value.licensePlate,
-        floorNumber: value.floorNumber.code,
+        floorNumber: value.floorNumber,
         totalSeat: value.totalSeat,
         images: [
           {
