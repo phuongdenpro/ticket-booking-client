@@ -103,7 +103,7 @@ const TripDetailList = (props) => {
     {
       field: "status",
       headerName: "Trạng thái",
-      flex: 70,
+      flex: 100,
       headerAlign: "center",
       headerClassName: "theme",
       contentAlign: "center",
