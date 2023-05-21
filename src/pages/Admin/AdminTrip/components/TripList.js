@@ -101,7 +101,7 @@ const TripList = (props) => {
     {
       field: "toStation",
       headerName: "Nơi đến",
-      flex: 150,
+      flex: 140,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
@@ -118,7 +118,7 @@ const TripList = (props) => {
     {
       field: "startDate",
       headerName: "Ngày bắt đầu",
-      flex: 100,
+      flex: 113,
       headerAlign: "center",
       contentAlign: "center",
       headerClassName: "theme",
@@ -152,7 +152,7 @@ const TripList = (props) => {
     {
       field: "status",
       headerName: "Trạng thái",
-      flex: 125,
+      flex: 140,
       headerAlign: "center",
       contentAlign: "center",
       headerClassName: "theme",
@@ -191,7 +191,7 @@ const TripList = (props) => {
     {
       field: "action",
       headerName: "Thao tác",
-      flex: 100,
+      flex: 110,
       headerAlign: "center",
       contentAlign: "center",
       headerClassName: "theme",
