@@ -164,7 +164,7 @@ const TripDetailList = (props) => {
       renderCell: (params) => {
         return (
           <div>
-            <span>{params?.row?.vehicle.type}</span>
+            <span>{params?.row?.vehicle?.type}</span>
           </div>
         );
       },
@@ -179,7 +179,7 @@ const TripDetailList = (props) => {
       renderCell: (params) => {
         return (
           <div>
-            <span>{params?.row?.vehicle.licensePlate}</span>
+            <span>{params?.row?.vehicle?.licensePlate}</span>
           </div>
         );
       },
