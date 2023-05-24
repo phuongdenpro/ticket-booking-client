@@ -199,7 +199,6 @@ const GroupTicketPriceList = (props) => {
         total={total}
         page={page}
         pageSize={pageSize}
-        pagination={false}
       />
       <ModalAlert
         open={openModal}
