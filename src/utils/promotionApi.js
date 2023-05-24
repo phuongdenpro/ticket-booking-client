@@ -45,10 +45,13 @@ class PromotionApi {
     return res;
   }
 
-  getPromotionLine(codePromotion) {
-    const url = `promotion-line?promotionCode=${codePromotion}&sort=ASC&isAll=true`;
-
-    const res = axiosClient.get(url);
+  getPromotionLine(params) {
+    const url = `promotion-line`;
+    const res = axiosClient.get(url, {
+      params: {
+        ...params,
+      },
+    });
     return res;
   }
 
@@ -58,10 +61,9 @@ class PromotionApi {
       ...params,
     });
     return res;
-
   }
 
-  deletePromotionLine(id){
+  deletePromotionLine(id) {
     const url = `promotion-line/id/${id}`;
     const res = axiosClient.delete(url);
     return res;
@@ -83,7 +85,7 @@ class PromotionApi {
     return res;
   }
 
-  getPromotionAvailable(params){
+  getPromotionAvailable(params) {
     const url = "promotion-line/available";
     const res = axiosClient.get(url, {
       params: {
@@ -93,7 +95,7 @@ class PromotionApi {
     return res;
   }
 
-  calculatePromotionLine(params){
+  calculatePromotionLine(params) {
     const url = "promotion-history/calculate-promotion-line";
     const res = axiosClient.get(url, {
       params: {

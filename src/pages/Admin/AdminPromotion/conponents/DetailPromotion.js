@@ -31,6 +31,9 @@ const DetailPromotion = (props) => {
   const [idPromotionLine, setIdPromotionLine] = useState(null);
   const [detailPromotionLine, setDetailPromotionLine] = useState("");
   const isManager = Cookies.get("isManager");
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalPromotion, setTotalPromotion] = useState(0);
 
   const [promotionLine, setPromotionLine] = useState([]);
 
@@ -67,9 +70,14 @@ const DetailPromotion = (props) => {
   const getPromotionLine = async () => {
     try {
       const promotionApi = new PromotionApi();
-      const res = await promotionApi.getPromotionLine(codePromotion.id);
+      const res = await promotionApi.getPromotionLine({
+        promotionCode: codePromotion.id,
+        page: page + 1,
+        pageSize: pageSize,
+      });
       console.log(res);
       setPromotionLine(res?.data.data);
+      setTotalPromotion(res?.data?.pagination?.total)
     } catch (error) {
       customToast.error(error);
     }
@@ -79,6 +87,19 @@ const DetailPromotion = (props) => {
     getDetailPromotion();
     getPromotionLine();
   }, [codePromotion]);
+
+  useEffect(() => {
+    getPromotionLine();
+  }, [page, pageSize]);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setPageSize(+event.target.value);
+    setPage(0);
+  };
   const defaultValues = useMemo(
     () => ({
       province: dataCustomer?.citiesId || "",
@@ -352,6 +373,11 @@ const DetailPromotion = (props) => {
               data={promotionLine}
               getPromotionLine={getPromotionLine}
               handleShowDetail={handleShowDetail}
+              handleChangePage={handleChangePage}
+              onChangeRowsPerPage={handleChangeRowsPerPage}
+              total={totalPromotion}
+              page={page}
+              pageSize={pageSize}
             />
           </div>
         </Grid>

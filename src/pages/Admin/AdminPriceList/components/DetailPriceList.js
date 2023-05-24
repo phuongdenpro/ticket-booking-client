@@ -25,6 +25,9 @@ const DetailPriceList = (props) => {
   const [showDrawer, setShowDrawer] = useState(false);
   const [showDrawerAdd, setShowDrawerAdd] = useState(false);
   const isManager = Cookies.get("isManager");
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const [priceListDetails, setPriceListDetails] = useState([]);
 
@@ -43,8 +46,11 @@ const DetailPriceList = (props) => {
       const priceListApi = new PriceListApi();
       const res = await priceListApi.getPriceListDetails({
         priceListCode: codePriceList.id,
+        page: page + 1,
+        pageSize: pageSize,
       });
-      setPriceListDetails(res?.data.data);
+      setPriceListDetails(res?.data?.data);
+      setTotalPrice(res?.data?.pagination?.total);
     } catch (error) {
       customToast.error(error);
     }
@@ -54,7 +60,20 @@ const DetailPriceList = (props) => {
     getDetailPriceList();
     getPriceListDetails();
   }, [codePriceList]);
-  
+
+  useEffect(() => {
+    getPriceListDetails();
+  }, [page, pageSize]);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setPageSize(+event.target.value);
+    setPage(0);
+  };
+
   const defaultValues = useMemo(
     () => ({
       province: dataCustomer?.citiesId || "",
@@ -142,31 +161,32 @@ const DetailPriceList = (props) => {
                   </div>
                 </div>
               </div>
-              {isManager == "true" && <div>
-              <Button
-                style={{
-                  padding: "1px 4px",
-                  textTransform: "none",
-                }}
-                onClick={() => setShowDrawer(true)}
-              >
-                <BorderColorIcon color="primary" fontSize="small" />
-                <span
-                  style={{
-                    color: "#00354e ",
-                    fontSize: "0.875rem",
-                    fontWeight: "500",
-                    padding: "2px 5px",
-                    display: "flex",
-                    alignItems: "center",
-                    marginRight: "5px",
-                  }}
-                >
-                  Cập nhật
-                </span>
-              </Button>
-            </div>}
-              
+              {isManager == "true" && (
+                <div>
+                  <Button
+                    style={{
+                      padding: "1px 4px",
+                      textTransform: "none",
+                    }}
+                    onClick={() => setShowDrawer(true)}
+                  >
+                    <BorderColorIcon color="primary" fontSize="small" />
+                    <span
+                      style={{
+                        color: "#00354e ",
+                        fontSize: "0.875rem",
+                        fontWeight: "500",
+                        padding: "2px 5px",
+                        display: "flex",
+                        alignItems: "center",
+                        marginRight: "5px",
+                      }}
+                    >
+                      Cập nhật
+                    </span>
+                  </Button>
+                </div>
+              )}
             </Grid>
             <Divider />
             <FormProvider {...methods}>
@@ -308,25 +328,31 @@ const DetailPriceList = (props) => {
               <Grid md={7}>
                 <h2 className={"txt-title"}>DANH SÁCH GIÁ</h2>
               </Grid>
-              {isManager =="true" && <div
-              className="item-btn-right"
-              style={{ float: "right", marginBottom: 20 }}
-            >
-              <Button
-                className={"btn-create"}
-                variant="outlined"
-                size="medium"
-                style={{ height: "2rem" }}
-                onClick={() => setShowDrawerAdd(true)}
-              >
-                <span className={"txt"}>Thêm nhóm</span>
-              </Button>
-            </div>}
-              
+              {isManager == "true" && (
+                <div
+                  className="item-btn-right"
+                  style={{ float: "right", marginBottom: 20 }}
+                >
+                  <Button
+                    className={"btn-create"}
+                    variant="outlined"
+                    size="medium"
+                    style={{ height: "2rem" }}
+                    onClick={() => setShowDrawerAdd(true)}
+                  >
+                    <span className={"txt"}>Thêm nhóm</span>
+                  </Button>
+                </div>
+              )}
             </Grid>
             <GroupDetailPriceList
               data={priceListDetails}
               getPriceListDetails={getPriceListDetails}
+              handleChangePage={handleChangePage}
+              onChangeRowsPerPage={handleChangeRowsPerPage}
+              total={totalPrice}
+              page={page}
+              pageSize={pageSize}
             />
           </div>
         </Grid>
