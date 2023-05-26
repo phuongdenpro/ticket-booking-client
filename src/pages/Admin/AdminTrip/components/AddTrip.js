@@ -34,7 +34,6 @@ const AddTrip = (props) => {
   });
   const optionStatus = ["Kích hoạt", "Tạm ngưng"];
   const [optionStations, setOptionStations] = useState([]);
-  
 
   const handelGetOptionStations = async () => {
     try {
@@ -72,6 +71,10 @@ const AddTrip = (props) => {
       .object()
       .typeError("Vui lòng chọn nơi đến")
       .required("Vui lòng chọn nơi đến"),
+    travelHours: yup
+      .number()
+      .typeError("Vui lòng điền đúng định dạng")
+      .required("Vui lòng nhập thời gian di chuyển"),
   });
 
   const defaultValues = {
@@ -79,6 +82,7 @@ const AddTrip = (props) => {
     name: "",
     note: "",
     status: "",
+    travelHours:"",
   };
 
   const methods = useForm({
@@ -122,6 +126,7 @@ const AddTrip = (props) => {
       endDate: new Date(selectedDate?.endDate),
       fromStationId: value.codeStationFrom.id,
       toStationId: value.codeStationTo.id,
+      travelHours: value.travelHours
     };
     try {
       const tripApi = new TripApi();
@@ -200,7 +205,7 @@ const AddTrip = (props) => {
                   </FormControlCustom>
                 </Grid>
                 <Grid item xs={6}>
-                  <FormControlCustom label="Ngày xuất phát" fullWidth isMarked>
+                  <FormControlCustom label="Ngày bắt đầu" fullWidth isMarked>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
                         value={dayjs(selectedDate?.startDate)}
@@ -218,7 +223,7 @@ const AddTrip = (props) => {
                   </FormControlCustom>
                 </Grid>
                 <Grid item xs={6}>
-                  <FormControlCustom label="Ngày đến" fullWidth isMarked>
+                  <FormControlCustom label="Ngày kết thúc" fullWidth isMarked>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
                         value={dayjs(selectedDate?.endDate)}
@@ -262,8 +267,22 @@ const AddTrip = (props) => {
                     />
                   </FormControlCustom>
                 </Grid>
-
-                <Grid item xs={12}>
+                <Grid item xs={6}>
+                  <FormControlCustom
+                    label={"Thời gian di chuyển (giờ)"}
+                    fullWidth
+                    isMarked
+                  >
+                    <InputField
+                      type="number"
+                      name={"travelHours"}
+                      placeholder={"Nhập thời gian di chuyển"}
+                      helperText={errors?.travelHours?.message}
+                      error={Boolean(errors.travelHours)}
+                    />
+                  </FormControlCustom>
+                </Grid>
+                <Grid item xs={6}>
                   <FormControlCustom label={"Trạng thái"} fullWidth isMarked>
                     <SelectCustom
                       name={"status"}

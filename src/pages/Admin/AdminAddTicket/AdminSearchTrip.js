@@ -19,7 +19,6 @@ import TripDetailList from "./TripDetailList";
 import { TripApi } from "../../../utils/tripApi";
 import { useNavigate } from "react-router-dom";
 
-
 const AdminSearchTrip = (props) => {
   const [optionsProvince, setOptionsProvince] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,9 +31,15 @@ const AdminSearchTrip = (props) => {
   const [total, setTotal] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const navigate = useNavigate();
+  const now = new Date();
 
-  const onBookingTrip = (code) => {
-    navigate(`/admin/booking-trip/create-ticket/${code}`);
+  const onBookingTrip = (code, departureTime) => {
+    if(new Date(departureTime) > now){
+      navigate(`/admin/booking-trip/create-ticket/${code}`);
+    }else{
+      customToast.error("Chuyến này đã khởi hành không thể đặt vé")
+    }
+    
   };
 
   const getDataProvince = async () => {
@@ -42,8 +47,8 @@ const AdminSearchTrip = (props) => {
       setLoading(true);
       const provinceApi = new ProvinceApi();
       const res = await provinceApi.getAllProvince();
-      const data = res?.data?.data
-      const newData = data.filter(item => item.code !== 0);
+      const data = res?.data?.data;
+      const newData = data.filter((item) => item.code !== 0);
       setOptionsProvince(newData);
       setLoading(false);
     } catch (error) {}
@@ -64,19 +69,18 @@ const AdminSearchTrip = (props) => {
       });
 
       const data = response?.data?.data;
-      setTotal(response?.data?.pagination?.total)
+      setTotal(response?.data?.pagination?.total);
       const updatedData = await Promise.all(
         data.map(async (item) => {
           const response1 = await tripApi.getTripDetailById(item.id);
-  
+
           item.trip = response1?.data?.data?.trip;
-          item.vehicle =response1?.data?.data?.vehicle;
-  
+          item.vehicle = response1?.data?.data?.vehicle;
+
           return item;
         })
       );
       setData(updatedData);
-
     } catch (error) {
       customToast.error(error.response.data.message);
     }

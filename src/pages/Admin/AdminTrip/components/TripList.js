@@ -71,14 +71,13 @@ const TripList = (props) => {
       headerName: "Mã",
       flex: 30,
       headerAlign: "center",
-      contentAlign: "center",
       headerClassName: "theme",
       sortable: false,
     },
     {
       field: "name",
       headerName: "Tên chuyến",
-      flex: 190,
+      flex: 170,
       headerAlign: "center",
       headerClassName: "theme",
       sortable: false,
@@ -125,7 +124,7 @@ const TripList = (props) => {
       sortable: false,
       renderCell: (params) => {
         return (
-          <span>{moment(params.row?.startDate).format("DD-MM-YYYY")}</span>
+          <span>{moment(params.row?.startDate).format("DD/MM/YYYY")}</span>
         );
       },
     },
@@ -142,7 +141,7 @@ const TripList = (props) => {
           <div>
             <span>
               {params.row?.endDate !== undefined && params.row?.endDate !== null
-                ? moment(params.row.endDate).format("DD-MM-YYYY")
+                ? moment(params.row.endDate).format("DD/MM/YYYY")
                 : "chưa xác định"}
             </span>
           </div>
@@ -150,11 +149,19 @@ const TripList = (props) => {
       },
     },
     {
+      field: "travelHours",
+      headerName: "Thời gian di chuyển (giờ)",
+      flex: 110,
+      headerAlign: "center",
+      contentAlign:'center',
+      headerClassName: "theme",
+      sortable: false,
+    },
+    {
       field: "status",
       headerName: "Trạng thái",
-      flex: 140,
+      flex: 200,
       headerAlign: "center",
-      contentAlign: "center",
       headerClassName: "theme",
       sortable: false,
       renderCell: (params) => {
@@ -173,7 +180,7 @@ const TripList = (props) => {
     {
       field: "TripDetails",
       headerName: "Chuyến chi tiết",
-      flex: 150,
+      flex: 120,
       headerAlign: "center",
       headerClassName: "theme",
       contentAlign: "center",
@@ -182,7 +189,7 @@ const TripList = (props) => {
         return (
           <div>
             {" "}
-            <Button  onClick={() => handelDetail(params.id)}>Xem chi tiết</Button>
+            <Button  onClick={() => handelDetail(params.id)}>Xem</Button>
           </div>
         );
       },
