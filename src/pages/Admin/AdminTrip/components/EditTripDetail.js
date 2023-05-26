@@ -146,8 +146,7 @@ const EditTripDetail = (props) => {
     const params = {
       vehicleId: value.codeVehicle.id,
       status: value.status,
-      departureTime: new Date(selectedDate?.startDate),
-      expectedTime: new Date(selectedDate?.endDate),
+      departureTime: new Date(selectedDate?.startDate)
     };
     try {
       const tripApi = new TripApi();
@@ -227,6 +226,7 @@ const EditTripDetail = (props) => {
                       <FormControlCustom label={"Mã tuyến"} fullWidth isMarked>
                         <InputField
                           name={"code"}
+                          disabled
                           placeholder={"Nhập mã tuyến"}
                           error={Boolean(errors.code)}
                           helperText={errors?.code?.message}
@@ -300,50 +300,8 @@ const EditTripDetail = (props) => {
                         </LocalizationProvider>
                       </FormControlCustom>
                     </Grid>
-                    <Grid item xs={6} className="auto-complete">
-                      <FormControlCustom
-                        label={"Ngày dự kiến đến"}
-                        fullWidth
-                        isMarked
-                      >
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <DatePicker
-                            value={dayjs(selectedDate?.endDate)}
-                            onChange={(e) => {
-                              setSelectedDate({
-                                ...selectedDate,
-                                endDate: new Date(e),
-                              });
-                            }}
-                            className={"date-picker"}
-                            renderInput={(params) => <TextField {...params} />}
-                            format="DD/MM/YYYY"
-                          />
-                        </LocalizationProvider>
-                      </FormControlCustom>
-                    </Grid>
-                    <Grid item xs={6} className="auto-complete">
-                      <FormControlCustom
-                        label={"Thời gian dự kiến đến"}
-                        fullWidth
-                        isMarked
-                      >
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <MobileTimePicker
-                            value={dayjs(selectedDate?.endDate)}
-                            onChange={(e) => {
-                              setSelectedDate({
-                                ...selectedDate,
-                                endDate: new Date(e),
-                              });
-                            }}
-                            inputVariant="outlined"
-                            format="h:mm a"
-                            className={"date-picker"}
-                          />
-                        </LocalizationProvider>
-                      </FormControlCustom>
-                    </Grid>
+                    
+                    
 
                     <Grid item xs={12} className="auto-complete">
                       <FormControlCustom

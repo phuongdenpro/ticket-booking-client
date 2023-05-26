@@ -117,7 +117,6 @@ const AddTripDetail = (props) => {
       vehicleId: value.codeVehicle.id,
       tripId: idTrip,
       departureTime: new Date(selectedDate?.startDate) ,
-      expectedTime: new Date(selectedDate?.endDate),
     };
     console.log(params);
     try {
@@ -128,7 +127,7 @@ const AddTripDetail = (props) => {
       setShowDrawerCreate(false);
       reset();
     } catch (error) {
-      customToast.error(error.response.data.message);
+      customToast.error(error?.response?.data?.message);
     }
     handleGetData();
   };
@@ -271,50 +270,7 @@ const AddTripDetail = (props) => {
                         </LocalizationProvider>
                       </FormControlCustom>
                     </Grid>
-                    <Grid item xs={6} className="auto-complete">
-                      <FormControlCustom
-                        label={"Ngày dự kiến đến"}
-                        fullWidth
-                        isMarked
-                      >
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <DatePicker
-                            value={dayjs(selectedDate?.endDate)}
-                            onChange={(e) => {
-                              setSelectedDate({
-                                ...selectedDate,
-                                endDate: new Date(e),
-                              });
-                            }}
-                            className={"date-picker"}
-                            renderInput={(params) => <TextField {...params} />}
-                            format="DD/MM/YYYY"
-                          />
-                        </LocalizationProvider>
-                      </FormControlCustom>
-                    </Grid>
-                    <Grid item xs={6} className="auto-complete">
-                      <FormControlCustom
-                        label={"Thời gian dự kiến đến"}
-                        fullWidth
-                        isMarked
-                      >
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <MobileTimePicker
-                            value={dayjs(selectedDate?.endDate)}
-                            onChange={(e) => {
-                              setSelectedDate({
-                                ...selectedDate,
-                                endDate: new Date(e),
-                              });
-                            }}
-                            inputVariant="outlined"
-                            format="h:mm a"
-                            className={"date-picker"}
-                          />
-                        </LocalizationProvider>
-                      </FormControlCustom>
-                    </Grid>
+                    
                   </Grid>
                 </div>
 

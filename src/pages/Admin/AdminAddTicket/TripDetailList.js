@@ -39,7 +39,7 @@ const TripDetailList = (props) => {
       renderCell: (params) => {
         return (
           <Button
-          onClick={() => handleShowDetail(params?.row?.code)}
+          onClick={() => handleShowDetail(params?.row?.code, params?.row?.departureTime)}
             style={{ backgroundColor: 'transparent' }}
             disabled={false}
             color="primary"
