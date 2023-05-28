@@ -17,6 +17,7 @@ import customToast from "../../../components/ToastCustom";
 import { StatisticsApi } from "../../../utils/statisticsApi";
 import "./AdminDashboardTicket.scss";
 import DashboardTicketList from "./components/ListDashboardTicket";
+import { convertCurrency } from "../../../data/curren";
 
 const AdminDashboardTicket = (props) => {
   const [page, setPage] = useState(0);
@@ -80,15 +81,18 @@ const AdminDashboardTicket = (props) => {
     };
     setFilterParams(params);
   }, [startDate, endDate]);
+
+  
   const handleTotal = () => {
     let total = 0;
     const dataNew = data?.data?.data;
+    console.log(dataNew);
     for (let i = 0; i < dataNew?.length; i++) {
-      total += Number(dataNew[i].totalTickets);
+      total += dataNew[i].finalTotalRevenue;
     }
     setTotal(total);
   };
-console.log(total);
+
   useEffect(() => {
     handleTotal();
   }, [data]);
@@ -431,7 +435,7 @@ console.log(total);
             fontWeight: "bold",
           }}
         >
-          Tổng số vé đã bán: {total}
+          Tổng doanh thu: {convertCurrency(total)}
         </span>
         <span className="txt-price"> </span>
       </Grid>
