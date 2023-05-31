@@ -65,6 +65,7 @@ const AdminSearchTrip = (props) => {
         page: page + 1,
         pageSize: pageSize,
         departureTime: new Date(startDate),
+        isPriceDetailExist:1,
         ...filterParams,
       });
 
